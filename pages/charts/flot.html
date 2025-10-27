@@ -816,67 +816,107 @@
                 + Math.round(series.percent) + "%</div>";
       }
     </script>
-<!-- SCRIPT DEFINITIVO PARA INTERFACES EN SUB-CARPETAS -->
+<!-- SCRIPT CORREGIDO - COLORES Y DISEÑO EXACTO -->
 <script>
 // =====================================================
-// SCRIPT DEFINITIVO - REPARACIÓN COMPLETA
+// SCRIPT CORREGIDO - DISEÑO EXACTO COMO INDEX
 // =====================================================
 
-// 1. DETENER LA EJECUCIÓN ORIGINAL DE FLOT
-window.flotInitialized = false;
-
-// 2. REPLACEMENT COMPLETO DE ADMINLTE
+// 1. REPARACIÓN DE COLORES Y DISEÑO
 function forceAdminLTERepair() {
-    console.log('🔧 Reparación forzada de AdminLTE...');
+    console.log('🎨 Aplicando diseño exacto del index...');
     
-    // Aplicar estilos COMPLETOS inmediatamente
+    // Aplicar estilos CORREGIDOS
     const emergencyCSS = `
         <style id="adminlte-emergency-css">
-        /* REPARACIÓN COMPLETA DEL TEMA */
+        /* DISEÑO EXACTO COMO INDEX PRINCIPAL */
         body {
             background-color: #ecf0f5 !important;
+            font-family: 'Source Sans Pro','Helvetica Neue',Helvetica,Arial,sans-serif !important;
         }
         
+        /* HEADER PRINCIPAL */
         .main-header .navbar {
             background-color: #3c8dbc !important;
             border-color: #367fa9 !important;
-            position: relative !important;
         }
         
         .main-header .logo {
             background-color: #367fa9 !important;
             color: white !important;
-            border-bottom: 0 !important;
-            display: block !important;
+            border-bottom: 0 solid transparent !important;
+            font-family: 'Source Sans Pro','Helvetica Neue',Helvetica,Arial,sans-serif !important;
+        }
+        
+        .main-header .logo:hover {
+            background-color: #357ca5 !important;
         }
         
         .main-header .navbar .sidebar-toggle {
             color: white !important;
-            float: left !important;
-            padding: 15px !important;
-            display: block !important;
         }
         
-        .main-header .navbar .nav {
-            float: right !important;
-            margin: 0 !important;
-        }
-        
-        .main-header .navbar .nav > li > a {
+        .main-header .navbar .sidebar-toggle:hover {
+            background-color: #367fa9 !important;
             color: white !important;
-            padding: 15px !important;
-            display: block !important;
         }
         
+        /* SIDEBAR - MANTENER DISEÑO ORIGINAL */
         .main-sidebar, .left-side {
             background-color: #222d32 !important;
-            position: absolute !important;
-            top: 0 !important;
-            left: 0 !important;
-            min-height: 100% !important;
-            width: 230px !important;
+            position: fixed !important;
+            top: 50px !important;
+            padding-top: 0 !important;
         }
         
+        /* USER PANEL - COLORES CORREGIDOS */
+        .user-panel {
+            padding: 10px !important;
+            border-bottom: 1px solid #1a2226 !important;
+        }
+        
+        .user-panel > .image > img {
+            width: 45px !important;
+            height: 45px !important;
+        }
+        
+        .user-panel > .info {
+            color: #fff !important;
+            padding: 5px 5px 5px 15px !important;
+            line-height: 1 !important;
+        }
+        
+        .user-panel > .info > p {
+            font-weight: 600 !important;
+            margin-bottom: 5px !important;
+            color: #fff !important;
+            font-size: 14px !important;
+        }
+        
+        .user-panel > .info > a {
+            color: #b8c7ce !important;
+            font-size: 11px !important;
+            text-decoration: none !important;
+            padding: 0 !important;
+        }
+        
+        .user-panel > .info > a > .fa-circle {
+            color: #00a65a !important;
+            font-size: 11px !important;
+        }
+        
+        /* MAIN NAVIGATION - TEXTO BLANCO Y CENTRADO */
+        .sidebar-header {
+            color: #4b646f !important;
+            background: #1a2226 !important;
+            padding: 10px 25px 10px 15px !important;
+            font-size: 12px !important;
+            text-transform: uppercase !important;
+            font-weight: bold !important;
+            letter-spacing: 1px !important;
+        }
+        
+        /* MENÚ LATERAL */
         .sidebar-menu {
             list-style: none !important;
             margin: 0 !important;
@@ -889,26 +929,46 @@ function forceAdminLTERepair() {
             padding: 0 !important;
         }
         
+        .sidebar-menu > li.header {
+            color: #4b646f !important;
+            background: #1a2226 !important;
+            padding: 10px 25px 10px 15px !important;
+            font-size: 12px !important;
+            text-transform: uppercase !important;
+            font-weight: bold !important;
+            letter-spacing: 1px !important;
+        }
+        
         .sidebar-menu > li > a {
             padding: 12px 5px 12px 15px !important;
             display: block !important;
             border-left: 3px solid transparent !important;
             color: #b8c7ce !important;
+            font-size: 14px !important;
         }
         
         .sidebar-menu > li > a:hover {
-            color: white !important;
+            color: #fff !important;
+            background: #1e282c !important;
+            border-left-color: #3c8dbc !important;
+            text-decoration: none !important;
+        }
+        
+        .sidebar-menu > li.active > a {
+            color: #fff !important;
             background: #1e282c !important;
             border-left-color: #3c8dbc !important;
         }
         
-        .content-wrapper {
-            background-color: #ecf0f5 !important;
-            margin-left: 230px !important;
-            min-height: 100vh !important;
+        /* ICONOS DEL MENÚ */
+        .sidebar-menu > li > a > .fa,
+        .sidebar-menu > li > a > .glyphicon,
+        .sidebar-menu > li > a > .ion {
+            width: 20px !important;
+            color: #b8c7ce !important;
         }
         
-        /* BUSCADOR */
+        /* BUSCADOR - DISEÑO ORIGINAL */
         .sidebar-form {
             border-radius: 3px !important;
             border: 1px solid #374850 !important;
@@ -921,9 +981,43 @@ function forceAdminLTERepair() {
             border: 1px solid transparent !important;
             color: #666 !important;
             border-radius: 2px !important;
+            height: 35px !important;
+            font-size: 14px !important;
         }
         
-        /* CONTENEDORES DE GRÁFICOS */
+        .sidebar-form .btn {
+            background: #374850 !important;
+            color: #999 !important;
+            border-radius: 2px !important;
+            height: 35px !important;
+        }
+        
+        /* CONTENIDO PRINCIPAL */
+        .content-wrapper {
+            background-color: #ecf0f5 !important;
+            margin-left: 230px !important;
+            min-height: calc(100vh - 101px) !important;
+        }
+        
+        .content-header {
+            background: transparent !important;
+            padding: 15px !important;
+        }
+        
+        .content-header > h1 {
+            margin: 0 !important;
+            font-size: 24px !important;
+            color: #333 !important;
+        }
+        
+        .content-header > .breadcrumb {
+            float: right !important;
+            background: transparent !important;
+            margin-top: 0 !important;
+            margin-bottom: 0 !important;
+        }
+        
+        /* GRÁFICOS */
         .chart {
             width: 100% !important;
             height: 300px !important;
@@ -938,11 +1032,43 @@ function forceAdminLTERepair() {
             border-top: 3px solid #d2d6de !important;
             border-radius: 3px !important;
             margin-bottom: 20px !important;
+            box-shadow: 0 1px 1px rgba(0,0,0,0.1) !important;
         }
         
         .box-header {
+            color: #444 !important;
             padding: 10px !important;
             border-bottom: 1px solid #f4f4f4 !important;
+        }
+        
+        .box-header > .box-title {
+            font-size: 18px !important;
+            color: #444 !important;
+        }
+        
+        /* DROPDOWN USER MENU */
+        .navbar-custom-menu .dropdown-menu {
+            background: white !important;
+            border: 1px solid #d2d6de !important;
+        }
+        
+        .user-header {
+            background-color: #3c8dbc !important;
+            color: white !important;
+            text-align: center !important;
+        }
+        
+        .user-header > p {
+            color: rgba(255,255,255,0.8) !important;
+        }
+        
+        .user-body {
+            color: #333 !important;
+        }
+        
+        .user-footer {
+            background-color: #f9f9f9 !important;
+            color: #333 !important;
         }
         </style>
     `;
@@ -954,79 +1080,70 @@ function forceAdminLTERepair() {
     // Agregar nuevo CSS
     document.head.insertAdjacentHTML('beforeend', emergencyCSS);
     
-    // Forzar estructura HTML si es necesario
-    forceHTMLStructure();
+    // Forzar estructura del sidebar
+    forceSidebarStructure();
     
-    console.log('✅ Reparación AdminLTE completada');
+    console.log('✅ Diseño exacto aplicado');
 }
 
-// 3. FORZAR ESTRUCTURA HTML
-function forceHTMLStructure() {
-    // Asegurar que existan los elementos principales
-    const body = document.body;
-    if (!body.classList.contains('skin-blue')) {
-        body.className = 'skin-blue sidebar-mini';
+// 2. REPARAR ESTRUCTURA DEL SIDEBAR
+function forceSidebarStructure() {
+    // Asegurar que MAIN NAVIGATION esté en el color correcto
+    const mainNavigation = document.querySelector('.sidebar-header, .header');
+    if (mainNavigation) {
+        mainNavigation.style.color = '#4b646f';
+        mainNavigation.style.backgroundColor = '#1a2226';
+        mainNavigation.style.padding = '10px 25px 10px 15px';
+        mainNavigation.style.fontSize = '12px';
+        mainNavigation.style.textTransform = 'uppercase';
+        mainNavigation.style.fontWeight = 'bold';
     }
     
-    // Asegurar wrapper structure
-    let wrapper = document.querySelector('.wrapper');
-    if (!wrapper) {
-        console.log('⚠️ Creando estructura wrapper...');
-        const content = document.querySelector('.content-wrapper') || document.querySelector('.content');
-        if (content) {
-            wrapper = document.createElement('div');
-            wrapper.className = 'wrapper';
-            content.parentNode.insertBefore(wrapper, content);
-            wrapper.appendChild(content);
-        }
+    // Asegurar colores del user panel
+    const userPanelInfo = document.querySelector('.user-panel .info');
+    if (userPanelInfo) {
+        userPanelInfo.style.color = '#fff';
+    }
+    
+    const userPanelName = document.querySelector('.user-panel .info p');
+    if (userPanelName) {
+        userPanelName.style.color = '#fff';
+        userPanelName.style.fontWeight = '600';
+    }
+    
+    const userPanelStatus = document.querySelector('.user-panel .info a');
+    if (userPanelStatus) {
+        userPanelStatus.style.color = '#b8c7ce';
     }
 }
 
-// 4. SOLUCIÓN AGRESIVA PARA FLOT
+// 3. SOLUCIÓN PARA FLOT
 function fixFlotDimensions() {
-    console.log('📊 Reparación agresiva de Flot...');
+    if (!window.location.pathname.includes('flot')) return;
     
-    // Esperar a que el DOM esté completamente listo
     setTimeout(() => {
-        // Forzar dimensiones a TODOS los contenedores posibles
-        const selectors = [
-            '#interactive', '#line-chart', '#area-chart', '#bar-chart', '#donut-chart',
-            '.chart', '.flot-chart', '[id*="chart"]', '[class*="chart"]'
-        ];
-        
-        selectors.forEach(selector => {
-            const elements = document.querySelectorAll(selector);
-            elements.forEach(el => {
-                if (el.offsetWidth === 0 || el.offsetHeight === 0) {
-                    console.log(`🔄 Forzando dimensiones: ${selector}`);
-                    el.style.width = '100%';
-                    el.style.height = '300px';
-                    el.style.minHeight = '300px';
-                    el.style.display = 'block';
-                    el.style.visibility = 'visible';
-                }
-            });
+        const charts = document.querySelectorAll('#interactive, #line-chart, #area-chart, #bar-chart, #donut-chart, .chart');
+        charts.forEach(chart => {
+            if (chart.offsetWidth === 0 || chart.offsetHeight === 0) {
+                chart.style.width = '100%';
+                chart.style.height = '300px';
+                chart.style.minHeight = '300px';
+            }
         });
         
-        // Redisparar eventos de Flot si existen
-        if (typeof $.plot !== 'undefined' && window.flotPlotInstances) {
-            console.log('🔄 Redibujando gráficos Flot...');
+        if (typeof $.plot !== 'undefined') {
             $(window).trigger('resize');
         }
-        
     }, 2000);
 }
 
-// 5. INTERCEPTAR LA INICIALIZACIÓN DE FLOT
+// 4. INTERCEPTAR FLOT
 function interceptFlotInitialization() {
-    const originalPlot = $.plot;
+    if (typeof $.plot === 'undefined') return;
     
+    const originalPlot = $.plot;
     $.plot = function(placeholder, data, options) {
-        console.log('🛑 Interceptando inicialización de Flot...');
-        
-        // Forzar dimensiones antes de crear el gráfico
         if (placeholder && (placeholder.offsetWidth === 0 || placeholder.offsetHeight === 0)) {
-            console.log('📏 Forzando dimensiones del placeholder...');
             $(placeholder).css({
                 'width': '100%',
                 'height': '300px',
@@ -1034,44 +1151,37 @@ function interceptFlotInitialization() {
             });
         }
         
-        // Esperar un frame para asegurar dimensiones
         setTimeout(() => {
-            console.log('✅ Creando gráfico Flot con dimensiones...');
             return originalPlot.call(this, placeholder, data, options);
         }, 100);
     };
 }
 
-// 6. INICIALIZACIÓN PRINCIPAL
+// 5. INICIALIZACIÓN PRINCIPAL
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('🚀 INICIANDO REPARACIÓN DEFINITIVA');
+    console.log('🚀 Aplicando diseño exacto...');
     
-    // Paso 1: Reparar AdminLTE inmediatamente
+    // Reparación inmediata
     forceAdminLTERepair();
     
-    // Paso 2: Si es Flot, interceptar inicialización
-    if (window.location.pathname.includes('flot') || document.querySelector('.chart')) {
-        console.log('📈 Detectada interfaz Flot - Aplicando parches...');
-        
-        if (typeof $ !== 'undefined' && typeof $.plot !== 'undefined') {
+    // Para Flot
+    if (window.location.pathname.includes('flot')) {
+        if (typeof $ !== 'undefined') {
             interceptFlotInitialization();
         }
-        
-        // Paso 3: Reparar dimensiones
         fixFlotDimensions();
     }
     
-    // Paso 4: Reparación final después de todo cargue
+    // Reparación final
     setTimeout(forceAdminLTERepair, 1000);
 });
 
-// 7. REPARACIÓN POR SI FALLA ALGO
+// 6. REPARACIÓN POST-CARGA
 window.addEventListener('load', function() {
-    console.log('🔄 Reparación post-carga...');
     setTimeout(forceAdminLTERepair, 500);
 });
 
-console.log('🛠️ Script definitivo cargado para: ' + document.title);
+console.log('🎯 Script de diseño exacto cargado');
 </script>
   </body>
 </html>
