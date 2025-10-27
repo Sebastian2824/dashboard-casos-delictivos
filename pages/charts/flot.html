@@ -816,5 +816,93 @@
                 + Math.round(series.percent) + "%</div>";
       }
     </script>
+<script>
+// =====================================================
+// SCRIPT ÚNICO PARA RESTAURAR ADMINLTE EN GITHUB PAGES
+// =====================================================
+
+// 1. PROTECCIÓN CONTRA ERRORES
+if (typeof $ !== 'undefined') {
+    if (typeof $.fn.sortable === 'undefined') {
+        console.log('🛡️ Aplicando parches de compatibilidad');
+        $.fn.sortable = function() { return this; };
+        $.fn.disableSelection = function() { return this; };
+    }
+}
+
+// 2. INICIALIZACIÓN FORZADA DE ADMINLTE
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🎨 Inicializando AdminLTE forzadamente...');
+    
+    setTimeout(function() {
+        // Forzar clase del tema
+        document.body.className = 'skin-blue sidebar-mini';
+        
+        // Restaurar colores del header
+        const navbar = document.querySelector('.main-header .navbar');
+        const logo = document.querySelector('.main-header .logo');
+        const sidebarToggle = document.querySelector('.sidebar-toggle');
+        
+        if (navbar) {
+            navbar.style.backgroundColor = '#3c8dbc';
+            navbar.style.borderColor = '#367fa9';
+        }
+        if (logo) {
+            logo.style.backgroundColor = '#367fa9';
+            logo.style.color = 'white';
+            logo.style.borderBottom = '0 solid transparent';
+        }
+        if (sidebarToggle) {
+            sidebarToggle.style.color = 'white';
+        }
+        
+        // Restaurar colores del sidebar
+        const sidebar = document.querySelector('.main-sidebar, .left-side');
+        if (sidebar) {
+            sidebar.style.backgroundColor = '#222d32';
+        }
+        
+        // Restaurar colores del contenido
+        const contentWrapper = document.querySelector('.content-wrapper');
+        if (contentWrapper) {
+            contentWrapper.style.backgroundColor = '#ecf0f5';
+        }
+        
+        // Inicializar AdminLTE
+        if (typeof $.AdminLTE !== 'undefined') {
+            $.AdminLTE.layout.activate();
+            console.log('✅ AdminLTE inicializado correctamente');
+        } else {
+            console.log('⚠️ AdminLTE no disponible, usando estilos manuales');
+        }
+        
+    }, 800);
+});
+
+// 3. SOLUCIÓN PARA GRÁFICOS (solo se ejecuta si es necesario)
+setTimeout(function() {
+    // Para Flot Charts
+    if (typeof $.plot !== 'undefined') {
+        console.log('📊 Aplicando fixes para gráficos Flot');
+        $('.chart').each(function() {
+            if ($(this).width() === 0 || $(this).height() === 0) {
+                $(this).css({
+                    'min-height': '200px',
+                    'min-width': '100%'
+                });
+            }
+        });
+        $(window).trigger('resize');
+    }
+    
+    // Para otros gráficos
+    if (typeof $.fn.knob !== 'undefined') {
+        $(".knob").knob();
+    }
+    
+}, 1500);
+
+console.log('🚀 Script de reparación cargado - Interfaz: ' + document.title);
+</script>
   </body>
 </html>
