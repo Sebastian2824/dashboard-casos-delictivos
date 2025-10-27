@@ -1,0 +1,4963 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>AdminLTE 2 | Dashboard</title>
+    <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+    <!-- Bootstrap 3.3.2 -->
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />    
+    <!-- FontAwesome 4.3.0 -->
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <!-- Ionicons 2.0.0 -->
+    <link href="http://code.ionicframework.com/ionicons/2.0.0/css/ionicons.min.css" rel="stylesheet" type="text/css" />    
+    <!-- Theme style -->
+    <link href="dist/css/AdminLTE.min.css" rel="stylesheet" type="text/css" />
+    <!-- AdminLTE Skins. Choose a skin from the css/skins 
+         folder instead of downloading all of them to reduce the load. -->
+    <link href="dist/css/skins/_all-skins.min.css" rel="stylesheet" type="text/css" />
+    <!-- iCheck -->
+    <link href="plugins/iCheck/flat/blue.css" rel="stylesheet" type="text/css" />
+    <!-- Morris chart -->
+    <link href="plugins/morris/morris.css" rel="stylesheet" type="text/css" />
+    <!-- jvectormap -->
+    <link href="plugins/jvectormap/jquery-jvectormap-1.2.2.css" rel="stylesheet" type="text/css" />
+    <!-- Date Picker -->
+    <link href="plugins/datepicker/datepicker3.css" rel="stylesheet" type="text/css" />
+    <!-- Daterange picker -->
+    <link href="plugins/daterangepicker/daterangepicker-bs3.css" rel="stylesheet" type="text/css" />
+    <!-- bootstrap wysihtml5 - text editor -->
+    <link href="plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css" rel="stylesheet" type="text/css" />
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <style>
+/* Estilos para el gráfico de tendencias */
+.bg-teal-gradient {
+    background: linear-gradient(135deg, #39CCCC 0%, #20B2AA 100%) !important;
+}
+
+#trends-chart {
+    position: relative;
+}
+
+/* Mejorar legibilidad de los filtros en el fondo gradient */
+.box-solid.bg-teal-gradient .form-control {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.box-solid.bg-teal-gradient label {
+    color: white;
+    font-weight: 500;
+}
+
+/* Estilos para las estadísticas */
+.knob-label {
+    font-size: 12px;
+    margin-top: 5px;
+    opacity: 0.9;
+}
+</style>
+<style>
+/* Estilos para indicadores del calendario AdminLTE */
+.fc-day-number {
+    position: relative !important;
+}
+
+.date-cases-indicator {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    background: #00a65a;
+    color: white;
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    font-size: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    z-index: 10;
+    cursor: pointer;
+}
+
+.fc-day.selected {
+    background-color: #d4edda !important;
+    border: 2px solid #00a65a !important;
+}
+
+/* Estilos para el calendario interactivo */
+.fc-day {
+    cursor: pointer;
+    position: relative;
+    transition: background-color 0.2s;
+}
+
+.fc-day:hover {
+    background-color: #f0f0f0 !important;
+}
+
+.fc-day.selected {
+    background-color: #d4edda !important;
+    border: 2px solid #00a65a !important;
+}
+
+/* Estilos para las tasks */
+.todo-list .fa-map-marker,
+.todo-list .fa-info-circle {
+    cursor: pointer;
+    margin-left: 5px;
+    color: #0073b7;
+}
+
+.todo-list .fa-map-marker:hover {
+    color: #0056a3;
+}
+
+.todo-list .fa-info-circle:hover {
+    color: #0056a3;
+}
+
+.todo-list .handle {
+    cursor: move;
+}
+
+/* Estilos para las estadísticas */
+.progress {
+    background: #f0f0f0;
+}
+
+.progress-bar-green {
+    background-color: #00a65a;
+}
+
+/* Estilos para el calendario AdminLTE */
+/* Estilos mejorados para el calendario AdminLTE */
+.day, .old, .new {
+    position: relative !important;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.day:hover, .old:hover, .new:hover {
+    background-color: #f0f0f0 !important;
+}
+
+.day.selected, .old.selected, .new.selected {
+    background-color: #d4edda !important;
+    border: 2px solid #00a65a !important;
+    font-weight: bold;
+}
+
+.date-cases-indicator {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    background: #00a65a;
+    color: white;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    z-index: 10;
+    cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+
+/* Mejorar la información de fecha seleccionada */
+#date-selection-info {
+    background: linear-gradient(135deg, #f8fff8 0%, #e8f5e8 100%);
+    padding: 12px 15px;
+    border-radius: 8px;
+    border-left: 5px solid #00a65a;
+    margin-bottom: 15px;
+    animation: fadeIn 0.4s ease-in;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    color: #333 !important;
+}
+
+#selected-date-text {
+    font-weight: bold;
+    color: #2d5016 !important;
+    margin-bottom: 5px;
+}
+
+#cases-count-info {
+    color: #666 !important;
+    font-size: 14px;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Mejorar los tasks */
+.todo-list li {
+    border-left: 3px solid #0073b7;
+    margin-bottom: 8px;
+    transition: all 0.3s ease;
+}
+
+.todo-list li:hover {
+    transform: translateX(5px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Estilos para la nueva sección de detalles del caso */
+#case-details-section {
+    border-top: 2px solid #00a65a;
+    animation: slideDown 0.4s ease-out;
+    margin-top: 15px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.case-detail-item {
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    color: #333 !important;
+    background: #f9f9f9;
+    border: 1px solid #e3e3e3;
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 15px;
+}
+
+.case-detail-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.case-detail-item h4 {
+    color: #0073b7 !important;
+    margin-top: 0;
+    border-bottom: 2px solid #0073b7;
+    padding-bottom: 8px;
+}
+
+.case-detail-item table {
+    color: #333 !important;
+    margin-bottom: 0;
+}
+
+.case-detail-item table strong {
+    color: #333 !important;
+}
+
+.case-detail-item .label {
+    color: white !important;
+}
+
+@keyframes slideDown {
+    from { 
+        opacity: 0; 
+        transform: translateY(-10px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
+}
+
+/* Mejorar las tablas de detalles */
+#case-details-content table {
+    margin-bottom: 0;
+}
+
+#case-details-content table td {
+    border: none;
+    padding: 6px 8px;
+    color: #333 !important;
+}
+
+#case-details-content table tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+#case-details-content {
+    color: #333 !important;
+    padding: 15px;
+}
+
+/* Mejorar las estadísticas mensuales */
+.progress {
+    background: #f0f0f0;
+    border-radius: 10px;
+    height: 20px;
+    margin-bottom: 10px;
+}
+
+.progress-bar-green {
+    background: linear-gradient(135deg, #00a65a 0%, #008d4c 100%);
+    border-radius: 10px;
+}
+
+.knob-label {
+    font-weight: 600;
+    color: #444;
+    margin-top: 5px;
+}
+
+/* Navegación entre casos */
+.case-navigation {
+    text-align: center;
+    margin-bottom: 15px;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 5px;
+    border: 1px solid #e3e3e3;
+}
+
+.case-navigation .btn-group .btn {
+    color: #333 !important;
+    border: 1px solid #ccc;
+}
+
+.case-navigation .btn-group .btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: #e9ecef;
+}
+
+.case-navigation .btn-group .btn:not(:disabled):hover {
+    background-color: #0073b7;
+    color: white !important;
+    border-color: #0073b7;
+}
+
+.case-navigation .case-counter {
+    background: #0073b7;
+    color: white !important;
+    border-color: #0073b7;
+    cursor: default;
+}
+
+/* Estilos para el footer del calendario */
+.box-footer.text-black {
+    color: #333 !important;
+}
+
+.box-footer.text-black .progress-xs {
+    margin-bottom: 15px;
+}
+
+.box-footer.text-black .clearfix {
+    margin-bottom: 10px;
+}
+
+/* Asegurar que el texto sea visible en toda la sección del calendario */
+.box-solid.bg-green-gradient .box-footer,
+.box-solid.bg-green-gradient .box-body {
+    color: #333 !important;
+}
+
+.box-solid.bg-green-gradient .box-footer .text-muted {
+    color: #666 !important;
+}
+
+/* Responsive improvements */
+@media (max-width: 768px) {
+    .case-detail-item .row {
+        margin: 0;
+    }
+    
+    .case-detail-item .col-md-6,
+    .case-detail-item .col-md-12 {
+        padding: 0;
+    }
+    
+    .case-navigation .btn-group {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+    
+    .case-navigation .btn-group .btn {
+        margin: 2px 0;
+    }
+}
+
+/* Estilos para los botones de acción en detalles */
+.case-detail-item .text-center .btn {
+    margin: 0 5px;
+}
+
+.case-detail-item .text-center .btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+/* Mejorar la visibilidad de las etiquetas */
+.label-warning {
+    background-color: #f39c12 !important;
+}
+
+.label-danger {
+    background-color: #dd4b39 !important;
+}
+
+.label-info {
+    background-color: #00c0ef !important;
+}
+
+.label-default {
+    background-color: #d2d6de !important;
+    color: #333 !important;
+}
+</style>
+<style>
+/* Estilos para el mini mapa */
+#mini-case-map {
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.mini-map-marker {
+    background: #dd4b39;
+    border: 3px solid white;
+    border-radius: 50%;
+    width: 12px;
+    height: 12px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
+
+/* Estilos para los items de la lista de casos */
+.case-item {
+    border-left: 3px solid #0073b7;
+    transition: all 0.3s ease;
+}
+
+.case-item:hover {
+    transform: translateX(5px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.case-item.highlighted {
+    background-color: #d4edda;
+    border-left-color: #00a65a;
+}
+
+/* Estilos para el botón de mapa en la lista */
+.btn-map-mini {
+    padding: 2px 6px;
+    font-size: 10px;
+    margin-left: 5px;
+}
+
+.map-active {
+    background-color: #00a65a !important;
+    color: white !important;
+}
+</style>
+<style>
+/* Estilos para la paginación */
+.pagination-info {
+    background: #f8f9fa;
+    padding: 5px 10px;
+    border-radius: 3px;
+    font-size: 12px;
+}
+
+.cases-counter {
+    background: #0073b7;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 11px;
+    margin-left: 5px;
+}
+</style>
+  <body class="skin-blue">
+    <div class="wrapper">
+      
+      <header class="main-header">
+        <!-- Logo -->
+        <a href="index2.html" class="logo"><b>Analitic</b>SEGU</a>
+        <!-- Header Navbar: style can be found in header.less -->
+        <nav class="navbar navbar-static-top" role="navigation">
+          <!-- Sidebar toggle button-->
+          <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+            <span class="sr-only">Toggle navigation</span>
+          </a>
+          <div class="navbar-custom-menu">
+            <ul class="nav navbar-nav">
+              <!-- Messages: style can be found in dropdown.less
+              <li class="dropdown messages-menu">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                  <i class="fa fa-envelope-o"></i>
+                  <span class="label label-success">4</span>
+                </a>
+                <ul class="dropdown-menu">
+                  <li class="header">You have 4 messages</li>
+                  <li>-->
+                    <!-- inner menu: contains the actual data 
+                    <ul class="menu">
+                      <li>--><!-- start message 
+                        <a href="#">
+                          <div class="pull-left">
+                            <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image"/>
+                          </div>
+                          <h4>
+                            Support Team
+                            <small><i class="fa fa-clock-o"></i> 5 mins</small>
+                          </h4>
+                          <p>Why not buy a new awesome theme?</p>
+                        </a>
+                      </li>--><!-- end message
+                      <li>
+                        <a href="#">
+                          <div class="pull-left">
+                            <img src="dist/img/user3-128x128.jpg" class="img-circle" alt="user image"/>
+                          </div>
+                          <h4>
+                            AdminLTE Design Team
+                            <small><i class="fa fa-clock-o"></i> 2 hours</small>
+                          </h4>
+                          <p>Why not buy a new awesome theme?</p>
+                        </a>
+                      </li>
+                      <li>
+                        <a href="#">
+                          <div class="pull-left">
+                            <img src="dist/img/user4-128x128.jpg" class="img-circle" alt="user image"/>
+                          </div>
+                          <h4>
+                            Developers
+                            <small><i class="fa fa-clock-o"></i> Today</small>
+                          </h4>
+                          <p>Why not buy a new awesome theme?</p>
+                        </a>
+                      </li>
+                      <li>
+                        <a href="#">
+                          <div class="pull-left">
+                            <img src="dist/img/user3-128x128.jpg" class="img-circle" alt="user image"/>
+                          </div>
+                          <h4>
+                            Sales Department
+                            <small><i class="fa fa-clock-o"></i> Yesterday</small>
+                          </h4>
+                          <p>Why not buy a new awesome theme?</p>
+                        </a>
+                      </li>
+                      <li>
+                        <a href="#">
+                          <div class="pull-left">
+                            <img src="dist/img/user4-128x128.jpg" class="img-circle" alt="user image"/>
+                          </div>
+                          <h4>
+                            Reviewers
+                            <small><i class="fa fa-clock-o"></i> 2 days</small>
+                          </h4>
+                          <p>Why not buy a new awesome theme?</p>
+                        </a>
+                      </li>
+                    </ul>
+                  </li>
+                  <li class="footer"><a href="#">See All Messages</a></li>
+                </ul>
+              </li> -->
+              <!-- Notifications: style can be found in dropdown.less 
+              <li class="dropdown notifications-menu">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                  <i class="fa fa-bell-o"></i>
+                  <span class="label label-warning">10</span>
+                </a>
+                <ul class="dropdown-menu">
+                  <li class="header">You have 10 notifications</li>
+                  <li>-->
+                    <!-- inner menu: contains the actual data 
+                    <ul class="menu">
+                      <li>
+                        <a href="#">
+                          <i class="fa fa-users text-aqua"></i> 5 new members joined today
+                        </a>
+                      </li>
+                      <li>
+                        <a href="#">
+                          <i class="fa fa-warning text-yellow"></i> Very long description here that may not fit into the page and may cause design problems
+                        </a>
+                      </li>
+                      <li>
+                        <a href="#">
+                          <i class="fa fa-users text-red"></i> 5 new members joined
+                        </a>
+                      </li>
+
+                      <li>
+                        <a href="#">
+                          <i class="fa fa-shopping-cart text-green"></i> 25 sales made
+                        </a>
+                      </li>
+                      <li>
+                        <a href="#">
+                          <i class="fa fa-user text-red"></i> You changed your username
+                        </a>
+                      </li>
+                    </ul>
+                  </li>
+                  <li class="footer"><a href="#">View all</a></li>
+                </ul>
+              </li>-->
+              
+              <!-- Tasks: style can be found in dropdown.less 
+              <li class="dropdown tasks-menu">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                  <i class="fa fa-flag-o"></i>
+                  <span class="label label-danger">9</span>
+                </a>
+                <ul class="dropdown-menu">
+                  <li class="header">You have 9 tasks</li>
+                  <li> -->
+                    <!-- inner menu: contains the actual data 
+                    <ul class="menu">
+                      <li>--><!-- Task item 
+                        <a href="#">
+                          <h3>
+                            Design some buttons
+                            <small class="pull-right">20%</small>
+                          </h3>
+                          <div class="progress xs">
+                            <div class="progress-bar progress-bar-aqua" style="width: 20%" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                              <span class="sr-only">20% Complete</span>
+                            </div>
+                          </div>
+                        </a>
+                      </li>--><!-- end task item
+                      <li> --><!-- Task item 
+                        <a href="#">
+                          <h3>
+                            Create a nice theme
+                            <small class="pull-right">40%</small>
+                          </h3>
+                          <div class="progress xs">
+                            <div class="progress-bar progress-bar-green" style="width: 40%" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                              <span class="sr-only">40% Complete</span>
+                            </div>
+                          </div>
+                        </a>
+                      </li>--><!-- end task item 
+                      <li>--><!-- Task item 
+                        <a href="#">
+                          <h3>
+                            Some task I need to do
+                            <small class="pull-right">60%</small>
+                          </h3>
+                          <div class="progress xs">
+                            <div class="progress-bar progress-bar-red" style="width: 60%" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                              <span class="sr-only">60% Complete</span>
+                            </div>
+                          </div>
+                        </a>
+                      </li>--><!-- end task item 
+                      <li>--><!-- Task item 
+                        <a href="#">
+                          <h3>
+                            Make beautiful transitions
+                            <small class="pull-right">80%</small>
+                          </h3>
+                          <div class="progress xs">
+                            <div class="progress-bar progress-bar-yellow" style="width: 80%" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                              <span class="sr-only">80% Complete</span>
+                            </div>
+                          </div>
+                        </a>
+                      </li>--><!-- end task item
+                    </ul>
+                  </li>
+                  <li class="footer">
+                    <a href="#">View all tasks</a>
+                  </li>
+                </ul>
+              </li>
+               --><!-- User Account: style can be found in dropdown.less -->
+              <li class="dropdown user user-menu">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                  <img src="https://static.vecteezy.com/system/resources/previews/036/594/092/non_2x/man-empty-avatar-photo-placeholder-for-social-networks-resumes-forums-and-dating-sites-male-and-female-no-photo-images-for-unfilled-user-profile-free-vector.jpg" class="user-image" alt="User Image"/>
+                  <span class="hidden-xs">Alexander Pierce</span>
+                </a>
+                <ul class="dropdown-menu">
+                  <!-- User image -->
+                  <li class="user-header">
+                    <img src="https://static.vecteezy.com/system/resources/previews/036/594/092/non_2x/man-empty-avatar-photo-placeholder-for-social-networks-resumes-forums-and-dating-sites-male-and-female-no-photo-images-for-unfilled-user-profile-free-vector.jpg" class="img-circle" alt="User Image" />
+                    <p>
+                      Alexander Pierce - Web Developer
+                      <small>Member since Nov. 2012</small>
+                    </p>
+                  </li>
+                  <!-- Menu Body -->
+                  <li class="user-body">
+                    <div class="col-xs-4 text-center">
+                      <a href="#">Followers</a>
+                    </div>
+                    <div class="col-xs-4 text-center">
+                      <a href="#">Sales</a>
+                    </div>
+                    <div class="col-xs-4 text-center">
+                      <a href="#">Friends</a>
+                    </div>
+                  </li>
+                  <!-- Menu Footer-->
+                  <li class="user-footer">
+                    <div class="pull-left">
+                      <a href="#" class="btn btn-default btn-flat">Profile</a>
+                    </div>
+                    <div class="pull-right">
+                      <a href="#" class="btn btn-default btn-flat">Sign out</a>
+                    </div>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </header>
+      <!-- Left side column. contains the logo and sidebar -->
+      <aside class="main-sidebar">
+        <!-- sidebar: style can be found in sidebar.less -->
+        <section class="sidebar">
+          <!-- Sidebar user panel -->
+          <div class="user-panel">
+            <div class="pull-left image">
+              <img src="https://static.vecteezy.com/system/resources/previews/036/594/092/non_2x/man-empty-avatar-photo-placeholder-for-social-networks-resumes-forums-and-dating-sites-male-and-female-no-photo-images-for-unfilled-user-profile-free-vector.jpg" class="img-circle" alt="User Image" />
+            </div>
+            <div class="pull-left info">
+              <p>Alexander Pierce</p>
+
+              <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+            </div>
+          </div>
+          <!-- search form -->
+          <form action="#" method="get" class="sidebar-form">
+            <div class="input-group">
+              <input type="text" name="q" class="form-control" placeholder="Search..."/>
+              <span class="input-group-btn">
+                <button type='submit' name='search' id='search-btn' class="btn btn-flat"><i class="fa fa-search"></i></button>
+              </span>
+            </div>
+          </form>
+          <!-- /.search form -->
+          <!-- sidebar menu: : style can be found in sidebar.less -->
+          <ul class="sidebar-menu">
+            <li class="header">MAIN NAVIGATION</li>
+            <li class="active treeview">
+              <a href="#">
+                <i class="fa fa-dashboard"></i> <span>Menú Principal</span> <i class="fa fa-angle-left pull-right"></i>
+              </a>
+              <ul class="treeview-menu">
+                <li class="active"><a href="index.html"><i class="fa fa-circle-o"></i> Dashboard v1</a></li>
+               <!-- <li><a href="index2.html"><i class="fa fa-circle-o"></i> Dashboard v2</a></li>-->
+              </ul>
+            </li>
+            <!--<li class="treeview">
+              <a href="#">
+                <i class="fa fa-files-o"></i>
+                <span>Layout Options</span>
+                <span class="label label-primary pull-right">4</span>
+              </a>
+              <ul class="treeview-menu">
+                <li><a href="pages/layout/top-nav.html"><i class="fa fa-circle-o"></i> Top Navigation</a></li>
+                <li><a href="pages/layout/boxed.html"><i class="fa fa-circle-o"></i> Boxed</a></li>
+                <li><a href="pages/layout/fixed.html"><i class="fa fa-circle-o"></i> Fixed</a></li>
+                <li><a href="pages/layout/collapsed-sidebar.html"><i class="fa fa-circle-o"></i> Collapsed Sidebar</a></li>
+              </ul>
+            </li>-->
+            <!--<li>
+              <a href="pages/widgets.html">
+                <i class="fa fa-th"></i> <span>Widgets</span> <small class="label pull-right bg-green">new</small>
+              </a>
+            </li>-->
+            <li class="treeview">
+              <a href="#">
+                <i class="fa fa-pie-chart"></i>
+                <span>Reportes de Power BI</span>
+                <i class="fa fa-angle-left pull-right"></i>
+              </a>
+              <ul class="treeview-menu">
+                <!--<li><a href="pages/charts/morris.html"><i class="fa fa-circle-o"></i> Morris</a></li>-->
+                <li><a href="pages/charts/flot.html"><i class="fa fa-circle-o"></i> Mapeos</a></li>
+                <li><a href="pages/charts/inline.html"><i class="fa fa-circle-o"></i> Gráficos Estadísticos</a></li>
+              </ul>
+            <!--</li>
+            <li class="treeview">
+              <a href="#">
+                <i class="fa fa-laptop"></i>
+                <span>UI Elements</span>
+                <i class="fa fa-angle-left pull-right"></i>
+              </a>
+              <ul class="treeview-menu">
+                <li><a href="pages/UI/general.html"><i class="fa fa-circle-o"></i> General</a></li>
+                <li><a href="pages/UI/icons.html"><i class="fa fa-circle-o"></i> Icons</a></li>
+                <li><a href="pages/UI/buttons.html"><i class="fa fa-circle-o"></i> Buttons</a></li>
+                <li><a href="pages/UI/sliders.html"><i class="fa fa-circle-o"></i> Sliders</a></li>
+                <li><a href="pages/UI/timeline.html"><i class="fa fa-circle-o"></i> Timeline</a></li>
+                <li><a href="pages/UI/modals.html"><i class="fa fa-circle-o"></i> Modals</a></li>
+              </ul>
+            </li>-->
+            <!--<li class="treeview">
+              <a href="#">
+                <i class="fa fa-edit"></i> <span>Forms</span>
+                <i class="fa fa-angle-left pull-right"></i>
+              </a>
+              <ul class="treeview-menu">
+                <li><a href="pages/forms/general.html"><i class="fa fa-circle-o"></i> General Elements</a></li>
+                <li><a href="pages/forms/advanced.html"><i class="fa fa-circle-o"></i> Advanced Elements</a></li>
+                <li><a href="pages/forms/editors.html"><i class="fa fa-circle-o"></i> Editors</a></li>
+              </ul>
+            </li>-->
+            <li class="treeview">
+              <a href="#">
+                <i class="fa fa-table"></i> <span>Tablas</span>
+                <i class="fa fa-angle-left pull-right"></i>
+              </a>
+              <ul class="treeview-menu">
+                <li><a href="pages/tables/simple.html"><i class="fa fa-circle-o"></i>Tabla de Casos de Robo</a></li>
+                <li><a href="pages/tables/data.html"><i class="fa fa-circle-o"></i>Tabla de Comisarias</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="pages/calendar.html">
+                <i class="fa fa-calendar"></i> <span>Calendar</span>
+                <small class="label pull-right bg-red">3</small>
+              </a>
+            </li>
+                       <!-- <li>
+              <a href="pages/mailbox/mailbox.html">
+                <i class="fa fa-envelope"></i> <span>Mailbox</span>
+                <small class="label pull-right bg-yellow">12</small>
+              </a>
+            </li>
+            <li class="treeview">
+              <a href="#">
+                <i class="fa fa-folder"></i> <span>Examples</span>
+                <i class="fa fa-angle-left pull-right"></i>
+              </a>
+              <ul class="treeview-menu">
+                <li><a href="pages/examples/invoice.html"><i class="fa fa-circle-o"></i> Invoice</a></li>
+                <li><a href="pages/examples/login.html"><i class="fa fa-circle-o"></i> Login</a></li>
+                <li><a href="pages/examples/register.html"><i class="fa fa-circle-o"></i> Register</a></li>
+                <li><a href="pages/examples/lockscreen.html"><i class="fa fa-circle-o"></i> Lockscreen</a></li>
+                <li><a href="pages/examples/404.html"><i class="fa fa-circle-o"></i> 404 Error</a></li>
+                <li><a href="pages/examples/500.html"><i class="fa fa-circle-o"></i> 500 Error</a></li>
+                <li><a href="pages/examples/blank.html"><i class="fa fa-circle-o"></i> Blank Page</a></li>
+              </ul>
+            </li>
+            <li class="treeview">
+              <a href="#">
+                <i class="fa fa-share"></i> <span>Multilevel</span>
+                <i class="fa fa-angle-left pull-right"></i>
+              </a>
+              <ul class="treeview-menu">
+                <li><a href="#"><i class="fa fa-circle-o"></i> Level One</a></li>
+                <li>
+                  <a href="#"><i class="fa fa-circle-o"></i> Level One <i class="fa fa-angle-left pull-right"></i></a>
+                  <ul class="treeview-menu">
+                    <li><a href="#"><i class="fa fa-circle-o"></i> Level Two</a></li>
+                    <li>
+                      <a href="#"><i class="fa fa-circle-o"></i> Level Two <i class="fa fa-angle-left pull-right"></i></a>
+                      <ul class="treeview-menu">
+                        <li><a href="#"><i class="fa fa-circle-o"></i> Level Three</a></li>
+                        <li><a href="#"><i class="fa fa-circle-o"></i> Level Three</a></li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+                <li><a href="#"><i class="fa fa-circle-o"></i> Level One</a></li>
+              </ul>
+            </li>-->
+            <li><a href="documentation/index.html"><i class="fa fa-book"></i> Documentation</a></li>
+            <!--<li class="header">LABELS</li>
+            <li><a href="#"><i class="fa fa-circle-o text-danger"></i> Important</a></li>
+            <li><a href="#"><i class="fa fa-circle-o text-warning"></i> Warning</a></li>
+            <li><a href="#"><i class="fa fa-circle-o text-info"></i> Information</a></li>
+          </ul>
+        </section>-->
+        <!-- /.sidebar -->
+      </aside>
+
+      <!-- Right side column. Contains the navbar and content of the page -->
+      <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+          <h1>
+            Dashboard
+            <small>Control panel</small>
+          </h1>
+          <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li class="active">Dashboard</li>
+          </ol>
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+          <!-- Small boxes (Stat box) -->
+<div class="row">
+    <div class="col-lg-3 col-xs-6">
+        <!-- small box -->
+        <div class="small-box bg-aqua">
+            <div class="inner">
+                <h3 id="total-cases-stat">0</h3>
+                <p>Total de Casos Registrados</p>
+            </div>
+            <div class="icon">
+                <i class="ion ion-document-text"></i>
+            </div>
+            <a href="#" class="small-box-footer" onclick="showAllCases()">Ver todos <i class="fa fa-arrow-circle-right"></i></a>
+        </div>
+    </div><!-- ./col -->
+    <div class="col-lg-3 col-xs-6">
+        <!-- small box -->
+        <div class="small-box bg-green">
+            <div class="inner">
+                <h3 id="current-year-cases">0</h3>
+                <p>Casos en 2025</p>
+            </div>
+            <div class="icon">
+                <i class="ion ion-calendar"></i>
+            </div>
+            <a href="#" class="small-box-footer" onclick="filterByCurrentYear()">Ver detalles <i class="fa fa-arrow-circle-right"></i></a>
+        </div>
+    </div><!-- ./col -->
+    <div class="col-lg-3 col-xs-6">
+        <!-- small box -->
+        <div class="small-box bg-yellow">
+            <div class="inner">
+                <h3 id="unique-comisarias">0</h3>
+                <p>Comisarías Involucradas</p>
+            </div>
+            <div class="icon">
+                <i class="ion ion-home"></i>
+            </div>
+            <a href="#" class="small-box-footer" onclick="showComisariasStats()">Ver comisarías <i class="fa fa-arrow-circle-right"></i></a>
+        </div>
+    </div><!-- ./col -->
+    <div class="col-lg-3 col-xs-6">
+        <!-- small box -->
+        <div class="small-box bg-red">
+            <div class="inner">
+                <h3 id="robos-agravados">0</h3>
+                <p>Robos Agravados</p>
+            </div>
+            <div class="icon">
+                <i class="ion ion-alert-circled"></i>
+            </div>
+            <a href="#" class="small-box-footer" onclick="showRobosAgravados()">Ver casos <i class="fa fa-arrow-circle-right"></i></a>
+        </div>
+    </div><!-- ./col -->
+</div><!-- /.row -->
+          <!-- Main row -->
+          <div class="row">
+            <!-- Left col -->
+            <section class="col-lg-7 connectedSortable">
+              <!-- Custom tabs (Charts with tabs)-->
+<div class="nav-tabs-custom">
+    <!-- Tabs within a box -->
+    <ul class="nav nav-tabs pull-right">
+        <li class="active"><a href="#delitos-mensuales-chart" data-toggle="tab">Mensual</a></li>
+        <li><a href="#delitos-tipo-chart" data-toggle="tab">Por Tipo</a></li>
+        <li><a href="#delitos-comisarias-chart" data-toggle="tab">Por Comisaría</a></li>
+        <li class="pull-left header"><i class="fa fa-bar-chart"></i> Estadísticas de Delitos</li>
+    </ul>
+    <div class="tab-content no-padding">
+        <!-- Filtro para gráficos -->
+        <div style="padding: 10px 15px; background: #f8f9fa; border-bottom: 1px solid #eee;">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label style="margin-bottom: 5px; font-weight: normal;">Año para gráficos:</label>
+                        <select class="form-control input-sm" id="chartYearFilter">
+                            <option value="2025">2025</option>
+                            <option value="2024">2024</option>
+                            <option value="2023">2023</option>
+                            <option value="2022">2022</option>
+                            <option value="2021">2021</option>
+                            <option value="2020">2020</option>
+                            <option value="2019">2019</option>
+                            <option value="2018">2018</option>
+                            <option value="2017">2017</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div style="padding-top: 25px; text-align: right;">
+                        <small class="text-muted" id="chartStats">
+                            Cargando estadísticas...
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Gráfico de delitos mensuales -->
+        <div class="chart tab-pane active" id="delitos-mensuales-chart" style="position: relative; height: 280px;">
+            <div id="mensuales-chart-container" style="height: 100%;">
+                <div class="text-center" style="padding-top: 120px; color: #999;">
+                    <i class="fa fa-spinner fa-spin"></i> Cargando datos mensuales...
+                </div>
+            </div>
+        </div>
+        <!-- Gráfico de delitos por tipo -->
+        <div class="chart tab-pane" id="delitos-tipo-chart" style="position: relative; height: 280px;">
+            <div id="tipo-chart-container" style="height: 100%;">
+                <div class="text-center" style="padding-top: 120px; color: #999;">
+                    <i class="fa fa-spinner fa-spin"></i> Cargando datos por tipo...
+                </div>
+            </div>
+        </div>
+        <!-- Gráfico de delitos por comisaría -->
+        <div class="chart tab-pane" id="delitos-comisarias-chart" style="position: relative; height: 280px;">
+            <div id="comisarias-chart-container" style="height: 100%;">
+                <div class="text-center" style="padding-top: 120px; color: #999;">
+                    <i class="fa fa-spinner fa-spin"></i> Cargando datos por comisaría...
+                </div>
+            </div>
+        </div>
+    </div>
+</div><!-- /.nav-tabs-custom -->
+
+              <!-- Chat box -->
+<div class="box box-success">
+    <div class="box-header">
+        <i class="fa fa-comments-o"></i>
+        <h3 class="box-title">Asistente de Datos Delictivos</h3>
+        <div class="box-tools pull-right" data-toggle="tooltip" title="Estado del sistema">
+            <div class="btn-group" data-toggle="btn-toggle">
+                <button type="button" class="btn btn-default btn-sm active" id="chat-status-on">
+                    <i class="fa fa-square text-green"></i> En línea
+                </button>
+                <button type="button" class="btn btn-default btn-sm" id="chat-status-off">
+                    <i class="fa fa-square text-red"></i> Offline
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="box-body chat" id="chat-box" style="height: 300px; overflow-y: auto;">
+        <!-- Mensaje de bienvenida -->
+        <!-- En la sección del chat, actualiza el mensaje de bienvenida: -->
+<div class="item">
+    <img src="https://png.pngtree.com/png-clipart/20230405/original/pngtree-head-robot-avatar-music-logo-png-image_9025565.png" alt="user image" class="online"/>
+    <p class="message">
+        <a href="#" class="name">
+            <small class="text-muted pull-right"><i class="fa fa-clock-o"></i> Justo ahora</small>
+            Asistente
+        </a>
+        ¡Hola! Soy tu asistente de análisis de datos delictivos. Puedo ayudarte a consultar información sobre:
+        <br><br>
+        <strong>🔍 Consultas disponibles:</strong><br>
+        • "Total de delitos en [año]"<br>
+        • "Delitos más comunes en [año]"<br>
+        • "Comisarías con más casos"<br>
+        • "Distritos con mayor incidencia"<br>
+        • "Evolución mensual de [año]"<br>
+        • "Tipos de delito por turno"<br>
+        • "Estadísticas de [comisaría]"<br>
+        • <strong>"Buscar casos en [dirección]"</strong><br>
+        • <strong>"Mostrar casos de [tipo de delito]"</strong><br>
+        <br>
+        <em>Ejemplos: "Buscar en Av. Lima 123", "Mostrar robos agravados", "Total de delitos en 2025"</em>
+    </p>
+</div>
+    </div>
+    <div class="box-footer">
+        <div class="input-group">
+            <input class="form-control" placeholder="Escribe tu consulta sobre los datos delictivos..." id="chat-input"/>
+            <div class="input-group-btn">
+                <button class="btn btn-success" id="send-chat">
+                    <i class="fa fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+        <!-- Sugerencias rápidas -->
+        <!-- En el footer del chat, actualiza los botones: -->
+<div style="margin-top: 10px; text-align: center;">
+    <small class="text-muted">Sugerencias: </small>
+    <button class="btn btn-xs btn-default" onclick="quickQuery('total 2025')">Total 2025</button>
+    <button class="btn btn-xs btn-default" onclick="quickQuery('delitos comunes')">Delitos comunes</button>
+    <button class="btn btn-xs btn-default" onclick="quickQuery('buscar dirección')">Buscar dirección</button>
+    <button class="btn btn-xs btn-default" onclick="quickQuery('robos agravados')">Robos agravados</button>
+</div>
+    </div>
+</div>
+
+              <!-- TO DO List -->
+<div class="box box-primary">
+    <div class="box-header">
+        <i class="ion ion-clipboard"></i>
+        <h3 class="box-title">Mapa de Casos - Vista Rápida</h3>
+        <div class="box-tools pull-right">
+            <div class="btn-group">
+                <button class="btn btn-xs btn-default" onclick="previousCasesPage()" id="prev-page-btn" disabled>
+                    <i class="fa fa-chevron-left"></i>
+                </button>
+                <button class="btn btn-xs btn-info" onclick="clearMapView()">
+                    <i class="fa fa-refresh"></i> Limpiar
+                </button>
+                <button class="btn btn-xs btn-default" onclick="nextCasesPage()" id="next-page-btn" disabled>
+                    <i class="fa fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="box-body">
+        <!-- Contenedor del Mini Mapa -->
+        <div id="mini-map-container" style="display: none; margin-bottom: 15px;">
+            <div class="box box-success">
+                <div class="box-header with-border">
+                    <h4 class="box-title">
+                        <i class="fa fa-map-marker"></i> Ubicación del Caso
+                    </h4>
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" onclick="closeMiniMap()">
+                            <i class="fa fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <div id="mini-case-map" style="height: 200px; width: 100%; border: 1px solid #ccc; border-radius: 5px;"></div>
+                    <div id="mini-case-info" style="margin-top: 10px; padding: 10px; background: #f8f9fa; border-radius: 3px;">
+                        <small id="mini-case-address"></small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Información de paginación -->
+        <div id="pagination-info" style="display: none; text-align: center; margin-bottom: 10px;">
+            <small class="text-muted" id="page-info">Página 1 de 1</small>
+        </div>
+        
+        <!-- Lista de casos -->
+        <ul class="todo-list" id="cases-todo-list">
+            <li>
+                <span class="text" style="color: #999; font-style: italic;">
+                    <i class="fa fa-info-circle"></i> Selecciona una fecha en el calendario para ver los casos
+                </span>
+            </li>
+        </ul>
+    </div>
+</div><!-- /.box -->
+
+              <!-- quick email widget -->
+              <div class="box box-info">
+                <div class="box-header">
+                  <i class="fa fa-envelope"></i>
+                  <h3 class="box-title">Quick Email</h3>
+                  <!-- tools box -->
+                  <div class="pull-right box-tools">
+                    <button class="btn btn-info btn-sm" data-widget="remove" data-toggle="tooltip" title="Remove"><i class="fa fa-times"></i></button>
+                  </div><!-- /. tools -->
+                </div>
+                <div class="box-body">
+                  <form action="#" method="post">
+                    <div class="form-group">
+                      <input type="email" class="form-control" name="emailto" placeholder="Email to:"/>
+                    </div>
+                    <div class="form-group">
+                      <input type="text" class="form-control" name="subject" placeholder="Subject"/>
+                    </div>
+                    <div>
+                      <textarea class="textarea" placeholder="Message" style="width: 100%; height: 125px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;"></textarea>
+                    </div>
+                  </form>
+                </div>
+                <div class="box-footer clearfix">
+                  <button class="pull-right btn btn-default" id="sendEmail">Send <i class="fa fa-arrow-circle-right"></i></button>
+                </div>
+              </div>
+
+            </section><!-- /.Left col -->
+            <!-- right col (We are only adding the ID to make the widgets sortable)-->
+            <section class="col-lg-5 connectedSortable">
+
+              <!-- Map box -->
+<div class="box box-solid bg-light-blue-gradient">
+    <div class="box-header">
+        <!-- tools box -->
+        <div class="pull-right box-tools">
+            <button class="btn btn-primary btn-sm daterange pull-right" data-toggle="tooltip" title="Filtrar por fecha" id="dateFilterBtn">
+                <i class="fa fa-calendar"></i> Filtrar por Fecha
+            </button>
+            <button class="btn btn-primary btn-sm pull-right" data-widget='collapse' data-toggle="tooltip" title="Contraer" style="margin-right: 5px;">
+                <i class="fa fa-minus"></i>
+            </button>
+        </div><!-- /. tools -->
+
+        <i class="fa fa-map-marker"></i>
+        <h3 class="box-title">
+            Casos de Robos Ocurridos - SJL
+        </h3>
+    </div>
+    <div class="box-body">
+        <!-- En la sección de filtros, reemplaza con esto: -->
+<div class="row" style="margin-bottom: 15px;">
+    <div class="col-md-2 col-sm-6">
+        <div class="form-group">
+            <label>Año:</label>
+            <select class="form-control" id="yearFilter">
+                <option value="">Cargando años...</option>
+            </select>
+        </div>
+    </div>
+    <div class="col-md-2 col-sm-6">
+        <div class="form-group">
+            <label>Mes:</label>
+            <select class="form-control" id="monthFilter">
+                <option value="">Todos</option>
+                <option value="1">Enero</option>
+                <option value="2">Febrero</option>
+                <option value="3">Marzo</option>
+                <option value="4">Abril</option>
+                <option value="5">Mayo</option>
+                <option value="6">Junio</option>
+                <option value="7">Julio</option>
+                <option value="8">Agosto</option>
+                <option value="9">Septiembre</option>
+                <option value="10">Octubre</option>
+                <option value="11">Noviembre</option>
+                <option value="12">Diciembre</option>
+            </select>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+        <div class="form-group">
+            <label>Tipo de Delito:</label>
+            <select class="form-control" id="crimeTypeFilter">
+                <option value="">Cargando tipos...</option>
+            </select>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+        <div class="form-group">
+            <label>Comisaría:</label>
+            <select class="form-control" id="comisariaFilter">
+                <option value="">Cargando comisarías...</option>
+            </select>
+        </div>
+    </div>
+    <div class="col-md-2 col-sm-6">
+        <div class="form-group">
+            <label>&nbsp;</label>
+            <button class="btn btn-warning form-control" id="clearFilters" title="Volver a 2025">
+                <i class="fa fa-refresh"></i> 
+            </button>
+        </div>
+    </div>
+</div>
+        
+        <!-- Mapa -->
+        <div id="crime-map" style="height: 400px; width: 100%; border: 1px solid #ccc;"></div>
+        
+<!-- Información del caso seleccionado -->
+<div id="case-info" style="display: none; margin-top: 15px; padding: 15px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 8px; border-left: 5px solid #3c8dbc; box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: relative;">
+    <!-- Botón de cerrar -->
+    <button id="close-case-info" style="position: absolute; top: 10px; right: 10px; background: rgba(255,255,255,0.2); border: none; color: white; border-radius: 50%; width: 30px; height: 30px; font-size: 16px; cursor: pointer; transition: all 0.3s;">
+        <i class="fa fa-times"></i>
+    </button>
+    
+    <h4 style="color: white; margin-top: 0; border-bottom: 2px solid rgba(255,255,255,0.3); padding-bottom: 10px; margin-right: 40px;">
+        <i class="fa fa-info-circle"></i> Información del Caso
+    </h4>
+    <div id="case-details" style="background: white; padding: 15px; border-radius: 5px; box-shadow: inset 0 0 10px rgba(0,0,0,0.1); color: #333; font-size: 14px; line-height: 1.5;"></div>
+</div>
+    </div><!-- /.box-body-->
+    <!-- En el footer del box, asegúrate de que tenga este estilo: -->
+<div class="box-footer no-border">
+    <div class="row">
+        <div class="col-xs-4 text-center" style="border-right: 1px solid #f4f4f4">
+            <div id="total-cases" style="color: #3c8dbc; font-size: 24px; font-weight: bold;">0</div>
+            <div class="knob-label" style="color: #666; font-weight: bold;">Total Casos</div>
+        </div>
+        <div class="col-xs-4 text-center" style="border-right: 1px solid #f4f4f4">
+            <div id="unique-stations" style="color: #00a65a; font-size: 24px; font-weight: bold;">0</div>
+            <div class="knob-label" style="color: #666; font-weight: bold;">Comisarías</div>
+        </div>
+        <div class="col-xs-4 text-center">
+            <div id="crime-types" style="color: #f39c12; font-size: 24px; font-weight: bold;">0</div>
+            <div class="knob-label" style="color: #666; font-weight: bold;">Tipos de Delito</div>
+        </div>
+    </div>
+</div>
+</div>
+              <!-- /.box -->
+
+              <!-- solid sales graph -->
+<div class="box box-solid bg-teal-gradient">
+    <div class="box-header">
+        <i class="fa fa-line-chart"></i>
+        <h3 class="box-title">Tendencias de Delitos</h3>
+        <div class="box-tools pull-right">
+            <button class="btn bg-teal btn-sm" data-widget="collapse"><i class="fa fa-minus"></i></button>
+            <button class="btn bg-teal btn-sm" data-widget="remove"><i class="fa fa-times"></i></button>
+        </div>
+    </div>
+    <div class="box-body border-radius-none">
+        <!-- Filtros simplificados -->
+        <div class="row" style="margin-bottom: 15px;">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Año:</label>
+                    <select class="form-control input-sm" id="trendYearFilter">
+                        <option value="2025">2025</option>
+                        <option value="2024">2024</option>
+                        <option value="2023">2023</option>
+                        <option value="2022">2022</option>
+                        <option value="2021">2021</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Tipo de Análisis:</label>
+                    <select class="form-control input-sm" id="trendAnalysisType">
+                        <option value="monthly">Mensual</option>
+                        <option value="crime_type">Por Tipo de Delito</option>
+                        <option value="turno">Por Turno</option>
+                        <option value="distrito">Por Distrito</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Contenedor del gráfico -->
+        <div class="chart" id="trends-chart" style="height: 250px;">
+            <div class="text-center" style="padding-top: 100px; color: rgba(255,255,255,0.7);">
+                <i class="fa fa-spinner fa-spin"></i> Cargando tendencias...
+            </div>
+        </div>
+    </div><!-- /.box-body -->
+    <div class="box-footer no-border">
+        <div class="row">
+            <div class="col-xs-4 text-center" style="border-right: 1px solid #f4f4f4">
+                <div id="trend-total" style="color: white; font-size: 20px; font-weight: bold;">0</div>
+                <div class="knob-label" style="color: white;">Total</div>
+            </div>
+            <div class="col-xs-4 text-center" style="border-right: 1px solid #f4f4f4">
+                <div id="trend-max" style="color: white; font-size: 20px; font-weight: bold;">0</div>
+                <div class="knob-label" style="color: white;">Máximo</div>
+            </div>
+            <div class="col-xs-4 text-center">
+                <div id="trend-avg" style="color: white; font-size: 20px; font-weight: bold;">0</div>
+                <div class="knob-label" style="color: white;">Promedio</div>
+            </div>
+        </div>
+    </div>
+</div><!-- /.box -->
+
+              <!-- Calendar -->
+<div class="box box-solid bg-green-gradient">
+    <div class="box-header">
+        <i class="fa fa-calendar"></i>
+        <h3 class="box-title">Calendario de Casos</h3>
+        <!-- tools box -->
+        <div class="pull-right box-tools">
+            <!-- button with a dropdown -->
+            <div class="btn-group">
+                <button class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bars"></i></button>
+                <ul class="dropdown-menu pull-right" role="menu">
+                    <li><a href="#" onclick="showTodayCases()">Ver casos de hoy</a></li>
+                    <li><a href="#" onclick="showYesterdayCases()">Ver casos de ayer</a></li>
+                    <li class="divider"></li>
+                    <li><a href="#" onclick="clearDateSelection()">Limpiar selección</a></li>
+                </ul>
+            </div>
+            <button class="btn btn-success btn-sm" data-widget="collapse"><i class="fa fa-minus"></i></button>
+            <button class="btn btn-success btn-sm" data-widget="remove"><i class="fa fa-times"></i></button>
+        </div><!-- /. tools -->
+    </div><!-- /.box-header -->
+    <div class="box-body no-padding">
+        <!--The calendar -->
+        <div id="calendar" style="width: 100%"></div>
+    </div><!-- /.box-body -->
+    
+    <!-- NUEVA SECCIÓN: Detalles del Caso Seleccionado -->
+    <div id="case-details-section" style="display: none; margin: 15px; padding: 0;">
+        <div class="box box-success">
+            <div class="box-header">
+                <i class="fa fa-info-circle"></i>
+                <h3 class="box-title">Detalles del Caso Seleccionado</h3>
+                <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool" onclick="closeCaseDetails()">
+                        <i class="fa fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="box-body" id="case-details-content" style="max-height: 400px; overflow-y: auto;">
+                <div class="text-center" style="padding: 20px; color: #999;">
+                    <i class="fa fa-info-circle fa-2x"></i><br>
+                    Selecciona una fecha en el calendario para ver los detalles del caso
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="box-footer text-black">
+        <div class="row">
+            <div class="col-sm-6">
+                <!-- Información de la fecha seleccionada -->
+                <div id="date-selection-info" style="display: none;">
+                    <h5><i class="fa fa-calendar-check-o"></i> <span id="selected-date-text"></span></h5>
+                    <p class="text-muted" id="cases-count-info"></p>
+                </div>
+                <!-- Progress bars -->
+                <div class="clearfix">
+                    <span class="pull-left">Casos del mes</span>
+                    <small class="pull-right" id="today-cases">0</small>
+                </div>
+                <div class="progress xs">
+                    <div class="progress-bar progress-bar-green" id="today-progress" style="width: 0%;"></div>
+                </div>
+
+                <div class="clearfix">
+                    <span class="pull-left">Comisarías activas</span>
+                    <small class="pull-right" id="active-stations">0</small>
+                </div>
+                <div class="progress xs">
+                    <div class="progress-bar progress-bar-green" id="stations-progress" style="width: 0%;"></div>
+                </div>
+            </div><!-- /.col -->
+            <div class="col-sm-6">
+                <div class="clearfix">
+                    <span class="pull-left">Tipos de delito</span>
+                    <small class="pull-right" id="crime-types-count">0</small>
+                </div>
+                <div class="progress xs">
+                    <div class="progress-bar progress-bar-green" id="types-progress" style="width: 0%;"></div>
+                </div>
+
+                <div class="clearfix">
+                    <span class="pull-left">Turno más activo</span>
+                    <small class="pull-right" id="active-turno">-</small>
+                </div>
+                <div class="progress xs">
+                    <div class="progress-bar progress-bar-green" id="turno-progress" style="width: 0%;"></div>
+                </div>
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </div>
+</div><!-- /.box -->
+
+            </section><!-- right col -->
+          </div><!-- /.row (main row) -->
+
+        </section><!-- /.content -->
+      </div><!-- /.content-wrapper -->
+      <footer class="main-footer">
+        <div class="pull-right hidden-xs">
+          <b>Version</b> 1.0
+        </div>
+        <strong>Copyright &copy; 2025 <a href="http://almsaeedstudio.com">Gestión de Proyectos</a>.</strong> All rights reserved.
+      </footer>
+    </div><!-- ./wrapper -->
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+<script>
+// Variables globales
+var map;
+var markers = [];
+var crimeData = [];
+var currentFilteredData = [];
+
+// Función para cargar datos JSON
+async function loadJSONData() {
+    try {
+        const response = await fetch('UBICACIÓN DE LOS HECHOS D. ROBO.json');
+        crimeData = await response.json();
+        
+        console.log('Datos cargados:', crimeData.length, 'registros');
+        
+        setupFilters();
+        applyDefaultFilter();
+        
+    } catch (error) {
+        console.error('Error cargando el archivo JSON:', error);
+        loadSampleData();
+    }
+}
+
+// Aplicar filtro por defecto (2025)
+function applyDefaultFilter() {
+    console.log('Aplicando filtro por defecto (2025)...');
+    
+    const yearFilter = document.getElementById('yearFilter');
+    const monthFilter = document.getElementById('monthFilter');
+    const crimeTypeFilter = document.getElementById('crimeTypeFilter');
+    const comisariaFilter = document.getElementById('comisariaFilter');
+    
+    if (yearFilter) yearFilter.value = '2025';
+    if (monthFilter) monthFilter.value = '';
+    if (crimeTypeFilter) crimeTypeFilter.value = '';
+    if (comisariaFilter) comisariaFilter.value = '';
+    
+    const filteredData = crimeData.filter(crime => crime.año_hecho == 2025);
+    currentFilteredData = filteredData;
+    
+    console.log('Registros filtrados para 2025:', filteredData.length);
+    initMap();
+}
+
+function loadSampleData() {
+    console.log('Cargando datos de ejemplo...');
+    crimeData = [
+        {
+            "id_dgc": 10737931,
+            "comisaria_registro": "LA HUAYRONA",
+            "ubic_comisaria_registro": "Jr. Callao 891",
+            "comisaria_hecho": "CPNP LA HUAYRONA",
+            "fecha_hora_hecho": 1735689600000,
+            "año_hecho": 2025,
+            "mes_hecho": 1,
+            "long_hecho": -76.9891476,
+            "lat_hecho": -12.0076807,
+            "distrito_hecho": "SAN JUAN DE LURIGANCHO",
+            "tipo_hecho": "PATRIMONIO (DELITO)",
+            "subtipo_hecho": "ROBO",
+            "modalidad_hecho": "ROBO AGRAVADO"
+        },
+        {
+            "id_dgc": 10737932,
+            "comisaria_registro": "COMISARIA CENTRAL",
+            "comisaria_hecho": "CPNP CENTRAL",
+            "fecha_hora_hecho": 1735689600000,
+            "año_hecho": 2025,
+            "mes_hecho": 1,
+            "long_hecho": -77.031,
+            "lat_hecho": -12.046,
+            "distrito_hecho": "LIMA",
+            "tipo_hecho": "PATRIMONIO (DELITO)",
+            "subtipo_hecho": "HURTO",
+            "modalidad_hecho": "HURTO AGRAVADO"
+        }
+    ];
+    
+    setupFilters();
+    applyDefaultFilter();
+}
+
+function initMap() {
+    if (typeof L === 'undefined') {
+        console.error('Leaflet no está cargado.');
+        document.getElementById('crime-map').innerHTML = 
+            '<div class="alert alert-danger">Error: Leaflet no está cargado.</div>';
+        return;
+    }
+    
+    let defaultCenter = [-12.046, -77.031];
+    let defaultZoom = 11;
+    
+    if (currentFilteredData.length > 0) {
+        const validCoords = currentFilteredData.filter(crime => crime.lat_hecho && crime.long_hecho);
+        if (validCoords.length > 0) {
+            const avgLat = validCoords.reduce((sum, crime) => sum + crime.lat_hecho, 0) / validCoords.length;
+            const avgLng = validCoords.reduce((sum, crime) => sum + crime.long_hecho, 0) / validCoords.length;
+            defaultCenter = [avgLat, avgLng];
+        }
+    }
+    
+    try {
+        if (map) {
+            map.remove();
+        }
+        
+        map = L.map('crime-map').setView(defaultCenter, defaultZoom);
+        
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+        
+        loadCrimeData();
+        
+    } catch (error) {
+        console.error('Error inicializando el mapa:', error);
+        document.getElementById('crime-map').innerHTML = 
+            '<div class="alert alert-danger">Error inicializando el mapa: ' + error.message + '</div>';
+    }
+}
+
+function loadCrimeData(filteredData = null) {
+    if (!map) return;
+    
+    const dataToShow = filteredData || currentFilteredData;
+    console.log('Cargando en mapa:', dataToShow.length, 'registros');
+    
+    markers.forEach(marker => map.removeLayer(marker));
+    markers = [];
+    
+    const validData = dataToShow.filter(crime => 
+        crime.lat_hecho && crime.long_hecho && 
+        !isNaN(crime.lat_hecho) && !isNaN(crime.long_hecho)
+    );
+    
+    updateStatistics(dataToShow);
+    
+    if (validData.length === 0) {
+        L.popup()
+            .setLatLng(map.getCenter())
+            .setContent('<div class="text-center"><i class="fa fa-exclamation-triangle"></i><br>No hay datos con coordenadas válidas</div>')
+            .openOn(map);
+        return;
+    }
+    
+    const maxMarkers = 1500;
+    const dataToDisplay = validData.length > maxMarkers ? validData.slice(0, maxMarkers) : validData;
+    
+    if (validData.length > maxMarkers) {
+        console.warn('Mostrando primeros', maxMarkers, 'de', validData.length, 'registros');
+        L.popup()
+            .setLatLng(map.getCenter())
+            .setContent(`<div class="text-center">
+                <i class="fa fa-info-circle text-warning"></i><br>
+                Mostrando ${maxMarkers} de ${validData.length} registros<br>
+                <small>Use filtros más específicos para ver todos los datos</small>
+            </div>`)
+            .openOn(map);
+    }
+    
+    dataToDisplay.forEach(crime => {
+        // Para cada marcador, encontrar cuántos casos hay en la misma ubicación
+        const casesAtLocation = findCasesAtLocation(crime.lat_hecho, crime.long_hecho, dataToDisplay);
+        const caseIndex = casesAtLocation.findIndex(c => c.id_dgc === crime.id_dgc);
+        
+        const marker = L.marker([crime.lat_hecho, crime.long_hecho])
+            .addTo(map)
+            .bindPopup(createPopupContent(crime, casesAtLocation, caseIndex));
+        
+        markers.push(marker);
+    });
+    
+    if (markers.length > 0) {
+        const group = new L.featureGroup(markers);
+        map.fitBounds(group.getBounds().pad(0.1));
+    }
+    
+    // Cerrar información del caso al recargar datos
+    closeCaseInfo();
+}
+
+// Nueva función para crear contenido del popup con navegación
+function createPopupContent(crime, casesAtLocation, currentIndex) {
+    const hasMultipleCases = casesAtLocation.length > 1;
+    
+    let navigationHTML = '';
+    if (hasMultipleCases) {
+        navigationHTML = `
+            <div style="margin: 10px 0; padding: 5px; background: #f8f9fa; border-radius: 5px; text-align: center;">
+                <button onclick="showPreviousCaseAtLocation(${crime.lat_hecho}, ${crime.long_hecho}, ${currentIndex})" 
+                        class="btn btn-xs btn-default" style="margin-right: 5px;">
+                    <i class="fa fa-chevron-left"></i>
+                </button>
+                <span style="font-size: 11px; color: #666;">${currentIndex + 1} de ${casesAtLocation.length}</span>
+                <button onclick="showNextCaseAtLocation(${crime.lat_hecho}, ${crime.long_hecho}, ${currentIndex})" 
+                        class="btn btn-xs btn-default" style="margin-left: 5px;">
+                    <i class="fa fa-chevron-right"></i>
+                </button>
+            </div>
+        `;
+    }
+    
+    return `
+        <div style="min-width: 280px;">
+            <div style="margin-bottom: 10px;">
+                <b>Comisaría:</b> ${crime.comisaria_hecho || 'No especificada'}<br>
+                <b>Delito:</b> ${crime.modalidad_hecho || crime.subtipo_hecho || 'No especificado'}<br>
+                <b>Fecha:</b> ${formatDate(crime.fecha_hora_hecho)}<br>
+                <b>Distrito:</b> ${crime.distrito_hecho || 'No especificado'}
+            </div>
+            ${navigationHTML}
+            <div style="text-align: center;">
+                <button onclick="showCaseDetailsFromPopup(${crime.id_dgc})" class="btn btn-xs btn-primary">
+                    <i class="fa fa-info-circle"></i> Ver detalles completos
+                </button>
+            </div>
+        </div>
+    `;
+}
+
+// Nueva función para encontrar casos en una ubicación específica
+function findCasesAtLocation(lat, lng, data) {
+    const tolerance = 0.0001;
+    return data.filter(crime => 
+        crime.lat_hecho && crime.long_hecho &&
+        Math.abs(crime.lat_hecho - lat) < tolerance &&
+        Math.abs(crime.long_hecho - lng) < tolerance
+    ).sort((a, b) => b.fecha_hora_hecho - a.fecha_hora_hecho);
+}
+
+// Nuevas funciones para navegación en el popup
+function showNextCaseAtLocation(lat, lng, currentIndex) {
+    const casesAtLocation = findCasesAtLocation(lat, lng, currentFilteredData);
+    const nextIndex = (currentIndex + 1) % casesAtLocation.length;
+    const nextCase = casesAtLocation[nextIndex];
+    
+    // Cerrar todos los popups
+    map.closePopup();
+    
+    // Encontrar y abrir el marcador del siguiente caso
+    const nextMarker = markers.find(marker => {
+        const markerLat = marker.getLatLng().lat;
+        const markerLng = marker.getLatLng().lng;
+        return Math.abs(markerLat - lat) < 0.0001 && Math.abs(markerLng - lng) < 0.0001;
+    });
+    
+    if (nextMarker) {
+        // Actualizar el popup con el nuevo caso
+        const updatedCases = findCasesAtLocation(lat, lng, currentFilteredData);
+        const updatedIndex = updatedCases.findIndex(c => c.id_dgc === nextCase.id_dgc);
+        nextMarker.bindPopup(createPopupContent(nextCase, updatedCases, updatedIndex));
+        nextMarker.openPopup();
+    }
+}
+
+function showPreviousCaseAtLocation(lat, lng, currentIndex) {
+    const casesAtLocation = findCasesAtLocation(lat, lng, currentFilteredData);
+    const prevIndex = (currentIndex - 1 + casesAtLocation.length) % casesAtLocation.length;
+    const prevCase = casesAtLocation[prevIndex];
+    
+    // Cerrar todos los popups
+    map.closePopup();
+    
+    // Encontrar y abrir el marcador del caso anterior
+    const prevMarker = markers.find(marker => {
+        const markerLat = marker.getLatLng().lat;
+        const markerLng = marker.getLatLng().lng;
+        return Math.abs(markerLat - lat) < 0.0001 && Math.abs(markerLng - lng) < 0.0001;
+    });
+    
+    if (prevMarker) {
+        // Actualizar el popup con el nuevo caso
+        const updatedCases = findCasesAtLocation(lat, lng, currentFilteredData);
+        const updatedIndex = updatedCases.findIndex(c => c.id_dgc === prevCase.id_dgc);
+        prevMarker.bindPopup(createPopupContent(prevCase, updatedCases, updatedIndex));
+        prevMarker.openPopup();
+    }
+}
+
+function setupFilters() {
+    // Filtro de años
+    const yearFilter = document.getElementById('yearFilter');
+    if (yearFilter) {
+        yearFilter.innerHTML = '<option value="">Todos los años</option>';
+        const years = [...new Set(crimeData.map(crime => crime.año_hecho).filter(Boolean))].sort((a, b) => b - a);
+        years.forEach(year => {
+            const option = document.createElement('option');
+            option.value = year;
+            option.textContent = year;
+            if (year == 2025) option.selected = true;
+            yearFilter.appendChild(option);
+        });
+        yearFilter.addEventListener('change', applyFilters);
+    }
+    
+    // Filtro de meses
+    const monthFilter = document.getElementById('monthFilter');
+    if (monthFilter) {
+        monthFilter.addEventListener('change', applyFilters);
+    }
+    
+    // Filtro de tipos de delito (modalidad_hecho)
+    const crimeTypeFilter = document.getElementById('crimeTypeFilter');
+    if (crimeTypeFilter) {
+        crimeTypeFilter.innerHTML = '<option value="">Todos los tipos</option>';
+        const crimeTypes = [...new Set(crimeData.map(crime => crime.modalidad_hecho).filter(Boolean))].sort();
+        crimeTypes.forEach(type => {
+            const option = document.createElement('option');
+            option.value = type;
+            option.textContent = type;
+            crimeTypeFilter.appendChild(option);
+        });
+        crimeTypeFilter.addEventListener('change', applyFilters);
+    }
+    
+    // Filtro de comisarías
+    const comisariaFilter = document.getElementById('comisariaFilter');
+    if (comisariaFilter) {
+        comisariaFilter.innerHTML = '<option value="">Todas las comisarías</option>';
+        const comisarias = [...new Set(crimeData.map(crime => crime.comisaria_hecho).filter(Boolean))].sort();
+        comisarias.forEach(comisaria => {
+            const option = document.createElement('option');
+            option.value = comisaria;
+            option.textContent = comisaria;
+            comisariaFilter.appendChild(option);
+        });
+        comisariaFilter.addEventListener('change', applyFilters);
+    }
+    
+    // Botón para limpiar filtros
+    const clearBtn = document.getElementById('clearFilters');
+    if (clearBtn) {
+        clearBtn.addEventListener('click', function() {
+            console.log('Limpiando filtros, aplicando 2025 por defecto');
+            applyDefaultFilter();
+        });
+    }
+    
+    // Solo mantener el evento para cerrar
+    const closeBtn = document.getElementById('close-case-info');
+    if (closeBtn) {
+        closeBtn.addEventListener('click', closeCaseInfo);
+    }
+}
+
+function applyFilters() {
+    const year = document.getElementById('yearFilter')?.value || '';
+    const month = document.getElementById('monthFilter')?.value || '';
+    const crimeType = document.getElementById('crimeTypeFilter')?.value || '';
+    const comisaria = document.getElementById('comisariaFilter')?.value || '';
+    
+    console.log('Aplicando filtros:', {year, month, crimeType, comisaria});
+    
+    let filteredData = crimeData;
+    
+    // Aplicar filtros en cascada
+    if (year) {
+        filteredData = filteredData.filter(crime => crime.año_hecho == year);
+    }
+    
+    if (month) {
+        filteredData = filteredData.filter(crime => crime.mes_hecho == month);
+    }
+    
+    if (crimeType) {
+        filteredData = filteredData.filter(crime => crime.modalidad_hecho === crimeType);
+    }
+    
+    if (comisaria) {
+        filteredData = filteredData.filter(crime => crime.comisaria_hecho === comisaria);
+    }
+    
+    currentFilteredData = filteredData;
+    console.log('Resultado del filtro:', filteredData.length, 'registros');
+    
+    loadCrimeData(filteredData);
+}
+
+function showCaseDetailsFromPopup(caseId) {
+    const crime = currentFilteredData.find(c => c.id_dgc === caseId);
+    if (crime) {
+        showCaseDetails(crime);
+    }
+}
+
+function showCaseDetails(crime) {
+    const caseInfo = document.getElementById('case-info');
+    const caseDetails = document.getElementById('case-details');
+    
+    if (!caseInfo || !caseDetails) return;
+    
+    const fecha = new Date(crime.fecha_hora_hecho);
+    
+    caseDetails.innerHTML = `
+        <div class="row">
+            <div class="col-md-6">
+                <p class="case-detail-item"><strong class="case-detail-strong">ID Caso:</strong> <span class="case-detail-highlight">${crime.id_dgc || 'N/A'}</span></p>
+                <p class="case-detail-item"><strong class="case-detail-strong">Comisarías Registro:</strong> <span class="case-detail-value">${crime.comisaria_registro || 'N/A'}</span></p>
+                <p class="case-detail-item"><strong class="case-detail-strong">Dirección Comisaría:</strong> <span class="case-detail-value">${crime.ubic_comisaria_registro || 'N/A'}</span></p>
+                <p class="case-detail-item"><strong class="case-detail-strong">Comisarías Hecho:</strong> <span class="case-detail-value">${crime.comisaria_hecho || 'N/A'}</span></p>
+            </div>
+            <div class="col-md-6">
+                <p class="case-detail-item"><strong class="case-detail-strong">Fecha y Hora:</strong> <span class="case-detail-success">${fecha.toLocaleString()}</span></p>
+                <p class="case-detail-item"><strong class="case-detail-strong">Turno:</strong> <span class="label label-info">${crime.turno_hecho || 'N/A'}</span></p>
+                <p class="case-detail-item"><strong class="case-detail-strong">Tipo de Delito:</strong> <span class="label label-warning">${crime.tipo_hecho || 'N/A'}</span></p>
+                <p class="case-detail-item"><strong class="case-detail-strong">Subtipo:</strong> <span class="case-detail-value">${crime.subtipo_hecho || 'N/A'}</span></p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <p class="case-detail-item"><strong class="case-detail-strong">Modalidad:</strong> <span class="label label-danger">${crime.modalidad_hecho || 'N/A'}</span></p>
+                <p class="case-detail-item"><strong class="case-detail-strong">Dirección del Hecho:</strong> <span class="case-detail-value">${crime.direccion_hecho || 'N/A'}</span></p>
+                <p class="case-detail-item"><strong class="case-detail-strong">Ubicación:</strong> <span class="case-detail-highlight">${crime.distrito_hecho || 'N/A'}, ${crime.provincia_hecho || 'N/A'}</span></p>
+                <p class="case-detail-item"><strong class="case-detail-strong">Coordenadas:</strong> <small class="case-detail-value">${crime.lat_hecho || 'N/A'}, ${crime.long_hecho || 'N/A'}</small></p>
+            </div>
+        </div>
+    `;
+    
+    caseInfo.style.display = 'block';
+    caseInfo.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function closeCaseInfo() {
+    const caseInfo = document.getElementById('case-info');
+    if (caseInfo) {
+        caseInfo.style.display = 'none';
+    }
+}
+
+function updateStatistics(data) {
+    const totalCases = document.getElementById('total-cases');
+    const uniqueStationsElem = document.getElementById('unique-stations');
+    const crimeTypesElem = document.getElementById('crime-types');
+    
+    if (totalCases) {
+        totalCases.textContent = data.length.toLocaleString();
+        totalCases.style.color = '#3c8dbc';
+        totalCases.style.fontSize = '24px';
+        totalCases.style.fontWeight = 'bold';
+    }
+    
+    if (uniqueStationsElem) {
+        const uniqueStations = new Set(data.map(crime => crime.comisaria_hecho).filter(Boolean)).size;
+        uniqueStationsElem.textContent = uniqueStations.toLocaleString();
+        uniqueStationsElem.style.color = '#00a65a';
+        uniqueStationsElem.style.fontSize = '24px';
+        uniqueStationsElem.style.fontWeight = 'bold';
+    }
+    
+    if (crimeTypesElem) {
+        const uniqueCrimeTypes = new Set(data.map(crime => crime.modalidad_hecho).filter(Boolean)).size;
+        crimeTypesElem.textContent = uniqueCrimeTypes.toLocaleString();
+        crimeTypesElem.style.color = '#f39c12';
+        crimeTypesElem.style.fontSize = '24px';
+        crimeTypesElem.style.fontWeight = 'bold';
+    }
+}
+
+function formatDate(timestamp) {
+    if (!timestamp) return 'Fecha no disponible';
+    const date = new Date(timestamp);
+    return date.toLocaleDateString('es-ES', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Documento cargado, iniciando carga de datos...');
+    loadJSONData();
+});
+
+// En el script del mapa, modifica la función applyFilters:
+function applyFilters() {
+    const year = document.getElementById('yearFilter')?.value || '';
+    const month = document.getElementById('monthFilter')?.value || '';
+    const crimeType = document.getElementById('crimeTypeFilter')?.value || '';
+    const comisaria = document.getElementById('comisariaFilter')?.value || '';
+    
+    console.log('Aplicando filtros:', {year, month, crimeType, comisaria});
+    
+    let filteredData = crimeData;
+    
+    // Aplicar filtros en cascada
+    if (year) {
+        filteredData = filteredData.filter(crime => crime.año_hecho == year);
+    }
+    
+    if (month) {
+        filteredData = filteredData.filter(crime => crime.mes_hecho == month);
+    }
+    
+    if (crimeType) {
+        filteredData = filteredData.filter(crime => crime.modalidad_hecho === crimeType);
+    }
+    
+    if (comisaria) {
+        filteredData = filteredData.filter(crime => crime.comisaria_hecho === comisaria);
+    }
+    
+    currentFilteredData = filteredData;
+    console.log('Resultado del filtro:', filteredData.length, 'registros');
+    
+    // Actualizar mapa
+    loadCrimeData(filteredData);
+    
+    // Actualizar gráficos si existen
+    if (typeof actualizarGraficosConFiltros === 'function') {
+        actualizarGraficosConFiltros(filteredData);
+    }
+}
+
+</script>
+<!-- Script para gráficos - Colócalo DESPUÉS del script del mapa -->
+<script>
+// Variables globales para gráficos
+var delitosMensualesChart;
+var delitosTipoChart;
+var delitosComisariasChart;
+var currentChartYear = 2025;
+
+// Función para inicializar los gráficos
+function initCharts() {
+    console.log('Inicializando gráficos...');
+    
+    // Configurar evento del filtro de año
+    const yearFilter = document.getElementById('chartYearFilter');
+    if (yearFilter) {
+        yearFilter.addEventListener('change', function() {
+            currentChartYear = parseInt(this.value);
+            console.log('Cambiando año de gráficos a:', currentChartYear);
+            actualizarTodosLosGraficos();
+        });
+    }
+    
+    // Cargar gráficos iniciales
+    actualizarTodosLosGraficos();
+}
+
+// Función principal para actualizar todos los gráficos
+function actualizarTodosLosGraficos() {
+    if (crimeData.length === 0) {
+        setTimeout(actualizarTodosLosGraficos, 100);
+        return;
+    }
+    
+    console.log('Actualizando gráficos para año:', currentChartYear);
+    
+    // Filtrar datos solo para el año seleccionado
+    const datosDelAño = crimeData.filter(crime => crime.año_hecho === currentChartYear);
+    
+    // Actualizar estadísticas
+    actualizarEstadisticas(datosDelAño);
+    
+    // Generar y actualizar gráficos
+    const datosMensuales = generarDatosMensuales(datosDelAño);
+    const datosPorTipo = generarDatosPorTipo(datosDelAño);
+    const datosPorComisaria = generarDatosPorComisaria(datosDelAño);
+    
+    crearGraficoMensual(datosMensuales);
+    crearGraficoTipo(datosPorTipo);
+    crearGraficoComisarias(datosPorComisaria);
+}
+
+// Actualizar estadísticas del gráfico
+function actualizarEstadisticas(datos) {
+    const statsElement = document.getElementById('chartStats');
+    if (statsElement) {
+        const totalDelitos = datos.length;
+        const tiposUnicos = new Set(datos.map(d => d.modalidad_hecho).filter(Boolean)).size;
+        const comisariasUnicas = new Set(datos.map(d => d.comisaria_hecho).filter(Boolean)).size;
+        
+        statsElement.innerHTML = 
+            `<strong>${totalDelitos.toLocaleString()}</strong> delitos | ` +
+            `<strong>${tiposUnicos}</strong> tipos | ` +
+            `<strong>${comisariasUnicas}</strong> comisarías`;
+    }
+}
+
+// Generar datos mensuales optimizado
+function generarDatosMensuales(datos) {
+    const meses = Array.from({length: 12}, (_, i) => i + 1);
+    const datosMensuales = meses.map(mes => {
+        const count = datos.filter(crime => crime.mes_hecho === mes).length;
+        return {
+            mes: mes,
+            cantidad: count,
+            nombreMes: obtenerNombreMes(mes)
+        };
+    });
+    
+    console.log(`Datos mensuales ${currentChartYear}:`, datosMensuales);
+    return datosMensuales;
+}
+
+// Generar datos por tipo optimizado
+function generarDatosPorTipo(datos) {
+    const contador = {};
+    
+    datos.forEach(crime => {
+        const tipo = crime.modalidad_hecho || crime.subtipo_hecho || 'No especificado';
+        contador[tipo] = (contador[tipo] || 0) + 1;
+    });
+    
+    const datosArray = Object.entries(contador)
+        .map(([tipo, cantidad]) => ({ tipo, cantidad }))
+        .sort((a, b) => b.cantidad - a.cantidad)
+        .slice(0, 8); // Top 8 para mejor visualización
+    
+    console.log(`Datos por tipo ${currentChartYear}:`, datosArray);
+    return datosArray;
+}
+
+// Generar datos por comisaría optimizado
+function generarDatosPorComisaria(datos) {
+    const contador = {};
+    
+    datos.forEach(crime => {
+        const comisaria = crime.comisaria_hecho || 'No especificada';
+        contador[comisaria] = (contador[comisaria] || 0) + 1;
+    });
+    
+    const datosArray = Object.entries(contador)
+        .map(([comisaria, cantidad]) => ({ comisaria, cantidad }))
+        .sort((a, b) => b.cantidad - a.cantidad)
+        .slice(0, 10); // Top 10 comisarías
+    
+    console.log(`Datos por comisaría ${currentChartYear}:`, datosArray);
+    return datosArray;
+}
+
+// Crear gráfico de delitos mensuales
+function crearGraficoMensual(datos) {
+    const container = document.getElementById('mensuales-chart-container');
+    if (!container) return;
+    
+    // Destruir gráfico existente
+    if (delitosMensualesChart) {
+        delitosMensualesChart.destroy();
+    }
+    
+    container.innerHTML = '<canvas id="mensuales-chart" style="width: 100%; height: 100%;"></canvas>';
+    
+    const ctx = document.getElementById('mensuales-chart').getContext('2d');
+    
+    delitosMensualesChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: datos.map(d => d.nombreMes),
+            datasets: [{
+                label: `Delitos ${currentChartYear}`,
+                data: datos.map(d => d.cantidad),
+                backgroundColor: 'rgba(60, 141, 188, 0.7)',
+                borderColor: 'rgba(60, 141, 188, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top'
+                },
+                tooltip: {
+                    mode: 'index',
+                    intersect: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Cantidad de Delitos'
+                    },
+                    grid: {
+                        color: 'rgba(0,0,0,0.1)'
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    }
+                }
+            }
+        }
+    });
+}
+
+// Crear gráfico de delitos por tipo
+function crearGraficoTipo(datos) {
+    const container = document.getElementById('tipo-chart-container');
+    if (!container) return;
+    
+    // Destruir gráfico existente
+    if (delitosTipoChart) {
+        delitosTipoChart.destroy();
+    }
+    
+    container.innerHTML = '<canvas id="tipo-chart" style="width: 100%; height: 100%;"></canvas>';
+    
+    const ctx = document.getElementById('tipo-chart').getContext('2d');
+    
+    // Colores para el gráfico
+    const colores = [
+        '#f56954', '#00a65a', '#f39c12', '#00c0ef', '#3c8dbc',
+        '#d2d6de', '#39CCCC', '#605ca8', '#ff851b', '#001f3f'
+    ];
+    
+    delitosTipoChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: datos.map(d => d.tipo),
+            datasets: [{
+                data: datos.map(d => d.cantidad),
+                backgroundColor: colores,
+                borderColor: '#fff',
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'right',
+                    labels: {
+                        boxWidth: 12,
+                        font: {
+                            size: 11
+                        }
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const label = context.label || '';
+                            const value = context.raw || 0;
+                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                            const percentage = Math.round((value / total) * 100);
+                            return `${label}: ${value} (${percentage}%)`;
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+
+// Crear gráfico de delitos por comisaría
+function crearGraficoComisarias(datos) {
+    const container = document.getElementById('comisarias-chart-container');
+    if (!container) return;
+    
+    // Destruir gráfico existente
+    if (delitosComisariasChart) {
+        delitosComisariasChart.destroy();
+    }
+    
+    container.innerHTML = '<canvas id="comisarias-chart" style="width: 100%; height: 100%;"></canvas>';
+    
+    const ctx = document.getElementById('comisarias-chart').getContext('2d');
+    
+    delitosComisariasChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: datos.map(d => 
+                d.comisaria.length > 15 ? d.comisaria.substring(0, 15) + '...' : d.comisaria
+            ),
+            datasets: [{
+                label: 'Cantidad de Delitos',
+                data: datos.map(d => d.cantidad),
+                backgroundColor: 'rgba(0, 166, 90, 0.7)',
+                borderColor: 'rgba(0, 166, 90, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        title: function(tooltipItems) {
+                            const index = tooltipItems[0].dataIndex;
+                            return datos[index].comisaria;
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Cantidad de Delitos'
+                    },
+                    grid: {
+                        color: 'rgba(0,0,0,0.1)'
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    },
+                    ticks: {
+                        maxRotation: 45,
+                        minRotation: 45
+                    }
+                }
+            }
+        }
+    });
+}
+
+// Función auxiliar para obtener nombre del mes
+function obtenerNombreMes(numeroMes) {
+    const meses = [
+        'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun',
+        'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'
+    ];
+    return meses[numeroMes - 1] || 'Desconocido';
+}
+
+// Inicializar gráficos cuando se cargan los datos
+document.addEventListener('DOMContentLoaded', function() {
+    // Iniciar gráficos después de que los datos estén cargados
+    const checkDataLoaded = setInterval(() => {
+        if (crimeData && crimeData.length > 0) {
+            clearInterval(checkDataLoaded);
+            initCharts();
+        }
+    }, 500);
+});
+</script>
+
+<!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Script optimizado para el gráfico de tendencias -->
+<!-- Script optimizado y simplificado para tendencias -->
+<script>
+// Variables para el gráfico de tendencias
+var trendsChart;
+var currentTrendYear = 2025;
+
+// Función para inicializar el gráfico de tendencias
+function initTrendsChart() {
+    console.log('Inicializando gráfico de tendencias...');
+    
+    // Configurar eventos de los filtros
+    document.getElementById('trendYearFilter').addEventListener('change', function() {
+        currentTrendYear = parseInt(this.value);
+        updateTrendsChart();
+    });
+    
+    document.getElementById('trendAnalysisType').addEventListener('change', updateTrendsChart);
+    
+    // Actualizar opciones del filtro de años
+    updateTrendYearFilter();
+    
+    // Crear gráfico inicial
+    updateTrendsChart();
+}
+
+// Actualizar opciones del filtro de años
+function updateTrendYearFilter() {
+    const yearFilter = document.getElementById('trendYearFilter');
+    if (!yearFilter || crimeData.length === 0) return;
+    
+    // Obtener años únicos de los datos
+    const añosUnicos = [...new Set(crimeData.map(crime => crime.año_hecho).filter(Boolean))].sort((a, b) => b - a);
+    
+    // Limpiar y llenar opciones
+    yearFilter.innerHTML = '';
+    añosUnicos.forEach(año => {
+        const option = document.createElement('option');
+        option.value = año;
+        option.textContent = año;
+        if (año === 2025) option.selected = true;
+        yearFilter.appendChild(option);
+    });
+}
+
+// Función principal para actualizar el gráfico
+function updateTrendsChart() {
+    const analysisType = document.getElementById('trendAnalysisType').value;
+    
+    console.log(`Actualizando tendencias para ${currentTrendYear}, tipo: ${analysisType}`);
+    
+    // Obtener datos filtrados por año
+    const yearData = crimeData.filter(crime => crime.año_hecho === currentTrendYear);
+    
+    if (yearData.length === 0) {
+        showNoDataMessage();
+        return;
+    }
+    
+    // Generar datos según el tipo de análisis
+    const chartData = generateChartData(yearData, analysisType);
+    createTrendsChart(chartData, analysisType);
+    updateTrendsStats(chartData);
+}
+
+// Generar datos para el gráfico
+function generateChartData(yearData, analysisType) {
+    switch(analysisType) {
+        case 'monthly':
+            return generateMonthlyData(yearData);
+        case 'crime_type':
+            return generateCrimeTypeData(yearData);
+        case 'turno':
+            return generateTurnoData(yearData);
+        case 'distrito':
+            return generateDistritoData(yearData);
+        default:
+            return generateMonthlyData(yearData);
+    }
+}
+
+// Generar datos mensuales
+function generateMonthlyData(yearData) {
+    const monthlyData = Array(12).fill(0);
+    
+    yearData.forEach(crime => {
+        if (crime.mes_hecho && crime.mes_hecho >= 1 && crime.mes_hecho <= 12) {
+            monthlyData[crime.mes_hecho - 1]++;
+        }
+    });
+    
+    return {
+        labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+        data: monthlyData,
+        type: 'line'
+    };
+}
+
+// Generar datos por tipo de delito
+function generateCrimeTypeData(yearData) {
+    const crimeTypes = {};
+    
+    yearData.forEach(crime => {
+        const tipo = crime.modalidad_hecho || crime.subtipo_hecho || 'No especificado';
+        crimeTypes[tipo] = (crimeTypes[tipo] || 0) + 1;
+    });
+    
+    const topCrimes = Object.entries(crimeTypes)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 8);
+    
+    return {
+        labels: topCrimes.map(([tipo]) => tipo),
+        data: topCrimes.map(([, cantidad]) => cantidad),
+        type: 'bar'
+    };
+}
+
+// Generar datos por turno
+function generateTurnoData(yearData) {
+    const turnos = {
+        'mañana': 0,
+        'tarde': 0,
+        'noche': 0,
+        'madrugada': 0
+    };
+    
+    yearData.forEach(crime => {
+        if (crime.turno_hecho) {
+            const turno = crime.turno_hecho.toLowerCase();
+            if (turnos.hasOwnProperty(turno)) {
+                turnos[turno]++;
+            }
+        }
+    });
+    
+    return {
+        labels: Object.keys(turnos),
+        data: Object.values(turnos),
+        type: 'bar'
+    };
+}
+
+// Generar datos por distrito
+function generateDistritoData(yearData) {
+    const distritos = {};
+    
+    yearData.forEach(crime => {
+        if (crime.distrito_hecho) {
+            distritos[crime.distrito_hecho] = (distritos[crime.distrito_hecho] || 0) + 1;
+        }
+    });
+    
+    const topDistritos = Object.entries(distritos)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 10);
+    
+    return {
+        labels: topDistritos.map(([distrito]) => distrito),
+        data: topDistritos.map(([, cantidad]) => cantidad),
+        type: 'bar'
+    };
+}
+
+// Crear el gráfico
+function createTrendsChart(chartData, analysisType) {
+    const ctx = document.getElementById('trends-chart');
+    if (!ctx) return;
+    
+    // Destruir gráfico anterior si existe
+    if (trendsChart) {
+        trendsChart.destroy();
+    }
+    
+    // Crear canvas para el nuevo gráfico
+    ctx.innerHTML = '<canvas style="width: 100%; height: 100%;"></canvas>';
+    
+    const canvas = ctx.querySelector('canvas');
+    const context = canvas.getContext('2d');
+    
+    // Configurar colores según el tipo de gráfico
+    const isLineChart = chartData.type === 'line';
+    const backgroundColor = isLineChart ? 'rgba(255, 255, 255, 0.2)' : 'rgba(255, 255, 255, 0.7)';
+    const borderColor = 'rgba(255, 255, 255, 1)';
+    
+    trendsChart = new Chart(context, {
+        type: chartData.type,
+        data: {
+            labels: chartData.labels,
+            datasets: [{
+                label: getChartLabel(analysisType),
+                data: chartData.data,
+                backgroundColor: backgroundColor,
+                borderColor: borderColor,
+                borderWidth: isLineChart ? 2 : 1,
+                fill: isLineChart,
+                tension: isLineChart ? 0.4 : 0
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: isLineChart,
+                    labels: {
+                        color: 'white',
+                        font: {
+                            size: 11
+                        }
+                    }
+                },
+                tooltip: {
+                    mode: 'index',
+                    intersect: false,
+                    backgroundColor: 'rgba(0,0,0,0.8)',
+                    callbacks: {
+                        label: function(context) {
+                            return `${context.dataset.label}: ${context.parsed.y}`;
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)'
+                    },
+                    ticks: {
+                        color: 'white'
+                    }
+                },
+                x: {
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)'
+                    },
+                    ticks: {
+                        color: 'white',
+                        maxRotation: analysisType === 'distrito' ? 45 : 0,
+                        minRotation: analysisType === 'distrito' ? 45 : 0
+                    }
+                }
+            },
+            elements: {
+                point: {
+                    radius: isLineChart ? 3 : 0,
+                    hoverRadius: isLineChart ? 6 : 0
+                }
+            }
+        }
+    });
+}
+
+// Obtener etiqueta del gráfico
+function getChartLabel(analysisType) {
+    const labels = {
+        'monthly': `Delitos ${currentTrendYear}`,
+        'crime_type': 'Tipos de Delito',
+        'turno': 'Delitos por Turno',
+        'distrito': 'Delitos por Distrito'
+    };
+    return labels[analysisType] || 'Delitos';
+}
+
+// Actualizar estadísticas
+function updateTrendsStats(chartData) {
+    const data = chartData.data;
+    const total = data.reduce((sum, value) => sum + value, 0);
+    const max = Math.max(...data);
+    const avg = data.length > 0 ? Math.round(total / data.length) : 0;
+    
+    document.getElementById('trend-total').textContent = total.toLocaleString();
+    document.getElementById('trend-max').textContent = max.toLocaleString();
+    document.getElementById('trend-avg').textContent = avg.toLocaleString();
+}
+
+// Mostrar mensaje cuando no hay datos
+function showNoDataMessage() {
+    const ctx = document.getElementById('trends-chart');
+    if (ctx) {
+        ctx.innerHTML = `
+            <div class="text-center" style="padding-top: 100px; color: rgba(255,255,255,0.7);">
+                <i class="fa fa-exclamation-triangle"></i><br>
+                No hay datos para el año ${currentTrendYear}
+            </div>
+        `;
+    }
+    
+    document.getElementById('trend-total').textContent = '0';
+    document.getElementById('trend-max').textContent = '0';
+    document.getElementById('trend-avg').textContent = '0';
+}
+
+// Inicializar cuando los datos estén listos
+document.addEventListener('DOMContentLoaded', function() {
+    const checkDataLoaded = setInterval(() => {
+        if (crimeData && crimeData.length > 0) {
+            clearInterval(checkDataLoaded);
+            setTimeout(initTrendsChart, 100);
+        }
+    }, 500);
+});
+</script>
+
+<!-- Script completo del chat con todas las funciones -->
+<script>
+// Variables para el chat
+var chatHistory = [];
+var currentSearchState = null;
+var lastUsedYear = 2025; // Variable para recordar el último año usado
+
+// Inicializar el chat
+function initChat() {
+    console.log('Inicializando asistente de chat...');
+    
+    document.getElementById('send-chat').addEventListener('click', processUserQuery);
+    document.getElementById('chat-input').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') processUserQuery();
+    });
+    
+    document.getElementById('chat-status-on').addEventListener('click', function() {
+        setChatStatus('online');
+    });
+    document.getElementById('chat-status-off').addEventListener('click', function() {
+        setChatStatus('offline');
+    });
+}
+
+// Consultas rápidas
+function quickQuery(queryType) {
+    const queries = {
+        'total 2025': 'Total de delitos en 2025',
+        'delitos comunes': 'Cuáles son los delitos más comunes en 2025',
+        'buscar dirección': 'Buscar casos en ',
+        'robos agravados': 'Mostrar casos de robo agravado'
+    };
+    
+    const query = queries[queryType] || queryType;
+    document.getElementById('chat-input').value = query;
+    
+    if (queryType === 'buscar dirección') {
+        document.getElementById('chat-input').focus();
+    } else {
+        processUserQuery();
+    }
+}
+
+// Procesar consulta del usuario
+function processUserQuery() {
+    const input = document.getElementById('chat-input');
+    const query = input.value.trim();
+    
+    if (!query) return;
+    
+    addUserMessage(query);
+    input.value = '';
+    
+    setTimeout(() => {
+        let response;
+        
+        if (currentSearchState) {
+            response = processFollowUpQuery(query, currentSearchState);
+            // NO resetear currentSearchState aquí, solo en casos específicos
+        } else {
+            response = generateResponse(query);
+        }
+        
+        addBotMessage(response);
+    }, 1000);
+}
+
+// Procesar consultas de seguimiento - CORREGIDO
+function processFollowUpQuery(query, state) {
+    const lowerQuery = query.toLowerCase();
+    
+    if (state.type === 'crime_type_year') {
+        const yearMatch = query.match(/\b(20\d{2})\b/);
+        if (yearMatch) {
+            const year = parseInt(yearMatch[1]);
+            lastUsedYear = year; // Actualizar el último año usado
+            return generateCrimeTypeCases(state.crimeType, year);
+        } else {
+            return "❌ No entendí el año. Por favor especifica un año, por ejemplo: '2025'";
+        }
+    }
+    else if (state.type === 'crime_type_location') {
+        const result = generateCrimeTypeLocationCases(state.crimeType, state.year, query);
+        currentSearchState = null; // Solo resetear después de completar la búsqueda por ubicación
+        return result;
+    }
+    
+    currentSearchState = null; // Resetear si no se entendió
+    return "🤔 No entendí tu respuesta. ¿Podrías ser más específico?";
+}
+
+// Generar respuesta principal - CORREGIDO para usar último año
+function generateResponse(query) {
+    if (!crimeData || crimeData.length === 0) {
+        return "⚠️ Lo siento, no hay datos disponibles en este momento. Por favor intenta más tarde.";
+    }
+    
+    const lowerQuery = query.toLowerCase();
+    
+    // Búsqueda por dirección
+    if (lowerQuery.includes('buscar') && (lowerQuery.includes('dirección') || lowerQuery.includes('direccion') || lowerQuery.includes('en ') || lowerQuery.includes('calle') || lowerQuery.includes('av.') || lowerQuery.includes('av ') || lowerQuery.includes('jr.'))) {
+        return searchByAddress(query);
+    }
+    
+    // Búsqueda por tipo de delito
+    if (lowerQuery.includes('mostrar') || lowerQuery.includes('casos de') || lowerQuery.includes('buscar') || esTipoDeDelito(lowerQuery)) {
+        return searchByCrimeType(query);
+    }
+    
+    // Consultas existentes - USAR ÚLTIMO AÑO EN LUGAR DE 2025 POR DEFECTO
+    const yearMatch = query.match(/\b(20\d{2})\b/);
+    const year = yearMatch ? parseInt(yearMatch[1]) : lastUsedYear;
+    
+    // Actualizar lastUsedYear si se especificó un año nuevo
+    if (yearMatch) {
+        lastUsedYear = year;
+    }
+    
+    const yearData = crimeData.filter(crime => crime.año_hecho === year);
+    
+    if (yearData.length === 0) {
+        return `❌ No hay datos disponibles para el año ${year}. Los años disponibles son: ${getAvailableYears()}`;
+    }
+    
+    if (lowerQuery.includes('total') && lowerQuery.includes('delito')) {
+        return generateTotalResponse(yearData, year);
+    }
+    else if (lowerQuery.includes('delito') && (lowerQuery.includes('común') || lowerQuery.includes('frecuente'))) {
+        return generateCommonCrimesResponse(yearData, year);
+    }
+    else if (lowerQuery.includes('comisaría') || lowerQuery.includes('comisaria')) {
+        return generateComisariasResponse(yearData, year);
+    }
+    else if (lowerQuery.includes('distrito') || lowerQuery.includes('zona')) {
+        return generateDistritosResponse(yearData, year);
+    }
+    else if (lowerQuery.includes('evolución') || lowerQuery.includes('mensual') || lowerQuery.includes('tendencia')) {
+        return generateMonthlyTrendResponse(yearData, year);
+    }
+    else if (lowerQuery.includes('turno') || lowerQuery.includes('horario')) {
+        return generateTurnoResponse(yearData, year);
+    }
+    else if (lowerQuery.includes('estadística') || lowerQuery.includes('estadistica')) {
+        return generateGeneralStatsResponse(yearData, year);
+    }
+    else {
+        return generateDefaultResponse(yearData, year);
+    }
+}
+
+// ========== FUNCIONES DE BÚSQUEDA AVANZADA ==========
+
+function searchByAddress(query) {
+    const searchTerms = query.toLowerCase()
+        .replace('buscar', '')
+        .replace('dirección', '')
+        .replace('direccion', '')
+        .replace('en', '')
+        .replace('calle', '')
+        .replace('av.', '')
+        .replace('av ', '')
+        .replace('jr.', '')
+        .trim()
+        .split(' ')
+        .filter(term => term.length > 2);
+    
+    if (searchTerms.length === 0) {
+        return "❌ Por favor especifica una dirección para buscar. Ejemplo: 'Buscar en Av. Lima 123'";
+    }
+    
+    const matches = crimeData.filter(crime => {
+        if (!crime.direccion_hecho) return false;
+        const direccion = crime.direccion_hecho.toLowerCase();
+        return searchTerms.some(term => direccion.includes(term));
+    });
+    
+    if (matches.length === 0) {
+        return `🔍 No se encontraron casos en la dirección que mencionas. Los términos buscados fueron: "${searchTerms.join(', ')}"`;
+    }
+    
+    if (matches.length === 1) {
+        return generateSingleCaseResponse(matches[0]);
+    }
+    
+    return generateAddressSearchResults(matches, searchTerms);
+}
+
+function searchByCrimeType(query) {
+    const crimeType = detectCrimeType(query);
+    
+    if (!crimeType) {
+        return "❌ No pude identificar el tipo de delito. Por sé más específico, por ejemplo: 'Mostrar casos de robo agravado' o 'Buscar hurtos'";
+    }
+    
+    currentSearchState = {
+        type: 'crime_type_year',
+        crimeType: crimeType
+    };
+    
+    return `🔍 Encontré el tipo de delito: <strong>${crimeType}</strong>. ¿De qué año quieres ver los casos? (ej: 2025, 2024, etc.)`;
+}
+
+function generateCrimeTypeCases(crimeType, year) {
+    const matches = crimeData.filter(crime => 
+        crime.año_hecho === year && 
+        (crime.modalidad_hecho === crimeType || crime.subtipo_hecho === crimeType)
+    );
+    
+    if (matches.length === 0) {
+        currentSearchState = null; // Resetear estado
+        return `❌ No se encontraron casos de <strong>${crimeType}</strong> en el año ${year}.`;
+    }
+    
+    if (matches.length <= 10) {
+        currentSearchState = null; // Resetear estado
+        return generateCrimeCasesTable(matches, crimeType, year);
+    }
+    
+    currentSearchState = {
+        type: 'crime_type_location',
+        crimeType: crimeType,
+        year: year,
+        matches: matches
+    };
+    
+    return `📊 Encontré <strong>${matches.length.toLocaleString()} casos</strong> de ${crimeType} en ${year}. Como son muchos, ¿podrías especificar una ubicación para filtrar? (ej: "Lima", "Miraflores", "Av. Lima", etc.)`;
+}
+
+// CORREGIDO: Esta función ahora maneja correctamente la búsqueda por ubicación
+function generateCrimeTypeLocationCases(crimeType, year, locationQuery) {
+    const locationTerms = locationQuery.toLowerCase().split(' ').filter(term => term.length > 2);
+    
+    if (!currentSearchState || !currentSearchState.matches) {
+        return "❌ Error en la búsqueda. Por favor intenta nuevamente.";
+    }
+    
+    const filteredMatches = currentSearchState.matches.filter(crime => {
+        const direccion = crime.direccion_hecho ? crime.direccion_hecho.toLowerCase() : '';
+        const distrito = crime.distrito_hecho ? crime.distrito_hecho.toLowerCase() : '';
+        return locationTerms.some(term => direccion.includes(term) || distrito.includes(term));
+    });
+    
+    if (filteredMatches.length === 0) {
+        return `❌ No se encontraron casos de <strong>${crimeType}</strong> en ${year} que coincidan con "${locationQuery}". Intenta con otros términos de ubicación.`;
+    }
+    
+    return generateCrimeCasesTable(filteredMatches, crimeType, year, locationQuery);
+}
+
+function generateCrimeCasesTable(cases, crimeType, year, locationFilter = null) {
+    let tableHTML = `
+        <strong>🔍 Casos de ${crimeType} en ${year}${locationFilter ? ` (filtrado por: ${locationFilter})` : ''}</strong>
+        <br><br>
+        <div style="max-height: 300px; overflow-y: auto; font-size: 12px;">
+        <table class="table table-bordered table-condensed" style="background: white; color: #333;">
+            <thead style="background: #f5f5f5;">
+                <tr>
+                    <th>Fecha</th>
+                    <th>Dirección</th>
+                    <th>Distrito</th>
+                    <th>Comisaría</th>
+                    <th>Turno</th>
+                </tr>
+            </thead>
+            <tbody>
+    `;
+    
+    cases.slice(0, 20).forEach(crime => {
+        const fecha = crime.fecha_hora_hecho ? new Date(crime.fecha_hora_hecho).toLocaleDateString('es-ES') : 'N/A';
+        const direccion = crime.direccion_hecho ? (crime.direccion_hecho.length > 30 ? crime.direccion_hecho.substring(0, 30) + '...' : crime.direccion_hecho) : 'N/A';
+        const distrito = crime.distrito_hecho || 'N/A';
+        const comisaria = crime.comisaria_hecho || 'N/A'; // Manteniendo tu cambio a comisaria_hecho
+        const turno = crime.turno_hecho || 'N/A';
+        
+        tableHTML += `
+            <tr>
+                <td>${fecha}</td>
+                <td title="${crime.direccion_hecho || ''}">${direccion}</td>
+                <td>${distrito}</td>
+                <td>${comisaria}</td>
+                <td>${turno}</td>
+            </tr>
+        `;
+    });
+    
+    tableHTML += `
+            </tbody>
+        </table>
+        </div>
+    `;
+    
+    if (cases.length > 20) {
+        tableHTML += `<br><small>💡 Se muestran 20 de ${cases.length} casos. Usa filtros más específicos para ver todos.</small>`;
+    }
+    
+    return tableHTML;
+}
+
+function generateSingleCaseResponse(crime) {
+    const fecha = crime.fecha_hora_hecho ? new Date(crime.fecha_hora_hecho) : null;
+    
+    return `
+        🎯 <strong>CASO ENCONTRADO</strong>
+        <br><br>
+        📍 <strong>Dirección:</strong> ${crime.direccion_hecho || 'No especificada'}
+        <br>
+        📅 <strong>Fecha y Hora:</strong> ${fecha ? fecha.toLocaleString('es-ES') : 'No especificada'}
+        <br>
+        🏢 <strong>Comisaría:</strong> ${crime.comisaria_hecho || 'No especificada'} <!-- Manteniendo tu cambio -->
+        <br>
+        🔍 <strong>Delito:</strong> ${crime.modalidad_hecho || crime.subtipo_hecho || 'No especificado'}
+        <br>
+        ⏰ <strong>Turno:</strong> ${crime.turno_hecho || 'No especificado'}
+        <br>
+        🗺️ <strong>Distrito:</strong> ${crime.distrito_hecho || 'No especificado'}
+        <br><br>
+        <small>💡 <em>ID del caso: ${crime.id_dgc || 'N/A'}</em></small>
+    `;
+}
+
+function generateAddressSearchResults(matches, searchTerms) {
+    const byYear = {};
+    matches.forEach(crime => {
+        const year = crime.año_hecho;
+        if (!byYear[year]) byYear[year] = [];
+        byYear[year].push(crime);
+    });
+    
+    let response = `🔍 <strong>Encontré ${matches.length} casos</strong> que coinciden con "${searchTerms.join(', ')}"`;
+    
+    Object.keys(byYear).sort().reverse().forEach(year => {
+        const yearCases = byYear[year];
+        const tipos = [...new Set(yearCases.map(c => c.modalidad_hecho).filter(Boolean))];
+        
+        response += `<br><br><strong>📅 ${year} (${yearCases.length} casos):</strong>`;
+        response += `<br>• Tipos de delito: ${tipos.slice(0, 3).join(', ')}${tipos.length > 3 ? '...' : ''}`;
+        
+        const direccionesUnicas = [...new Set(yearCases.map(c => c.direccion_hecho).filter(Boolean))].slice(0, 2);
+        if (direccionesUnicas.length > 0) {
+            response += `<br>• Ubicaciones: ${direccionesUnicas.join(', ')}${direccionesUnicas.length > 2 ? '...' : ''}`;
+        }
+    });
+    
+    response += `<br><br><small>💡 <em>Puedes buscar un caso específico mencionando la dirección completa.</em></small>`;
+    
+    return response;
+}
+
+// ========== FUNCIONES AUXILIARES DEL CHAT ==========
+
+function addUserMessage(message) {
+    const chatBox = document.getElementById('chat-box');
+    const timestamp = new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+    
+    const messageHTML = `
+        <div class="item">
+            <img src="https://static.vecteezy.com/system/resources/previews/036/594/092/non_2x/man-empty-avatar-photo-placeholder-for-social-networks-resumes-forums-and-dating-sites-male-and-female-no-photo-images-for-unfilled-user-profile-free-vector.jpg" alt="user image" class="offline"/>
+            <p class="message">
+                <a href="#" class="name">
+                    <small class="text-muted pull-right"><i class="fa fa-clock-o"></i> ${timestamp}</small>
+                    Tú
+                </a>
+                ${message}
+            </p>
+        </div>
+    `;
+    
+    chatBox.innerHTML += messageHTML;
+    scrollChatToBottom();
+}
+
+function addBotMessage(message) {
+    const chatBox = document.getElementById('chat-box');
+    const timestamp = new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+    
+    const messageHTML = `
+        <div class="item">
+            <img src="https://png.pngtree.com/png-clipart/20230405/original/pngtree-head-robot-avatar-music-logo-png-image_9025565.png" alt="user image" class="online"/>
+            <p class="message">
+                <a href="#" class="name">
+                    <small class="text-muted pull-right"><i class="fa fa-clock-o"></i> ${timestamp}</small>
+                    Asistente
+                </a>
+                ${message}
+            </p>
+        </div>
+    `;
+    
+    chatBox.innerHTML += messageHTML;
+    scrollChatToBottom();
+}
+
+function scrollChatToBottom() {
+    const chatBox = document.getElementById('chat-box');
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+function setChatStatus(status) {
+    const onlineBtn = document.getElementById('chat-status-on');
+    const offlineBtn = document.getElementById('chat-status-off');
+    
+    if (status === 'online') {
+        onlineBtn.classList.add('active');
+        offlineBtn.classList.remove('active');
+        document.getElementById('chat-input').disabled = false;
+        document.getElementById('send-chat').disabled = false;
+    } else {
+        onlineBtn.classList.remove('active');
+        offlineBtn.classList.add('active');
+        document.getElementById('chat-input').disabled = true;
+        document.getElementById('send-chat').disabled = true;
+        addBotMessage("🔴 <strong>Asistente en modo offline.</strong> Las consultas están deshabilitadas temporalmente.");
+    }
+}
+
+// ========== FUNCIONES DE DETECCIÓN DE DELITOS ==========
+
+function detectCrimeType(text) {
+    const lowerText = text.toLowerCase();
+    const crimePatterns = {
+        'ROBO AGRAVADO': ['robo agravado', 'robo armado', 'robo con arma'],
+        'ROBO': ['robo', 'robos'],
+        'HURTO': ['hurto', 'hurtos'],
+        'SECUESTRO': ['secuestro', 'secuestros'],
+        'EXTORSIÓN': ['extorsión', 'extorsion', 'extorsiones'],
+        'VIOLACIÓN': ['violación', 'violacion', 'violaciones'],
+        'HOMICIDIO': ['homicidio', 'homicidios', 'asesinato'],
+        'LESIONES': ['lesiones', 'agresión', 'agresion'],
+        'MICROCOMERCIALIZACIÓN': ['microcomercialización', 'microcomercializacion', 'venta drogas'],
+        'TENENCIA ILÍCITA': ['tenencia ilícita', 'tenencia ilicita', 'portación armas']
+    };
+    
+    for (const [crimeType, patterns] of Object.entries(crimePatterns)) {
+        if (patterns.some(pattern => lowerText.includes(pattern))) {
+            return crimeType;
+        }
+    }
+    
+    return null;
+}
+
+function esTipoDeDelito(text) {
+    return detectCrimeType(text) !== null;
+}
+
+// ========== FUNCIONES DE CONSULTAS BÁSICAS (EXISTENTES) ==========
+
+function generateTotalResponse(yearData, year) {
+    const total = yearData.length;
+    const previousYear = year - 1;
+    const previousYearData = crimeData.filter(crime => crime.año_hecho === previousYear);
+    const previousTotal = previousYearData.length;
+    
+    let variationText = '';
+    if (previousTotal > 0) {
+        const variation = ((total - previousTotal) / previousTotal * 100).toFixed(1);
+        const trend = variation >= 0 ? '📈 aumento' : '📉 disminución';
+        variationText = ` Esto representa un <strong>${Math.abs(variation)}%</strong> de ${trend} comparado con ${previousYear}.`;
+    }
+    
+    return `
+        📊 <strong>Total de delitos en ${year}: ${total.toLocaleString()}</strong>${variationText}
+        <br><br>
+        <small>💡 <em>Puedes preguntar por "delitos más comunes" o "evolución mensual" para más detalles.</em></small>
+    `;
+}
+
+function generateCommonCrimesResponse(yearData, year) {
+    const crimeTypes = {};
+    
+    yearData.forEach(crime => {
+        const tipo = crime.modalidad_hecho || crime.subtipo_hecho || 'No especificado';
+        crimeTypes[tipo] = (crimeTypes[tipo] || 0) + 1;
+    });
+    
+    const topCrimes = Object.entries(crimeTypes)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 5);
+    
+    let response = `🔍 <strong>Delitos más comunes en ${year}:</strong><br><br>`;
+    
+    topCrimes.forEach(([tipo, cantidad], index) => {
+        const percentage = ((cantidad / yearData.length) * 100).toFixed(1);
+        const emoji = ['🥇', '🥈', '🥉', '4️⃣', '5️⃣'][index] || '🔹';
+        response += `${emoji} <strong>${tipo}</strong>: ${cantidad.toLocaleString()} casos (${percentage}%)<br>`;
+    });
+    
+    return response;
+}
+
+function generateComisariasResponse(yearData, year) {
+    const comisarias = {};
+    
+    yearData.forEach(crime => {
+        const comisaria = crime.comisaria_hecho || 'No especificada'; // Manteniendo tu cambio
+        comisarias[comisaria] = (comisarias[comisaria] || 0) + 1;
+    });
+    
+    const topComisarias = Object.entries(comisarias)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 5);
+    
+    let response = `🏢 <strong>Comisarías con más casos en ${year}:</strong><br><br>`;
+    
+    topComisarias.forEach(([comisaria, cantidad], index) => {
+        const percentage = ((cantidad / yearData.length) * 100).toFixed(1);
+        const emoji = ['🥇', '🥈', '🥉', '4️⃣', '5️⃣'][index] || '🔹';
+        response += `${emoji} <strong>${comisaria}</strong>: ${cantidad.toLocaleString()} casos (${percentage}%)<br>`;
+    });
+    
+    return response;
+}
+
+function generateDistritosResponse(yearData, year) {
+    const distritos = {};
+    
+    yearData.forEach(crime => {
+        if (crime.distrito_hecho) {
+            distritos[crime.distrito_hecho] = (distritos[crime.distrito_hecho] || 0) + 1;
+        }
+    });
+    
+    const topDistritos = Object.entries(distritos)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 5);
+    
+    let response = `🗺️ <strong>Distritos con mayor incidencia en ${year}:</strong><br><br>`;
+    
+    topDistritos.forEach(([distrito, cantidad], index) => {
+        const percentage = ((cantidad / yearData.length) * 100).toFixed(1);
+        const emoji = ['🥇', '🥈', '🥉', '4️⃣', '5️⃣'][index] || '🔹';
+        response += `${emoji} <strong>${distrito}</strong>: ${cantidad.toLocaleString()} casos (${percentage}%)<br>`;
+    });
+    
+    return response;
+}
+
+function generateMonthlyTrendResponse(yearData, year) {
+    const monthlyData = Array(12).fill(0);
+    const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+    
+    yearData.forEach(crime => {
+        if (crime.mes_hecho) {
+            monthlyData[crime.mes_hecho - 1]++;
+        }
+    });
+    
+    const maxMonth = monthlyData.indexOf(Math.max(...monthlyData));
+    const minMonth = monthlyData.indexOf(Math.min(...monthlyData));
+    
+    let response = `📅 <strong>Evolución mensual de delitos en ${year}:</strong><br><br>`;
+    
+    response += `📈 <strong>Mes con más delitos:</strong> ${meses[maxMonth]} (${monthlyData[maxMonth].toLocaleString()} casos)<br>`;
+    response += `📉 <strong>Mes con menos delitos:</strong> ${meses[minMonth]} (${monthlyData[minMonth].toLocaleString()} casos)<br>`;
+    response += `📊 <strong>Promedio mensual:</strong> ${Math.round(monthlyData.reduce((a, b) => a + b, 0) / 12).toLocaleString()} casos<br><br>`;
+    
+    response += `<strong>Top 3 meses:</strong><br>`;
+    const sortedMonths = monthlyData.map((count, index) => ({ mes: meses[index], count }))
+        .sort((a, b) => b.count - a.count)
+        .slice(0, 3);
+    
+    sortedMonths.forEach((item, index) => {
+        const emoji = ['🥇', '🥈', '🥉'][index];
+        response += `${emoji} ${item.mes}: ${item.count.toLocaleString()} casos<br>`;
+    });
+    
+    return response;
+}
+
+function generateTurnoResponse(yearData, year) {
+    const turnos = {
+        'mañana': 0,
+        'tarde': 0,
+        'noche': 0,
+        'madrugada': 0
+    };
+    
+    yearData.forEach(crime => {
+        if (crime.turno_hecho) {
+            const turno = crime.turno_hecho.toLowerCase();
+            if (turnos.hasOwnProperty(turno)) {
+                turnos[turno]++;
+            }
+        }
+    });
+    
+    let response = `⏰ <strong>Distribución de delitos por turno en ${year}:</strong><br><br>`;
+    
+    Object.entries(turnos).forEach(([turno, cantidad]) => {
+        const percentage = ((cantidad / yearData.length) * 100).toFixed(1);
+        const emoji = turno === 'mañana' ? '🌅' : turno === 'tarde' ? '🌇' : turno === 'noche' ? '🌃' : '🌙';
+        response += `${emoji} <strong>${turno.charAt(0).toUpperCase() + turno.slice(1)}</strong>: ${cantidad.toLocaleString()} casos (${percentage}%)<br>`;
+    });
+    
+    return response;
+}
+
+function generateGeneralStatsResponse(yearData, year) {
+    const total = yearData.length;
+    const crimeTypes = new Set(yearData.map(crime => crime.modalidad_hecho).filter(Boolean)).size;
+    const comisarias = new Set(yearData.map(crime => crime.comisaria_hecho).filter(Boolean)).size; // Manteniendo tu cambio
+    const distritos = new Set(yearData.map(crime => crime.distrito_hecho).filter(Boolean)).size;
+    
+    return `
+        📈 <strong>Estadísticas generales de ${year}:</strong>
+        <br><br>
+        📊 <strong>Total de delitos:</strong> ${total.toLocaleString()}
+        <br>
+        🔍 <strong>Tipos de delito diferentes:</strong> ${crimeTypes}
+        <br>
+        🏢 <strong>Comisarías involucradas:</strong> ${comisarias}
+        <br>
+        🗺️ <strong>Distritos afectados:</strong> ${distritos}
+        <br><br>
+        <small>💡 <em>Pregunta por detalles específicos como "delitos más comunes" o "comisarías con más casos".</em></small>
+    `;
+}
+
+function generateDefaultResponse(yearData, year) {
+    const total = yearData.length;
+    
+    return `
+        🤔 <strong>He analizado los datos de ${year}</strong> (${total.toLocaleString()} delitos registrados)
+        <br><br>
+        💡 <strong>Puedo ayudarte con:</strong>
+        <br>
+        • "Total de delitos en ${year}" 📊
+        <br>
+        • "Delitos más comunes" 🔍
+        <br>
+        • "Comisarías con más casos" 🏢
+        <br>
+        • "Distritos con mayor incidencia" 🗺️
+        <br>
+        • "Evolución mensual" 📅
+        <br>
+        • "Distribución por turnos" ⏰
+        <br><br>
+        <em>¿En qué específicamente te puedo ayudar?</em>
+    `;
+}
+
+function getAvailableYears() {
+    const years = [...new Set(crimeData.map(crime => crime.año_hecho).filter(Boolean))].sort((a, b) => b - a);
+    return years.join(', ');
+}
+
+// Inicializar chat cuando esté listo
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(initChat, 1000);
+});
+</script>
+
+<!-- Script DEBUG para analizar la estructura del calendario -->
+<script>
+// Función para debuggear la estructura del calendario
+function debugCalendar() {
+    console.log('=== DEBUG CALENDARIO ===');
+    
+    const calendar = document.getElementById('calendar');
+    if (!calendar) {
+        console.log('❌ No se encontró el elemento con id="calendar"');
+        return;
+    }
+    
+    console.log('Estructura del calendario:', calendar);
+    console.log('HTML interno:', calendar.innerHTML);
+    
+    // Buscar elementos específicos
+    const days = calendar.querySelectorAll('[data-date]');
+    console.log(`Elementos con data-date: ${days.length}`);
+    days.forEach(day => {
+        console.log('Día encontrado:', day, 'data-date:', day.getAttribute('data-date'));
+    });
+    
+    const dayNumbers = calendar.querySelectorAll('.fc-day-number');
+    console.log(`Números de día: ${dayNumbers.length}`);
+    
+    const headers = calendar.querySelectorAll('.fc-header-title, .fc-header-toolbar');
+    console.log(`Headers: ${headers.length}`);
+    headers.forEach(header => {
+        console.log('Header:', header.textContent);
+    });
+}
+
+// Ejecutar debug cuando cargue la página
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(debugCalendar, 1000);
+    setTimeout(debugCalendar, 3000); // Y otra vez después de 3 segundos
+});
+</script>
+
+<script>
+// DEBUG: Función para verificar datos del calendario
+function debugCalendarData() {
+    console.log('=== DEBUG CALENDARIO ===');
+    
+    // Verificar datos cargados
+    console.log('Total de casos cargados:', crimeData.length);
+    console.log('Primeros 3 casos:', crimeData.slice(0, 3));
+    
+    // Verificar fechas en los datos
+    crimeData.slice(0, 5).forEach((crime, i) => {
+        if (crime.fecha_hora_hecho) {
+            const date = new Date(crime.fecha_hora_hecho);
+            console.log(`Caso ${i}:`, {
+                timestamp: crime.fecha_hora_hecho,
+                fechaISO: date.toISOString(),
+                fechaLocal: date.toLocaleDateString('es-ES'),
+                año: crime.año_hecho,
+                mes: crime.mes_hecho
+            });
+        }
+    });
+    
+    // Verificar casesByDate
+    console.log('Fechas en casesByDate:', Object.keys(casesByDate).slice(0, 10));
+    console.log('Total de fechas con casos:', Object.keys(casesByDate).length);
+    
+    // Verificar una fecha específica
+    const testDate = '2025-01-01';
+    console.log(`Casos para ${testDate}:`, casesByDate[testDate] || 'No encontrados');
+}
+
+// Ejecutar debug cuando cargue la página
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(debugCalendarData, 2000);
+});
+</script>
+
+<!-- Script CORREGIDO para el calendario de AdminLTE -->
+<!-- Script CORREGIDO para el calendario de AdminLTE -->
+<script>
+// Variables para el calendario
+var selectedDate = null;
+var casesByDate = {};
+var casesByMonth = {};
+var calendarInitialized = false;
+var currentCalendarMonth = null;
+var currentCalendarYear = null;
+var currentCaseIndex = 0;
+
+// Inicializar el calendario
+function initCalendar() {
+    console.log('🟡 Inicializando calendario AdminLTE...');
+    
+    if (!crimeData || crimeData.length === 0) {
+        console.log('❌ No hay datos de delitos cargados');
+        setTimeout(initCalendar, 1000);
+        return;
+    }
+    
+    // Preparar datos de casos por fecha y por mes
+    prepareCasesData();
+    
+    // Configurar el calendario de AdminLTE
+    setupAdminLTECalendar();
+    
+    calendarInitialized = true;
+    console.log('✅ Calendario AdminLTE inicializado');
+}
+
+// Preparar datos organizados por fecha y por mes
+function prepareCasesData() {
+    casesByDate = {};
+    casesByMonth = {};
+    
+    console.log('🟡 Preparando datos organizados...');
+    console.log('📊 Total de casos a procesar:', crimeData.length);
+    
+    crimeData.forEach((crime) => {
+        if (!crime.fecha_hora_hecho) return;
+        
+        try {
+            let date;
+            
+            if (typeof crime.fecha_hora_hecho === 'number') {
+                date = new Date(crime.fecha_hora_hecho);
+            } else {
+                date = new Date(crime.fecha_hora_hecho);
+            }
+            
+            if (!date || isNaN(date.getTime())) return;
+            
+            const year = date.getFullYear();
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            const day = date.getDate().toString().padStart(2, '0');
+            const dateStr = `${year}-${month}-${day}`;
+            const monthStr = `${year}-${month}`;
+            
+            // Organizar por fecha
+            if (!casesByDate[dateStr]) {
+                casesByDate[dateStr] = [];
+            }
+            casesByDate[dateStr].push(crime);
+            
+            // Organizar por mes
+            if (!casesByMonth[monthStr]) {
+                casesByMonth[monthStr] = [];
+            }
+            casesByMonth[monthStr].push(crime);
+            
+        } catch (error) {
+            console.error('Error procesando caso:', error);
+        }
+    });
+    
+    console.log(`✅ Datos procesados`);
+    console.log(`📊 Fechas únicas con casos: ${Object.keys(casesByDate).length}`);
+    console.log(`📈 Meses únicos con casos: ${Object.keys(casesByMonth).length}`);
+}
+
+// Configurar calendario específico para AdminLTE - CORREGIDO
+function setupAdminLTECalendar() {
+    console.log('🟡 Configurando calendario AdminLTE...');
+    
+    const calendar = document.getElementById('calendar');
+    if (!calendar) {
+        console.log('❌ No se encontró el elemento con id="calendar"');
+        return;
+    }
+    
+    // Configurar eventos de clic para las celdas del calendario
+    setupCalendarClickEvents();
+    
+    // Configurar observador MEJORADO para cambios de mes/año
+    setupImprovedCalendarObserver();
+    
+    // Obtener y mostrar el mes/año actual del calendario
+    setTimeout(() => {
+        updateCurrentCalendarView();
+        highlightAdminLTEDates();
+    }, 500);
+}
+
+// NUEVO: Observador mejorado para cambios de mes/año
+function setupImprovedCalendarObserver() {
+    console.log('🟡 Configurando observador mejorado...');
+    
+    let lastKnownMonthYear = '';
+    let checkInterval;
+    
+    // Función para verificar cambios
+    function checkForCalendarChanges() {
+        const datepickerSwitch = document.querySelector('.datepicker-switch');
+        if (!datepickerSwitch) return;
+        
+        const currentMonthYear = datepickerSwitch.textContent.trim();
+        
+        if (currentMonthYear !== lastKnownMonthYear) {
+            console.log('🔄 Cambio detectado en calendario:', currentMonthYear);
+            lastKnownMonthYear = currentMonthYear;
+            
+            // Pequeño delay para asegurar que el DOM se actualizó
+            setTimeout(() => {
+                updateCurrentCalendarView();
+                highlightAdminLTEDates();
+                loadCurrentMonthStats();
+            }, 100);
+        }
+    }
+    
+    // Verificar cambios cada 500ms
+    checkInterval = setInterval(checkForCalendarChanges, 500);
+    
+    // También observar clicks en botones de navegación
+    document.addEventListener('click', function(e) {
+        if (e.target.closest('.prev') || e.target.closest('.next') || 
+            e.target.closest('.month') || e.target.closest('.year')) {
+            console.log('🔍 Click en navegación del calendario detectado');
+            setTimeout(() => {
+                updateCurrentCalendarView();
+                highlightAdminLTEDates();
+                loadCurrentMonthStats();
+            }, 300);
+        }
+    });
+    
+    // Limpiar intervalo cuando se cierre la página
+    window.addEventListener('beforeunload', function() {
+        if (checkInterval) clearInterval(checkInterval);
+    });
+}
+
+// Actualizar la vista actual del calendario - MEJORADO
+function updateCurrentCalendarView() {
+    const datepickerSwitch = document.querySelector('.datepicker-switch');
+    if (!datepickerSwitch) {
+        console.log('❌ No se encontró el elemento datepicker-switch');
+        return;
+    }
+    
+    const currentView = datepickerSwitch.textContent.trim();
+    console.log('📅 Vista actual del calendario:', currentView);
+    
+    // Parsear mes y año de forma más robusta
+    const monthNames = {
+        'january': 1, 'february': 2, 'march': 3, 'april': 4, 'may': 5, 'june': 6,
+        'july': 7, 'august': 8, 'september': 9, 'october': 10, 'november': 11, 'december': 12,
+        'enero': 1, 'febrero': 2, 'marzo': 3, 'abril': 4, 'mayo': 5, 'junio': 6,
+        'julio': 7, 'agosto': 8, 'septiembre': 9, 'octubre': 10, 'noviembre': 11, 'diciembre': 12
+    };
+    
+    let month = null;
+    let year = null;
+    
+    // Buscar mes en el texto
+    const lowerView = currentView.toLowerCase();
+    for (const [monthName, monthNumber] of Object.entries(monthNames)) {
+        if (lowerView.includes(monthName)) {
+            month = monthNumber;
+            break;
+        }
+    }
+    
+    // Buscar año (4 dígitos)
+    const yearMatch = currentView.match(/\b(20\d{2})\b/);
+    if (yearMatch) {
+        year = parseInt(yearMatch[1]);
+    }
+    
+    // Método alternativo si no se encuentra
+    if (!month || !year) {
+        console.log('⚠️ Usando método alternativo para parsear fecha');
+        const today = new Date();
+        month = today.getMonth() + 1;
+        year = today.getFullYear();
+    }
+    
+    if (month && year) {
+        currentCalendarMonth = month;
+        currentCalendarYear = year;
+        console.log(`📅 Calendario actualizado: Mes ${month}, Año ${year}`);
+    } else {
+        console.log('❌ No se pudo determinar mes/año del calendario');
+    }
+}
+
+// Configurar eventos de clic para AdminLTE
+function setupCalendarClickEvents() {
+    document.addEventListener('click', function(e) {
+        // Buscar el elemento de día más cercano
+        let dayElement = e.target;
+        while (dayElement && !dayElement.classList.contains('day') && 
+               !dayElement.classList.contains('old') && !dayElement.classList.contains('new')) {
+            dayElement = dayElement.parentElement;
+        }
+        
+        if (dayElement && (dayElement.classList.contains('day') || 
+            dayElement.classList.contains('old') || 
+            dayElement.classList.contains('new'))) {
+            
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            
+            console.log('🖱️ Click detectado en elemento del calendario:', dayElement);
+            
+            const dateStr = extractDateFromClickedDay(dayElement);
+            if (dateStr) {
+                console.log('📅 Fecha procesada del click:', dateStr);
+                handleDateSelection(dateStr, dayElement);
+            } else {
+                console.log('❌ No se pudo extraer fecha del elemento:', dayElement);
+            }
+            
+            return false;
+        }
+    }, true);
+}
+
+// Extraer fecha desde un día clickeado - CORREGIDO
+// Extraer fecha desde un día clickeado - SOLO EL DÍA, SIN INDICADORES
+function extractDateFromClickedDay(dayElement) {
+    if (!currentCalendarMonth || !currentCalendarYear) {
+        console.log('❌ No hay mes/año actual del calendario');
+        return null;
+    }
+    
+    try {
+        // CLONAR el elemento para trabajar con una copia sin los indicadores
+        const tempElement = dayElement.cloneNode(true);
+        
+        // REMOVER todos los indicadores de casos del elemento clonado
+        const indicators = tempElement.querySelectorAll('.date-cases-indicator');
+        indicators.forEach(indicator => indicator.remove());
+        
+        // Ahora extraer el texto limpio (solo el número del día)
+        let dayText = tempElement.textContent.trim();
+        
+        // Limpiar espacios extra y tomar solo el primer número
+        dayText = dayText.replace(/\s+/g, ' ').trim();
+        const dayMatch = dayText.match(/^\d+/); // Solo números al inicio
+        
+        if (!dayMatch) {
+            console.log('❌ No se encontró número de día en:', dayText);
+            return null;
+        }
+        
+        const day = parseInt(dayMatch[0]);
+        
+        if (isNaN(day) || day < 1 || day > 31) {
+            console.log('❌ Día inválido:', day);
+            return null;
+        }
+        
+        // Determinar mes y año reales basados en las clases
+        let actualMonth = currentCalendarMonth;
+        let actualYear = currentCalendarYear;
+        
+        if (dayElement.classList.contains('old')) {
+            // Día del mes anterior
+            actualMonth = currentCalendarMonth - 1;
+            if (actualMonth === 0) {
+                actualMonth = 12;
+                actualYear = currentCalendarYear - 1;
+            }
+            console.log('📅 Es un día del mes anterior:', {actualMonth, actualYear});
+        } else if (dayElement.classList.contains('new')) {
+            // Día del mes siguiente
+            actualMonth = currentCalendarMonth + 1;
+            if (actualMonth === 13) {
+                actualMonth = 1;
+                actualYear = currentCalendarYear + 1;
+            }
+            console.log('📅 Es un día del mes siguiente:', {actualMonth, actualYear});
+        } else {
+            console.log('📅 Es un día del mes actual');
+        }
+        
+        const dateStr = `${actualYear}-${actualMonth.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+        console.log('✅ Fecha extraída del día clickeado:', dateStr, '(día limpio:', day + ')');
+        return dateStr;
+        
+    } catch (error) {
+        console.error('❌ Error extrayendo fecha:', error);
+        return null;
+    }
+}
+
+// Configurar eventos de clic para AdminLTE - MEJORADA
+function setupCalendarClickEvents() {
+    document.addEventListener('click', function(e) {
+        // Buscar el elemento de día más cercano
+        let dayElement = e.target;
+        
+        // Si se hizo click directamente en un indicador, usar el padre (el día)
+        if (dayElement.classList?.contains('date-cases-indicator')) {
+            dayElement = dayElement.parentElement;
+        }
+        
+        // Subir hasta encontrar un elemento con clase day, old o new
+        while (dayElement && 
+               !dayElement.classList?.contains('day') && 
+               !dayElement.classList?.contains('old') && 
+               !dayElement.classList?.contains('new')) {
+            dayElement = dayElement.parentElement;
+            if (!dayElement || dayElement === document.body) {
+                dayElement = null;
+                break;
+            }
+        }
+        
+        if (dayElement) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            
+            console.log('🖱️ Click detectado en:', {
+                tag: dayElement.tagName,
+                classes: dayElement.className,
+                textContent: dayElement.textContent
+            });
+            
+            const dateStr = extractDateFromClickedDay(dayElement);
+            if (dateStr) {
+                console.log('📅 Fecha procesada del click:', dateStr);
+                handleDateSelection(dateStr, dayElement);
+            } else {
+                console.log('❌ No se pudo extraer fecha del elemento');
+            }
+            
+            return false;
+        }
+    }, true);
+}
+
+// Destacar fechas en el calendario AdminLTE - CORREGIDA
+function highlightAdminLTEDates() {
+    if (!currentCalendarMonth || !currentCalendarYear) {
+        console.log('❌ No hay mes/año actual para destacar fechas');
+        return;
+    }
+    
+    const days = document.querySelectorAll('.day, .old, .new');
+    let highlighted = 0;
+    
+    console.log(`🟡 Destacando fechas para mes ${currentCalendarMonth}, año ${currentCalendarYear}`);
+    console.log(`📊 Días encontrados en el calendario: ${days.length}`);
+    
+    days.forEach(dayElement => {
+        // CLONAR el elemento para obtener solo el número del día (sin indicadores previos)
+        const tempElement = dayElement.cloneNode(true);
+        
+        // Remover cualquier indicador existente en el clon
+        const existingIndicators = tempElement.querySelectorAll('.date-cases-indicator');
+        existingIndicators.forEach(indicator => indicator.remove());
+        
+        // Extraer el número del día limpio
+        let dayText = tempElement.textContent.trim();
+        dayText = dayText.replace(/\s+/g, ' ').trim();
+        const dayMatch = dayText.match(/^\d+/);
+        
+        if (!dayMatch) {
+            return; // Saltar si no tiene número de día
+        }
+        
+        const day = parseInt(dayMatch[0]);
+        
+        if (isNaN(day) || day < 1 || day > 31) {
+            return;
+        }
+        
+        // Determinar la fecha REAL de este elemento del calendario
+        let actualMonth = currentCalendarMonth;
+        let actualYear = currentCalendarYear;
+        
+        if (dayElement.classList.contains('old')) {
+            // Día del mes anterior
+            actualMonth = currentCalendarMonth - 1;
+            if (actualMonth === 0) {
+                actualMonth = 12;
+                actualYear = currentCalendarYear - 1;
+            }
+        } else if (dayElement.classList.contains('new')) {
+            // Día del mes siguiente
+            actualMonth = currentCalendarMonth + 1;
+            if (actualMonth === 13) {
+                actualMonth = 1;
+                actualYear = currentCalendarYear + 1;
+            }
+        }
+        
+        const dateStr = `${actualYear}-${actualMonth.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+        
+        // Verificar si esta fecha tiene casos
+        if (casesByDate[dateStr]) {
+            const casesCount = casesByDate[dateStr].length;
+            
+            // Remover indicador anterior si existe
+            const oldIndicator = dayElement.querySelector('.date-cases-indicator');
+            if (oldIndicator) oldIndicator.remove();
+            
+            // Crear y agregar indicador
+            const indicator = document.createElement('span');
+            indicator.className = 'date-cases-indicator';
+            indicator.textContent = casesCount;
+            indicator.style.cssText = `
+                position: absolute;
+                top: 2px;
+                right: 2px;
+                background: ${getColorByCasesCount(casesCount)};
+                color: white;
+                border-radius: 50%;
+                width: 18px;
+                height: 18px;
+                font-size: 10px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: bold;
+                z-index: 10;
+                cursor: pointer;
+            `;
+            
+            // Usar closure para capturar la fecha correcta
+            indicator.addEventListener('click', (function(date, element) {
+                return function(e) {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    console.log('🎯 Indicador clickeado para fecha:', date);
+                    handleDateSelection(date, element);
+                };
+            })(dateStr, dayElement));
+            
+            dayElement.style.position = 'relative';
+            dayElement.appendChild(indicator);
+            highlighted++;
+            
+            console.log(`📍 Destacado día ${day} -> ${dateStr}: ${casesCount} casos`);
+        }
+    });
+    
+    console.log(`✅ ${highlighted} fechas destacadas con casos en este mes`);
+}
+
+// Cargar estadísticas del mes actual
+function loadCurrentMonthStats() {
+    if (!currentCalendarMonth || !currentCalendarYear) return;
+    
+    const monthStr = `${currentCalendarYear}-${currentCalendarMonth.toString().padStart(2, '0')}`;
+    const monthCases = casesByMonth[monthStr] || [];
+    
+    // Actualizar las estadísticas mensuales
+    updateMonthlyStats(monthCases, monthStr);
+}
+
+// Actualizar estadísticas mensuales
+function updateMonthlyStats(monthCases, monthStr) {
+    const totalCases = monthCases.length;
+    
+    if (document.getElementById('today-cases')) {
+        document.getElementById('today-cases').textContent = totalCases.toLocaleString();
+    }
+    
+    const maxCasesMonthly = Math.max(1, ...Object.values(casesByMonth).map(arr => arr.length));
+    const progressPercentage = Math.min(100, (totalCases / maxCasesMonthly) * 100);
+    if (document.getElementById('today-progress')) {
+        document.getElementById('today-progress').style.width = progressPercentage + '%';
+    }
+    
+    const uniqueStations = new Set(monthCases.map(crime => crime.comisaria_hecho).filter(Boolean)).size;
+    if (document.getElementById('active-stations')) {
+        document.getElementById('active-stations').textContent = uniqueStations;
+        document.getElementById('stations-progress').style.width = Math.min(100, (uniqueStations / 20) * 100) + '%';
+    }
+    
+    const uniqueCrimeTypes = new Set(monthCases.map(crime => crime.modalidad_hecho).filter(Boolean)).size;
+    if (document.getElementById('crime-types-count')) {
+        document.getElementById('crime-types-count').textContent = uniqueCrimeTypes;
+        document.getElementById('types-progress').style.width = Math.min(100, (uniqueCrimeTypes / 15) * 100) + '%';
+    }
+    
+    const turnos = {};
+    monthCases.forEach(crime => {
+        if (crime.turno_hecho) {
+            turnos[crime.turno_hecho] = (turnos[crime.turno_hecho] || 0) + 1;
+        }
+    });
+    
+    const activeTurno = Object.entries(turnos).sort((a, b) => b[1] - a[1])[0];
+    if (activeTurno && document.getElementById('active-turno')) {
+        document.getElementById('active-turno').textContent = activeTurno[0];
+        document.getElementById('turno-progress').style.width = Math.min(100, (activeTurno[1] / totalCases) * 100) + '%';
+    }
+}
+
+// Manejar selección de fecha
+function handleDateSelection(dateStr, element) {
+    console.log('🟡 Iniciando selección de fecha:', dateStr);
+    
+    if (!dateStr || dateStr.includes('undefined') || dateStr.includes('NaN')) {
+        console.log('❌ Fecha inválida:', dateStr);
+        return;
+    }
+    
+    selectedDate = dateStr;
+    
+    // Remover selección previa
+    document.querySelectorAll('.day.selected, .old.selected, .new.selected').forEach(el => {
+        el.classList.remove('selected');
+    });
+    
+    // Agregar clase de selección al elemento clickeado
+    element.classList.add('selected');
+    
+    // Mostrar casos de la fecha seleccionada
+    showCasesForDate(dateStr);
+    
+    // Actualizar información de la fecha seleccionada
+    updateSelectedDateInfo(dateStr);
+}
+
+// Mostrar casos para una fecha específica
+function showCasesForDate(dateStr) {
+    console.log(`🔍 Buscando casos para: ${dateStr}`);
+    
+    const cases = casesByDate[dateStr] || [];
+    console.log(`📊 Encontrados ${cases.length} casos para esta fecha`);
+    
+    // Actualizar tasks
+    updateTasksWithCases(cases, dateStr);
+    
+    // Actualizar información de la fecha seleccionada
+    updateSelectedDateInfo(dateStr);
+    
+    // Actualizar detalles del caso
+    updateCaseDetails(cases, dateStr);
+}
+
+// Actualizar información de la fecha seleccionada
+function updateSelectedDateInfo(dateStr) {
+    try {
+        const [year, month, day] = dateStr.split('-').map(Number);
+        if (isNaN(year) || isNaN(month) || isNaN(day)) return;
+        
+        const date = new Date(year, month - 1, day);
+        const formattedDate = date.toLocaleDateString('es-ES', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+        
+        const cases = casesByDate[dateStr] || [];
+        const casesCount = cases.length;
+        
+        if (document.getElementById('selected-date-text')) {
+            document.getElementById('selected-date-text').textContent = `Fecha seleccionada: ${formattedDate}`;
+        }
+        if (document.getElementById('cases-count-info')) {
+            document.getElementById('cases-count-info').textContent = `${casesCount} caso${casesCount !== 1 ? 's' : ''} registrado${casesCount !== 1 ? 's' : ''} para esta fecha`;
+        }
+        if (document.getElementById('date-selection-info')) {
+            document.getElementById('date-selection-info').style.display = 'block';
+        }
+        
+    } catch (error) {
+        console.error('❌ Error actualizando información de fecha:', error);
+    }
+}
+
+// Actualizar tasks con casos
+function updateTasksWithCases(cases, dateStr) {
+    const tasksContainer = document.querySelector('.todo-list');
+    if (!tasksContainer) return;
+    
+    // Limpiar tasks existentes
+    tasksContainer.innerHTML = '';
+    
+    if (cases.length === 0) {
+        tasksContainer.innerHTML = `
+            <li>
+                <span class="text" style="color: #999; font-style: italic;">
+                    <i class="fa fa-info-circle"></i> No hay casos registrados para el ${dateStr}
+                </span>
+            </li>
+        `;
+        return;
+    }
+    
+    // Crear HTML de tasks
+    let tasksHTML = '';
+    
+    cases.forEach((crime, index) => {
+        const fecha = crime.fecha_hora_hecho ? new Date(crime.fecha_hora_hecho) : null;
+        const hora = fecha ? fecha.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }) : 'N/A';
+        
+        let labelClass = 'label-default';
+        const delito = crime.modalidad_hecho || crime.subtipo_hecho || 'No especificado';
+        if (delito.includes('ROBO')) labelClass = 'label-danger';
+        else if (delito.includes('HURTO')) labelClass = 'label-warning';
+        else if (delito.includes('AGRAVADO')) labelClass = 'label-danger';
+        else if (delito.includes('LESIONES')) labelClass = 'label-info';
+        
+        tasksHTML += `
+            <li>
+                <span class="handle">
+                    <i class="fa fa-ellipsis-v"></i>
+                    <i class="fa fa-ellipsis-v"></i>
+                </span>
+                <input type="checkbox" value="" name=""/>
+                <span class="text">
+                    <strong>${crime.comisaria_hecho || 'Comisaría no especificada'}</strong>
+                    <br>
+                    <small style="color: #0073b7; font-weight: bold;">${delito}</small>
+                    <br>
+                    <small style="color: #666;">
+                        <i class="fa fa-map-marker"></i> 
+                        ${crime.direccion_hecho ? 
+                            (crime.direccion_hecho.length > 50 ? 
+                             crime.direccion_hecho.substring(0, 50) + '...' : 
+                             crime.direccion_hecho) : 
+                            'Dirección no especificada'}
+                    </small>
+                </span>
+                <small class="label ${labelClass}">
+                    <i class="fa fa-clock-o"></i> ${hora}
+                </small>
+                <div class="tools">
+                    <i class="fa fa-map-marker" onclick="showCaseOnMap(${crime.id_dgc})" title="Ver en mapa"></i>
+                    <i class="fa fa-info-circle" onclick="showCaseDetailsCalendar(${crime.id_dgc})" title="Ver detalles"></i>
+                </div>
+            </li>
+        `;
+    });
+    
+    tasksContainer.innerHTML = tasksHTML;
+}
+
+// Función para actualizar los detalles del caso
+function updateCaseDetails(cases, dateStr) {
+    const detailsSection = document.getElementById('case-details-section');
+    const detailsContent = document.getElementById('case-details-content');
+    
+    if (!detailsSection) {
+        console.log('❌ No se encontró la sección de detalles');
+        return;
+    }
+    
+    // Resetear índice de navegación
+    currentCaseIndex = 0;
+    
+    if (cases.length === 0) {
+        detailsContent.innerHTML = `
+            <div class="alert alert-info" style="color: #333;">
+                <i class="fa fa-info-circle"></i> No hay casos registrados para la fecha seleccionada.
+            </div>
+        `;
+        detailsSection.style.display = 'block';
+        return;
+    }
+    
+    // Mostrar el caso actual
+    showCurrentCaseDetails(cases, dateStr);
+}
+
+// Mostrar detalles del caso actual
+function showCurrentCaseDetails(cases, dateStr) {
+    const detailsContent = document.getElementById('case-details-content');
+    const currentCase = cases[currentCaseIndex];
+    
+    if (!currentCase) {
+        return;
+    }
+    
+    const fecha = currentCase.fecha_hora_hecho ? new Date(currentCase.fecha_hora_hecho) : null;
+    const hora = fecha ? fecha.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }) : 'N/A';
+    
+    // Navegación si hay más de un caso
+    let navigationHTML = '';
+    if (cases.length > 1) {
+        navigationHTML = `
+            <div class="text-center" style="margin-bottom: 15px;">
+                <div class="btn-group">
+                    <button class="btn btn-default" onclick="showPreviousCase()" ${currentCaseIndex === 0 ? 'disabled' : ''}>
+                        <i class="fa fa-chevron-left"></i> Anterior
+                    </button>
+                    <button class="btn btn-default" style="cursor: default; background: #0073b7; color: white; border-color: #0073b7;">
+                        Caso ${currentCaseIndex + 1} de ${cases.length}
+                    </button>
+                    <button class="btn btn-default" onclick="showNextCase()" ${currentCaseIndex === cases.length - 1 ? 'disabled' : ''}>
+                        Siguiente <i class="fa fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        `;
+    }
+    
+    const detailsHTML = navigationHTML + `
+        <div class="case-detail-item">
+            <h4 style="margin-top: 0; color: #0073b7; border-bottom: 2px solid #0073b7; padding-bottom: 8px;">
+                <i class="fa fa-shield"></i> Caso ${currentCaseIndex + 1} - ${currentCase.modalidad_hecho || 'Delito no especificado'}
+            </h4>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <table class="table table-condensed">
+                        <tr>
+                            <td><strong><i class="fa fa-calendar"></i> Fecha:</strong></td>
+                            <td>${fecha ? fecha.toLocaleDateString('es-ES') : 'N/A'}</td>
+                        </tr>
+                        <tr>
+                            <td><strong><i class="fa fa-clock-o"></i> Hora:</strong></td>
+                            <td>${hora}</td>
+                        </tr>
+                        <tr>
+                            <td><strong><i class="fa fa-building"></i> Comisaría:</strong></td>
+                            <td>${currentCase.comisaria_hecho || 'No especificada'}</td>
+                        </tr>
+                        <tr>
+                            <td><strong><i class="fa fa-map-marker"></i> Distrito:</strong></td>
+                            <td>${currentCase.distrito_hecho || 'No especificado'}</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="col-md-6">
+                    <table class="table table-condensed">
+                        <tr>
+                            <td><strong><i class="fa fa-exclamation-triangle"></i> Tipo:</strong></td>
+                            <td><span class="label label-warning">${currentCase.tipo_hecho || 'No especificado'}</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong><i class="fa fa-tag"></i> Subtipo:</strong></td>
+                            <td>${currentCase.subtipo_hecho || 'No especificado'}</td>
+                        </tr>
+                        <tr>
+                            <td><strong><i class="fa fa-cog"></i> Modalidad:</strong></td>
+                            <td><span class="label label-danger">${currentCase.modalidad_hecho || 'No especificado'}</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong><i class="fa fa-sun-o"></i> Turno:</strong></td>
+                            <td><span class="label label-info">${currentCase.turno_hecho || 'No especificado'}</span></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table table-condensed">
+                        <tr>
+                            <td style="width: 100px;"><strong><i class="fa fa-road"></i> Dirección:</strong></td>
+                            <td>${currentCase.direccion_hecho || 'No especificada'}</td>
+                        </tr>
+                        <tr>
+                            <td><strong><i class="fa fa-id-card"></i> ID Caso:</strong></td>
+                            <td><code>${currentCase.id_dgc || 'N/A'}</code></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="text-center" style="margin-top: 10px;">
+<button class="btn btn-xs btn-primary" onclick="showCaseOnMap(${currentCase.id_dgc})">
+    <i class="fa fa-map-marker"></i> Ver en Mapa
+</button>
+                <button class="btn btn-xs btn-info" onclick="showCaseDetailsCalendar(${currentCase.id_dgc})">
+                    <i class="fa fa-list"></i> Ver Detalles Completos
+                </button>
+            </div>
+        </div>
+    `;
+    
+    detailsContent.innerHTML = detailsHTML;
+    document.getElementById('case-details-section').style.display = 'block';
+}
+
+// Función para navegar al caso anterior
+function showPreviousCase() {
+    if (currentCaseIndex > 0) {
+        currentCaseIndex--;
+        const cases = casesByDate[selectedDate] || [];
+        showCurrentCaseDetails(cases, selectedDate);
+    }
+}
+
+// Función para navegar al caso siguiente
+function showNextCase() {
+    const cases = casesByDate[selectedDate] || [];
+    if (currentCaseIndex < cases.length - 1) {
+        currentCaseIndex++;
+        showCurrentCaseDetails(cases, selectedDate);
+    }
+}
+
+// Funciones auxiliares
+function closeCaseDetails() {
+    const detailsSection = document.getElementById('case-details-section');
+    if (detailsSection) detailsSection.style.display = 'none';
+}
+
+function clearDateSelection() {
+    selectedDate = null;
+    const dateSelectionInfo = document.getElementById('date-selection-info');
+    if (dateSelectionInfo) dateSelectionInfo.style.display = 'none';
+    
+    const detailsSection = document.getElementById('case-details-section');
+    if (detailsSection) detailsSection.style.display = 'none';
+    
+    document.querySelectorAll('.day.selected, .old.selected, .new.selected').forEach(el => {
+        el.classList.remove('selected');
+    });
+    
+    // Limpiar también la paginación del To Do List
+    clearMapView();
+}
+
+function restoreDefaultTasks() {
+    const tasksContainer = document.querySelector('.todo-list');
+    if (tasksContainer) {
+        tasksContainer.innerHTML = `
+            <li>
+                <span class="handle">
+                    <i class="fa fa-ellipsis-v"></i>
+                    <i class="fa fa-ellipsis-v"></i>
+                </span>
+                <input type="checkbox" value="" name=""/>
+                <span class="text">Selecciona una fecha en el calendario para ver los casos</span>
+                <small class="label label-default"><i class="fa fa-clock-o"></i> Información</small>
+                <div class="tools">
+                    <i class="fa fa-info-circle"></i>
+                </div>
+            </li>
+        `;
+    }
+}
+
+function getColorByCasesCount(count) {
+    if (count <= 3) return '#00a65a';
+    if (count <= 10) return '#f39c12';
+    return '#dd4b39';
+}
+
+// Funciones de utilidad para el calendario
+function showTodayCases() {
+    const today = new Date();
+    const todayStr = formatDateToYYYYMMDD(today);
+    console.log('📅 Mostrando casos de hoy:', todayStr);
+    
+    // Buscar el elemento del día de hoy en el calendario
+    const todayElement = findCalendarElementForDate(todayStr);
+    if (todayElement) {
+        handleDateSelection(todayStr, todayElement);
+    } else {
+        alert('No se pudo encontrar el día de hoy en el calendario actual');
+    }
+}
+
+function showYesterdayCases() {
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const yesterdayStr = formatDateToYYYYMMDD(yesterday);
+    console.log('📅 Mostrando casos de ayer:', yesterdayStr);
+    
+    const yesterdayElement = findCalendarElementForDate(yesterdayStr);
+    if (yesterdayElement) {
+        handleDateSelection(yesterdayStr, yesterdayElement);
+    } else {
+        alert('No se pudo encontrar el día de ayer en el calendario actual');
+    }
+}
+
+function findCalendarElementForDate(dateStr) {
+    const [year, month, day] = dateStr.split('-').map(Number);
+    const days = document.querySelectorAll('.day, .old, .new');
+    
+    for (let dayElement of days) {
+        const elementDateStr = extractDateFromClickedDay(dayElement);
+        if (elementDateStr === dateStr) {
+            return dayElement;
+        }
+    }
+    return null;
+}
+
+function formatDateToYYYYMMDD(date) {
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    return `${year}-${month}-${day}`;
+}
+
+// Placeholder functions para compatibilidad
+function showCaseOnMap(caseId) {
+    console.log('📍 Mostrando caso en mapa:', caseId);
+    // Implementar lógica para mostrar caso en mapa
+}
+
+function showCaseDetailsCalendar(caseId) {
+    console.log('📋 Mostrando detalles completos:', caseId);
+    // Implementar lógica para mostrar detalles completos
+}
+
+// Inicializar calendario cuando los datos estén listos
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('📅 Iniciando carga del calendario...');
+    
+    const checkData = setInterval(() => {
+        if (window.crimeData && window.crimeData.length > 0) {
+            clearInterval(checkData);
+            console.log('✅ Datos cargados, inicializando calendario...');
+            setTimeout(initCalendar, 100);
+        }
+    }, 500);
+});
+</script>
+
+<script>
+// Variables para el mini mapa
+var miniMap = null;
+var miniMapMarker = null;
+var currentMiniMapCase = null;
+
+// Función para mostrar un caso en el mini mapa
+function showCaseInMiniMap(caseId, scrollToMap = true) {
+    console.log('🗺️ Mostrando caso en mini mapa:', caseId);
+    
+    // Buscar el caso en los datos
+    const crime = crimeData.find(c => c.id_dgc === caseId);
+    if (!crime) {
+        console.log('❌ Caso no encontrado:', caseId);
+        return;
+    }
+    
+    // Validar coordenadas
+    if (!crime.lat_hecho || !crime.long_hecho || 
+        isNaN(crime.lat_hecho) || isNaN(crime.long_hecho)) {
+        console.log('❌ Coordenadas inválidas para el caso:', caseId);
+        alert('Este caso no tiene coordenadas válidas para mostrar en el mapa.');
+        return;
+    }
+    
+    currentMiniMapCase = crime;
+    
+    // Mostrar el contenedor del mapa
+    const mapContainer = document.getElementById('mini-map-container');
+    mapContainer.style.display = 'block';
+    
+    // Inicializar el mapa si no existe
+    if (!miniMap) {
+        initMiniMap();
+    }
+    
+    // Centrar el mapa en las coordenadas del caso
+    const latLng = [crime.lat_hecho, crime.long_hecho];
+    miniMap.setView(latLng, 16);
+    
+    // Remover marcador anterior si existe
+    if (miniMapMarker) {
+        miniMap.removeLayer(miniMapMarker);
+    }
+    
+    // Agregar nuevo marcador
+    miniMapMarker = L.marker(latLng)
+        .addTo(miniMap)
+        .bindPopup(`
+            <div style="min-width: 200px;">
+                <strong>${crime.comisaria_hecho || 'Comisaría no especificada'}</strong><br>
+                <small>${crime.modalidad_hecho || 'Delito no especificado'}</small><br>
+                <small>${crime.direccion_hecho || 'Dirección no especificada'}</small>
+            </div>
+        `);
+    
+    // Actualizar información del caso
+    updateMiniCaseInfo(crime);
+    
+    // Resaltar el item en la lista
+    highlightCaseInList(caseId);
+    
+    // Scroll al mapa si se solicita
+    if (scrollToMap) {
+        mapContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+    
+    console.log('✅ Caso mostrado en mini mapa:', crime);
+}
+
+// Inicializar el mini mapa
+function initMiniMap() {
+    console.log('🟡 Inicializando mini mapa...');
+    
+    const miniMapElement = document.getElementById('mini-case-map');
+    if (!miniMapElement) {
+        console.log('❌ No se encontró el elemento del mini mapa');
+        return;
+    }
+    
+    try {
+        miniMap = L.map('mini-case-map').setView([-12.046, -77.031], 12);
+        
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors',
+            maxZoom: 18
+        }).addTo(miniMap);
+        
+        console.log('✅ Mini mapa inicializado correctamente');
+    } catch (error) {
+        console.error('❌ Error inicializando mini mapa:', error);
+    }
+}
+
+// Actualizar información del caso en el mini mapa
+function updateMiniCaseInfo(crime) {
+    const infoElement = document.getElementById('mini-case-info');
+    const addressElement = document.getElementById('mini-case-address');
+    
+    if (!infoElement || !addressElement) return;
+    
+    const fecha = crime.fecha_hora_hecho ? new Date(crime.fecha_hora_hecho) : null;
+    const fechaStr = fecha ? fecha.toLocaleDateString('es-ES') : 'Fecha no disponible';
+    
+    addressElement.innerHTML = `
+        <strong>${crime.comisaria_hecho || 'Comisaría no especificada'}</strong><br>
+        ${crime.modalidad_hecho || 'Delito no especificado'}<br>
+        <strong>Dirección:</strong> ${crime.direccion_hecho || 'No especificada'}<br>
+        <strong>Fecha:</strong> ${fechaStr}<br>
+        <strong>Coordenadas:</strong> ${crime.lat_hecho?.toFixed(6)}, ${crime.long_hecho?.toFixed(6)}
+    `;
+}
+
+// Cerrar el mini mapa
+function closeMiniMap() {
+    console.log('🗺️ Cerrando mini mapa...');
+    
+    const mapContainer = document.getElementById('mini-map-container');
+    if (mapContainer) {
+        mapContainer.style.display = 'none';
+    }
+    
+    // Remover highlight de la lista
+    removeHighlightFromList();
+    
+    currentMiniMapCase = null;
+}
+
+// Limpiar vista del mapa
+function clearMapView() {
+    closeMiniMap();
+    
+    // También limpiar la selección del calendario si existe
+    clearDateSelection();
+}
+
+// Resaltar caso en la lista
+function highlightCaseInList(caseId) {
+    // Remover highlight anterior
+    removeHighlightFromList();
+    
+    // Agregar highlight al caso actual
+    const caseElement = document.querySelector(`[data-case-id="${caseId}"]`);
+    if (caseElement) {
+        caseElement.classList.add('highlighted');
+        
+        // Marcar el botón de mapa como activo
+        const mapButton = caseElement.querySelector('.btn-map-mini');
+        if (mapButton) {
+            mapButton.classList.add('map-active');
+        }
+    }
+}
+
+// Remover highlight de la lista
+function removeHighlightFromList() {
+    const highlightedItems = document.querySelectorAll('.case-item.highlighted');
+    highlightedItems.forEach(item => {
+        item.classList.remove('highlighted');
+    });
+    
+    const activeButtons = document.querySelectorAll('.btn-map-mini.map-active');
+    activeButtons.forEach(button => {
+        button.classList.remove('map-active');
+    });
+}
+
+// Función para mostrar caso en mapa DESDE EL CALENDARIO (redirige al To Do List)
+function showCaseOnMap(caseId) {
+    console.log('📍 Mostrando caso en mapa desde calendario:', caseId);
+    
+    // Cerrar detalles del calendario
+    closeCaseDetails();
+    
+    // Mostrar en el mini mapa del To Do List
+    showCaseInMiniMap(caseId, true);
+    
+    // Scroll a la sección del To Do List
+    const todoListSection = document.querySelector('.box-primary');
+    if (todoListSection) {
+        todoListSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+}
+
+// Actualizar la función updateTasksWithCases para incluir los botones de mapa
+function updateTasksWithCases(cases, dateStr) {
+    const tasksContainer = document.getElementById('cases-todo-list');
+    if (!tasksContainer) return;
+    
+    // Limpiar tasks existentes
+    tasksContainer.innerHTML = '';
+    
+    if (cases.length === 0) {
+        tasksContainer.innerHTML = `
+            <li>
+                <span class="text" style="color: #999; font-style: italic;">
+                    <i class="fa fa-info-circle"></i> No hay casos registrados para el ${dateStr}
+                </span>
+            </li>
+        `;
+        return;
+    }
+    
+    // Crear HTML de tasks
+    let tasksHTML = '';
+    
+    cases.forEach((crime, index) => {
+        const fecha = crime.fecha_hora_hecho ? new Date(crime.fecha_hora_hecho) : null;
+        const hora = fecha ? fecha.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }) : 'N/A';
+        
+        let labelClass = 'label-default';
+        const delito = crime.modalidad_hecho || crime.subtipo_hecho || 'No especificado';
+        if (delito.includes('ROBO')) labelClass = 'label-danger';
+        else if (delito.includes('HURTO')) labelClass = 'label-warning';
+        else if (delito.includes('AGRAVADO')) labelClass = 'label-danger';
+        else if (delito.includes('LESIONES')) labelClass = 'label-info';
+        
+        tasksHTML += `
+            <li class="case-item" data-case-id="${crime.id_dgc}">
+                <span class="handle">
+                    <i class="fa fa-ellipsis-v"></i>
+                    <i class="fa fa-ellipsis-v"></i>
+                </span>
+                <input type="checkbox" value="" name=""/>
+                <span class="text">
+                    <strong>${crime.comisaria_hecho || 'Comisaría no especificada'}</strong>
+                    <br>
+                    <small style="color: #0073b7; font-weight: bold;">${delito}</small>
+                    <br>
+                    <small style="color: #666;">
+                        <i class="fa fa-map-marker"></i> 
+                        ${crime.direccion_hecho ? 
+                            (crime.direccion_hecho.length > 50 ? 
+                             crime.direccion_hecho.substring(0, 50) + '...' : 
+                             crime.direccion_hecho) : 
+                            'Dirección no especificada'}
+                    </small>
+                </span>
+                <small class="label ${labelClass}">
+                    <i class="fa fa-clock-o"></i> ${hora}
+                </small>
+                <div class="tools">
+                    <button class="btn btn-xs btn-default btn-map-mini" onclick="showCaseInMiniMap(${crime.id_dgc})" title="Ver en mapa">
+                        <i class="fa fa-map-marker"></i>
+                    </button>
+                    <i class="fa fa-info-circle" onclick="showCaseDetailsCalendar(${crime.id_dgc})" title="Ver detalles"></i>
+                </div>
+            </li>
+        `;
+    });
+    
+    tasksContainer.innerHTML = tasksHTML;
+}
+
+// Función placeholder para compatibilidad
+function showCaseDetailsCalendar(caseId) {
+    console.log('📋 Mostrando detalles completos desde To Do List:', caseId);
+    // Aquí puedes implementar la lógica para mostrar detalles completos
+    // Por ahora solo mostraremos un alert
+    const crime = crimeData.find(c => c.id_dgc === caseId);
+    if (crime) {
+        alert(`Detalles del caso ${caseId}:\n\nComisaría: ${crime.comisaria_hecho}\nDelito: ${crime.modalidad_hecho}\nDirección: ${crime.direccion_hecho}`);
+    }
+}
+///
+// Variables para la paginación del To Do List
+var currentCasesPage = 1;
+var casesPerPage = 5;
+var currentDateCases = [];
+var totalPages = 1;
+
+// Función para actualizar la lista de casos con paginación
+function updateTasksWithCases(cases, dateStr) {
+    const tasksContainer = document.getElementById('cases-todo-list');
+    if (!tasksContainer) return;
+    
+    // Guardar los casos actuales para la paginación
+    currentDateCases = cases;
+    currentCasesPage = 1;
+    totalPages = Math.ceil(cases.length / casesPerPage);
+    
+    // Mostrar/ocultar información de paginación
+    const paginationInfo = document.getElementById('pagination-info');
+    if (paginationInfo) {
+        paginationInfo.style.display = cases.length > casesPerPage ? 'block' : 'none';
+    }
+    
+    // Actualizar botones de paginación
+    updatePaginationButtons();
+    
+    // Mostrar la página actual
+    showCurrentPage();
+    
+    // Actualizar información de la página
+    updatePageInfo();
+}
+
+// Mostrar la página actual de casos
+function showCurrentPage() {
+    const tasksContainer = document.getElementById('cases-todo-list');
+    if (!tasksContainer || currentDateCases.length === 0) return;
+    
+    // Calcular índices para la página actual
+    const startIndex = (currentCasesPage - 1) * casesPerPage;
+    const endIndex = Math.min(startIndex + casesPerPage, currentDateCases.length);
+    const pageCases = currentDateCases.slice(startIndex, endIndex);
+    
+    // Crear HTML de tasks para la página actual
+    let tasksHTML = '';
+    
+    pageCases.forEach((crime, index) => {
+        const globalIndex = startIndex + index;
+        const fecha = crime.fecha_hora_hecho ? new Date(crime.fecha_hora_hecho) : null;
+        const hora = fecha ? fecha.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }) : 'N/A';
+        
+        let labelClass = 'label-default';
+        const delito = crime.modalidad_hecho || crime.subtipo_hecho || 'No especificado';
+        if (delito.includes('ROBO')) labelClass = 'label-danger';
+        else if (delito.includes('HURTO')) labelClass = 'label-warning';
+        else if (delito.includes('AGRAVADO')) labelClass = 'label-danger';
+        else if (delito.includes('LESIONES')) labelClass = 'label-info';
+        
+        tasksHTML += `
+            <li class="case-item" data-case-id="${crime.id_dgc}">
+                <span class="handle">
+                    <i class="fa fa-ellipsis-v"></i>
+                    <i class="fa fa-ellipsis-v"></i>
+                </span>
+                <input type="checkbox" value="" name=""/>
+                <span class="text">
+                    <strong>${crime.comisaria_hecho || 'Comisaría no especificada'}</strong>
+                    <span class="cases-counter">${globalIndex + 1}</span>
+                    <br>
+                    <small style="color: #0073b7; font-weight: bold;">${delito}</small>
+                    <br>
+                    <small style="color: #666;">
+                        <i class="fa fa-map-marker"></i> 
+                        ${crime.direccion_hecho ? 
+                            (crime.direccion_hecho.length > 40 ? 
+                             crime.direccion_hecho.substring(0, 40) + '...' : 
+                             crime.direccion_hecho) : 
+                            'Dirección no especificada'}
+                    </small>
+                </span>
+                <small class="label ${labelClass}">
+                    <i class="fa fa-clock-o"></i> ${hora}
+                </small>
+                <div class="tools">
+                    <button class="btn btn-xs btn-default btn-map-mini" onclick="showCaseInMiniMap(${crime.id_dgc})" title="Ver en mapa">
+                        <i class="fa fa-map-marker"></i>
+                    </button>
+                    <i class="fa fa-info-circle" onclick="showCaseDetailsCalendar(${crime.id_dgc})" title="Ver detalles"></i>
+                </div>
+            </li>
+        `;
+    });
+    
+    tasksContainer.innerHTML = tasksHTML;
+}
+
+// Ir a la página siguiente
+function nextCasesPage() {
+    if (currentCasesPage < totalPages) {
+        currentCasesPage++;
+        showCurrentPage();
+        updatePaginationButtons();
+        updatePageInfo();
+        
+        // Cerrar mapa al cambiar de página
+        closeMiniMap();
+    }
+}
+
+// Ir a la página anterior
+function previousCasesPage() {
+    if (currentCasesPage > 1) {
+        currentCasesPage--;
+        showCurrentPage();
+        updatePaginationButtons();
+        updatePageInfo();
+        
+        // Cerrar mapa al cambiar de página
+        closeMiniMap();
+    }
+}
+
+// Actualizar estado de los botones de paginación
+function updatePaginationButtons() {
+    const prevBtn = document.getElementById('prev-page-btn');
+    const nextBtn = document.getElementById('next-page-btn');
+    
+    if (prevBtn) {
+        prevBtn.disabled = currentCasesPage <= 1;
+    }
+    if (nextBtn) {
+        nextBtn.disabled = currentCasesPage >= totalPages;
+    }
+}
+
+// Actualizar información de la página
+function updatePageInfo() {
+    const pageInfo = document.getElementById('page-info');
+    if (pageInfo && currentDateCases.length > 0) {
+        const startIndex = (currentCasesPage - 1) * casesPerPage + 1;
+        const endIndex = Math.min(currentCasesPage * casesPerPage, currentDateCases.length);
+        
+        pageInfo.innerHTML = `
+            Mostrando casos ${startIndex}-${endIndex} de ${currentDateCases.length} 
+            (Página ${currentCasesPage} de ${totalPages})
+        `;
+    }
+}
+
+// Función para limpiar la vista (actualizada)
+function clearMapView() {
+    closeMiniMap();
+    
+    // Resetear paginación
+    currentCasesPage = 1;
+    currentDateCases = [];
+    totalPages = 1;
+    
+    // Ocultar información de paginación
+    const paginationInfo = document.getElementById('pagination-info');
+    if (paginationInfo) {
+        paginationInfo.style.display = 'none';
+    }
+    
+    // Resetear botones de paginación
+    updatePaginationButtons();
+    
+    // Restaurar lista por defecto
+    const tasksContainer = document.getElementById('cases-todo-list');
+    if (tasksContainer) {
+        tasksContainer.innerHTML = `
+            <li>
+                <span class="text" style="color: #999; font-style: italic;">
+                    <i class="fa fa-info-circle"></i> Selecciona una fecha en el calendario para ver los casos
+                </span>
+            </li>
+        `;
+    }
+    
+    // También limpiar la selección del calendario si existe
+    clearDateSelection();
+}
+
+// Función para mostrar caso en mini mapa (actualizada)
+function showCaseInMiniMap(caseId, scrollToMap = true) {
+    console.log('🗺️ Mostrando caso en mini mapa:', caseId);
+    
+    // Buscar el caso en los datos
+    const crime = crimeData.find(c => c.id_dgc === caseId);
+    if (!crime) {
+        console.log('❌ Caso no encontrado:', caseId);
+        return;
+    }
+    
+    // Validar coordenadas
+    if (!crime.lat_hecho || !crime.long_hecho || 
+        isNaN(crime.lat_hecho) || isNaN(crime.long_hecho)) {
+        console.log('❌ Coordenadas inválidas para el caso:', caseId);
+        alert('Este caso no tiene coordenadas válidas para mostrar en el mapa.');
+        return;
+    }
+    
+    currentMiniMapCase = crime;
+    
+    // Mostrar el contenedor del mapa
+    const mapContainer = document.getElementById('mini-map-container');
+    mapContainer.style.display = 'block';
+    
+    // Inicializar el mapa si no existe
+    if (!miniMap) {
+        initMiniMap();
+    }
+    
+    // Centrar el mapa en las coordenadas del caso
+    const latLng = [crime.lat_hecho, crime.long_hecho];
+    miniMap.setView(latLng, 16);
+    
+    // Remover marcador anterior si existe
+    if (miniMapMarker) {
+        miniMap.removeLayer(miniMapMarker);
+    }
+    
+    // Agregar nuevo marcador
+    miniMapMarker = L.marker(latLng)
+        .addTo(miniMap)
+        .bindPopup(`
+            <div style="min-width: 200px;">
+                <strong>${crime.comisaria_hecho || 'Comisaría no especificada'}</strong><br>
+                <small>${crime.modalidad_hecho || 'Delito no especificado'}</small><br>
+                <small>${crime.direccion_hecho || 'Dirección no especificada'}</small>
+            </div>
+        `);
+    
+    // Actualizar información del caso
+    updateMiniCaseInfo(crime);
+    
+    // Resaltar el item en la lista
+    highlightCaseInList(caseId);
+    
+    // Scroll al mapa si se solicita
+    if (scrollToMap) {
+        mapContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+    
+    console.log('✅ Caso mostrado en mini mapa:', crime);
+}
+
+</script>
+
+<script>
+    // Función para actualizar las estadísticas principales
+function updateMainStatistics() {
+    if (!crimeData || crimeData.length === 0) {
+        console.log('❌ No hay datos para actualizar estadísticas');
+        return;
+    }
+    
+    console.log('📊 Actualizando estadísticas principales...');
+    
+    // 1. Total de casos registrados
+    const totalCases = crimeData.length;
+    document.getElementById('total-cases-stat').textContent = totalCases.toLocaleString();
+    
+    // 2. Casos del año actual (2025)
+    const currentYearCases = crimeData.filter(crime => crime.año_hecho === 2025).length;
+    document.getElementById('current-year-cases').textContent = currentYearCases.toLocaleString();
+    
+    // 3. Comisarías únicas involucradas
+    const uniqueComisarias = new Set(crimeData.map(crime => crime.comisaria_hecho).filter(Boolean)).size;
+    document.getElementById('unique-comisarias').textContent = uniqueComisarias.toLocaleString();
+    
+    // 4. Robos agravados
+    const robosAgravados = crimeData.filter(crime => 
+        crime.modalidad_hecho && crime.modalidad_hecho.includes('ROBO AGRAVADO')
+    ).length;
+    document.getElementById('robos-agravados').textContent = robosAgravados.toLocaleString();
+    
+    console.log('✅ Estadísticas actualizadas:', {
+        totalCases,
+        currentYearCases,
+        uniqueComisarias,
+        robosAgravados
+    });
+}
+
+// Función para mostrar todos los casos
+function showAllCases() {
+    console.log('📋 Mostrando todos los casos...');
+    // Aplicar filtro para mostrar todos los casos
+    applyFilter('all');
+    // Scroll a la sección del mapa
+    document.querySelector('.box-solid.bg-light-blue-gradient').scrollIntoView({ 
+        behavior: 'smooth' 
+    });
+}
+
+// Función para filtrar por año actual
+function filterByCurrentYear() {
+    console.log('📅 Filtrando por año 2025...');
+    const yearFilter = document.getElementById('yearFilter');
+    if (yearFilter) {
+        yearFilter.value = '2025';
+        applyFilters();
+    }
+    // Scroll a la sección del mapa
+    document.querySelector('.box-solid.bg-light-blue-gradient').scrollIntoView({ 
+        behavior: 'smooth' 
+    });
+}
+
+// Función para mostrar estadísticas de comisarías
+function showComisariasStats() {
+    console.log('🏢 Mostrando estadísticas de comisarías...');
+    // Aquí podrías mostrar un modal o cambiar a la pestaña de comisarías en los gráficos
+    alert(`Estadísticas de Comisarías:\n\nTotal de comisarías: ${document.getElementById('unique-comisarias').textContent}\n\nPuedes ver el desglose completo en la pestaña "Por Comisaría" de los gráficos.`);
+}
+
+// Función para mostrar robos agravados
+function showRobosAgravados() {
+    console.log('🔴 Mostrando robos agravados...');
+    const crimeTypeFilter = document.getElementById('crimeTypeFilter');
+    if (crimeTypeFilter) {
+        // Buscar la opción de robo agravado
+        const options = crimeTypeFilter.options;
+        for (let i = 0; i < options.length; i++) {
+            if (options[i].text.includes('ROBO AGRAVADO')) {
+                crimeTypeFilter.value = options[i].value;
+                break;
+            }
+        }
+        applyFilters();
+    }
+    // Scroll a la sección del mapa
+    document.querySelector('.box-solid.bg-light-blue-gradient').scrollIntoView({ 
+        behavior: 'smooth' 
+    });
+}
+
+// Función auxiliar para aplicar filtros
+function applyFilter(type) {
+    const yearFilter = document.getElementById('yearFilter');
+    const crimeTypeFilter = document.getElementById('crimeTypeFilter');
+    
+    if (yearFilter && crimeTypeFilter) {
+        if (type === 'all') {
+            yearFilter.value = '';
+            crimeTypeFilter.value = '';
+        }
+        applyFilters();
+    }
+}
+
+// En la función loadJSONData, agrega esto al final:
+async function loadJSONData() {
+    try {
+        const response = await fetch('UBICACIÓN DE LOS HECHOS D. ROBO.json');
+        crimeData = await response.json();
+        
+        console.log('Datos cargados:', crimeData.length, 'registros');
+        
+        setupFilters();
+        applyDefaultFilter();
+        updateMainStatistics(); // ✅ NUEVA LÍNEA
+        
+    } catch (error) {
+        console.error('Error cargando el archivo JSON:', error);
+        loadSampleData();
+        updateMainStatistics(); // ✅ También en caso de error
+    }
+}
+</script>
+    <!-- jQuery 2.1.3 -->
+    <script src="plugins/jQuery/jQuery-2.1.3.min.js"></script>
+    <!-- jQuery UI 1.11.2 -->
+    <script src="http://code.jquery.com/ui/1.11.2/jquery-ui.min.js" type="text/javascript"></script>
+    <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+    <script>
+      $.widget.bridge('uibutton', $.ui.button);
+    </script>
+    <!-- Bootstrap 3.3.2 JS -->
+    <script src="bootstrap/js/bootstrap.min.js" type="text/javascript"></script>    
+    <!-- Morris.js charts -->
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+    <script src="plugins/morris/morris.min.js" type="text/javascript"></script>
+    <!-- Sparkline -->
+    <script src="plugins/sparkline/jquery.sparkline.min.js" type="text/javascript"></script>
+    <!-- jvectormap -->
+    <script src="plugins/jvectormap/jquery-jvectormap-1.2.2.min.js" type="text/javascript"></script>
+    <script src="plugins/jvectormap/jquery-jvectormap-world-mill-en.js" type="text/javascript"></script>
+    <!-- jQuery Knob Chart -->
+    <script src="plugins/knob/jquery.knob.js" type="text/javascript"></script>
+    <!-- daterangepicker -->
+    <script src="plugins/daterangepicker/daterangepicker.js" type="text/javascript"></script>
+    <!-- datepicker -->
+    <script src="plugins/datepicker/bootstrap-datepicker.js" type="text/javascript"></script>
+    <!-- Bootstrap WYSIHTML5 -->
+    <script src="plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js" type="text/javascript"></script>
+    <!-- iCheck -->
+    <script src="plugins/iCheck/icheck.min.js" type="text/javascript"></script>
+    <!-- Slimscroll -->
+    <script src="plugins/slimScroll/jquery.slimscroll.min.js" type="text/javascript"></script>
+    <!-- FastClick -->
+    <script src='plugins/fastclick/fastclick.min.js'></script>
+    <!-- AdminLTE App -->
+    <script src="dist/js/app.min.js" type="text/javascript"></script>
+
+    <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+    <script src="dist/js/pages/dashboard.js" type="text/javascript"></script>
+
+    <!-- AdminLTE for demo purposes -->
+    <script src="dist/js/demo.js" type="text/javascript"></script>
+  </body>
+</html>
