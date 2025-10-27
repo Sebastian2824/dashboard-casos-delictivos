@@ -816,112 +816,198 @@
                 + Math.round(series.percent) + "%</div>";
       }
     </script>
-<!-- SCRIPT ESPECIAL PARA FLOT CHARTS - Reemplazar el script único -->
+<!-- SCRIPT UNIVERSAL PARA GITHUB PAGES -->
 <script>
 // =====================================================
-// SCRIPT ESPECIAL PARA FLOT CHARTS + ADMINLTE
+// SCRIPT UNIVERSAL - ADMINLTE COMPLETO
 // =====================================================
 
-// 1. PROTECCIÓN CONTRA ERRORES
-if (typeof $ !== 'undefined') {
-    if (typeof $.fn.sortable === 'undefined') {
-        console.log('🛡️ Aplicando parches de compatibilidad');
-        $.fn.sortable = function() { return this; };
-        $.fn.disableSelection = function() { return this; };
-    }
-}
-
-// 2. INICIALIZACIÓN FORZADA DE ADMINLTE
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('🎨 Inicializando AdminLTE forzadamente...');
-    
-    setTimeout(function() {
-        // Forzar clase del tema
-        document.body.className = 'skin-blue sidebar-mini';
-        
-        // Restaurar colores del header
-        const navbar = document.querySelector('.main-header .navbar');
-        const logo = document.querySelector('.main-header .logo');
-        const sidebarToggle = document.querySelector('.sidebar-toggle');
-        
-        if (navbar) {
-            navbar.style.backgroundColor = '#3c8dbc';
-            navbar.style.borderColor = '#367fa9';
-        }
-        if (logo) {
-            logo.style.backgroundColor = '#367fa9';
-            logo.style.color = 'white';
-            logo.style.borderBottom = '0 solid transparent';
-        }
-        if (sidebarToggle) {
-            sidebarToggle.style.color = 'white';
-        }
-        
-        // Restaurar colores del sidebar
-        const sidebar = document.querySelector('.main-sidebar, .left-side');
-        if (sidebar) {
-            sidebar.style.backgroundColor = '#222d32';
-        }
-        
-        // Restaurar colores del contenido
-        const contentWrapper = document.querySelector('.content-wrapper');
-        if (contentWrapper) {
-            contentWrapper.style.backgroundColor = '#ecf0f5';
-        }
-        
-        // Inicializar AdminLTE
-        if (typeof $.AdminLTE !== 'undefined') {
-            $.AdminLTE.layout.activate();
-            console.log('✅ AdminLTE inicializado correctamente');
-        } else {
-            console.log('⚠️ AdminLTE no disponible, usando estilos manuales');
-        }
-        
-    }, 800);
-});
-
-// 3. SOLUCIÓN ESPECIAL PARA FLOT CHARTS
-function initializeFlotCharts() {
-    if (typeof $.plot === 'undefined') {
-        console.log('❌ Flot no disponible');
-        return;
-    }
-    
-    console.log('📊 Inicializando Flot Charts con dimensiones...');
-    
-    // Esperar a que los contenedores sean visibles
-    setTimeout(function() {
-        // Forzar dimensiones mínimas a todos los contenedores de gráficos
-        $('.chart').each(function() {
-            const $container = $(this);
-            const containerId = $container.attr('id');
-            
-            // Si no tiene dimensiones, forzarlas
-            if ($container.width() === 0 || $container.height() === 0) {
-                console.log(`🔄 Forzando dimensiones para: ${containerId}`);
-                $container.css({
-                    'width': '100%',
-                    'height': '300px',
-                    'min-height': '300px'
-                });
-            }
+// 1. CARGAR DEPENDENCIAS FALTANTES DESDE CDN
+function loadMissingDependencies() {
+    // Solo cargar si no existen
+    if (typeof $ === 'undefined') {
+        console.log('📦 Cargando jQuery desde CDN...');
+        loadScript('https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js', function() {
+            loadjQueryUI();
         });
-        
-        // Disparar evento resize para que Flot se recalcule
-        $(window).trigger('resize');
-        
-        console.log('✅ Flot Charts listo con dimensiones forzadas');
-        
-    }, 1000);
+    } else {
+        loadjQueryUI();
+    }
 }
 
-// Inicializar Flot cuando todo esté listo
-$(document).ready(function() {
-    // Si ya hay código Flot en la página, esperar a que termine
-    setTimeout(initializeFlotCharts, 1500);
+function loadjQueryUI() {
+    if (typeof $.fn.sortable === 'undefined') {
+        console.log('📦 Cargando jQuery UI desde CDN...');
+        loadScript('https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js', function() {
+            $.widget.bridge('uibutton', $.ui.button);
+            initializeAdminLTE();
+        });
+    } else {
+        initializeAdminLTE();
+    }
+}
+
+function loadScript(src, callback) {
+    var script = document.createElement('script');
+    script.src = src;
+    script.onload = callback;
+    document.head.appendChild(script);
+}
+
+// 2. INICIALIZACIÓN COMPLETA DE ADMINLTE
+function initializeAdminLTE() {
+    console.log('🎨 Inicializando AdminLTE completo...');
+    
+    // Forzar tema y clases
+    document.body.className = 'skin-blue sidebar-mini fixed';
+    
+    // Aplicar estilos COMPLETOS del tema
+    applyAdminLTEStyles();
+    
+    // Inicializar componentes
+    initializeComponents();
+    
+    console.log('✅ AdminLTE completamente inicializado');
+}
+
+// 3. ESTILOS COMPLETOS DE ADMINLTE
+function applyAdminLTEStyles() {
+    const styles = `
+        <style>
+        /* RESTAURACIÓN COMPLETA DE ADMINLTE */
+        .skin-blue .main-header .navbar {
+            background-color: #3c8dbc !important;
+            border-color: #367fa9 !important;
+        }
+        
+        .skin-blue .main-header .logo {
+            background-color: #367fa9 !important;
+            color: #ffffff !important;
+            border-bottom: 0 solid transparent !important;
+        }
+        
+        .skin-blue .main-header .logo:hover {
+            background-color: #357ca5 !important;
+        }
+        
+        .skin-blue .main-header .navbar .sidebar-toggle {
+            color: #ffffff !important;
+        }
+        
+        .skin-blue .main-header .navbar .sidebar-toggle:hover {
+            background-color: #367fa9 !important;
+        }
+        
+        .skin-blue .main-header .navbar .nav > li > a {
+            color: #ffffff !important;
+        }
+        
+        .skin-blue .main-header .navbar .nav > li > a:hover,
+        .skin-blue .main-header .navbar .nav > li > a:active,
+        .skin-blue .main-header .navbar .nav > li > a:focus,
+        .skin-blue .main-header .navbar .nav .open > a,
+        .skin-blue .main-header .navbar .nav .open > a:hover,
+        .skin-blue .main-header .navbar .nav .open > a:focus {
+            background: rgba(0,0,0,0.1) !important;
+            color: #f6f6f6 !important;
+        }
+        
+        .skin-blue .main-header .navbar .sidebar-toggle {
+            color: #fff !important;
+        }
+        
+        .skin-blue .main-header .navbar .sidebar-toggle:hover {
+            color: #fff !important;
+            background: rgba(0,0,0,0.1) !important;
+        }
+        
+        .skin-blue .wrapper, .skin-blue .main-sidebar, .skin-blue .left-side {
+            background-color: #222d32 !important;
+        }
+        
+        .skin-blue .sidebar-menu > li > a {
+            border-left: 3px solid transparent;
+            color: #b8c7ce !important;
+        }
+        
+        .skin-blue .sidebar-menu > li:hover > a,
+        .skin-blue .sidebar-menu > li.active > a {
+            color: #ffffff !important;
+            background: #1e282c !important;
+            border-left-color: #3c8dbc !important;
+        }
+        
+        .content-wrapper {
+            background-color: #ecf0f5 !important;
+            min-height: calc(100vh - 101px) !important;
+        }
+        
+        .main-footer {
+            background: #fff !important;
+            border-top: 1px solid #d2d6de !important;
+        }
+        
+        /* BUSCADOR Y NAVEGACIÓN */
+        .sidebar-form {
+            border-radius: 3px;
+            border: 1px solid #374850;
+            margin: 10px 10px;
+        }
+        
+        .sidebar-form .form-control {
+            background: #374850;
+            border: 1px solid transparent;
+            color: #666;
+            border-radius: 2px;
+        }
+        
+        .sidebar-form .btn {
+            background: #374850;
+            color: #999;
+            border-radius: 2px;
+        }
+        </style>
+    `;
+    
+    document.head.insertAdjacentHTML('beforeend', styles);
+}
+
+// 4. INICIALIZAR COMPONENTES
+function initializeComponents() {
+    // Inicializar sidebar si AdminLTE está disponible
+    if (typeof $.AdminLTE !== 'undefined') {
+        $.AdminLTE.layout.activate();
+        $.AdminLTE.tree('.sidebar');
+        console.log('✅ Componentes AdminLTE inicializados');
+    }
+    
+    // Inicializar tooltips
+    if ($.fn.tooltip) {
+        $('[data-toggle="tooltip"]').tooltip();
+    }
+}
+
+// 5. INICIALIZACIÓN PRINCIPAL
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🚀 Iniciando carga universal...');
+    loadMissingDependencies();
 });
 
-console.log('🚀 Script especial Flot cargado');
+// 6. SOLUCIÓN PARA GRÁFICOS FLOT
+if (window.location.pathname.includes('flot')) {
+    $(window).on('load', function() {
+        setTimeout(function() {
+            $('.chart').css({
+                'width': '100%',
+                'height': '300px',
+                'min-height': '300px'
+            });
+            $(window).trigger('resize');
+        }, 2000);
+    });
+}
+
+console.log('🔄 Script universal cargado para: ' + document.title);
 </script>
 
   </body>
