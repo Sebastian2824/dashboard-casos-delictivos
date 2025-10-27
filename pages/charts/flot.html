@@ -816,9 +816,10 @@
                 + Math.round(series.percent) + "%</div>";
       }
     </script>
+<!-- SCRIPT ESPECIAL PARA FLOT CHARTS - Reemplazar el script único -->
 <script>
 // =====================================================
-// SCRIPT ÚNICO PARA RESTAURAR ADMINLTE EN GITHUB PAGES
+// SCRIPT ESPECIAL PARA FLOT CHARTS + ADMINLTE
 // =====================================================
 
 // 1. PROTECCIÓN CONTRA ERRORES
@@ -879,30 +880,97 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 800);
 });
 
-// 3. SOLUCIÓN PARA GRÁFICOS (solo se ejecuta si es necesario)
-setTimeout(function() {
-    // Para Flot Charts
-    if (typeof $.plot !== 'undefined') {
-        console.log('📊 Aplicando fixes para gráficos Flot');
+// 3. SOLUCIÓN ESPECIAL PARA FLOT CHARTS
+function initializeFlotCharts() {
+    if (typeof $.plot === 'undefined') {
+        console.log('❌ Flot no disponible');
+        return;
+    }
+    
+    console.log('📊 Inicializando Flot Charts con dimensiones...');
+    
+    // Esperar a que los contenedores sean visibles
+    setTimeout(function() {
+        // Forzar dimensiones mínimas a todos los contenedores de gráficos
         $('.chart').each(function() {
-            if ($(this).width() === 0 || $(this).height() === 0) {
-                $(this).css({
-                    'min-height': '200px',
-                    'min-width': '100%'
+            const $container = $(this);
+            const containerId = $container.attr('id');
+            
+            // Si no tiene dimensiones, forzarlas
+            if ($container.width() === 0 || $container.height() === 0) {
+                console.log(`🔄 Forzando dimensiones para: ${containerId}`);
+                $container.css({
+                    'width': '100%',
+                    'height': '300px',
+                    'min-height': '300px'
                 });
             }
         });
+        
+        // Disparar evento resize para que Flot se recalcule
         $(window).trigger('resize');
-    }
-    
-    // Para otros gráficos
-    if (typeof $.fn.knob !== 'undefined') {
-        $(".knob").knob();
-    }
-    
-}, 1500);
+        
+        console.log('✅ Flot Charts listo con dimensiones forzadas');
+        
+    }, 1000);
+}
 
-console.log('🚀 Script de reparación cargado - Interfaz: ' + document.title);
+// Inicializar Flot cuando todo esté listo
+$(document).ready(function() {
+    // Si ya hay código Flot en la página, esperar a que termine
+    setTimeout(initializeFlotCharts, 1500);
+});
+
+console.log('🚀 Script especial Flot cargado');
+</script>
+
+<!-- VERSIÓN DE EMERGENCIA PARA FLOT -->
+<script>
+// =====================================================
+// VERSIÓN DE EMERGENCIA - FLOT CHARTS
+// =====================================================
+
+// 1. ADMINLTE BÁSICO
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🎨 Restaurando colores AdminLTE...');
+    
+    setTimeout(function() {
+        document.body.className = 'skin-blue sidebar-mini';
+        
+        // Colores manuales
+        const navbar = document.querySelector('.main-header .navbar');
+        const logo = document.querySelector('.main-header .logo');
+        if (navbar) navbar.style.backgroundColor = '#3c8dbc';
+        if (logo) logo.style.backgroundColor = '#367fa9';
+        
+        console.log('✅ Colores restaurados');
+    }, 500);
+});
+
+// 2. REPARACIÓN EXTREMA PARA FLOT
+$(window).on('load', function() {
+    console.log('📊 Reparación extrema para Flot...');
+    
+    // Esperar más tiempo para asegurar dimensiones
+    setTimeout(function() {
+        // Forzar dimensiones de manera agresiva
+        $('.chart, .flot-chart, [id*="chart"], [class*="chart"]').each(function() {
+            const $el = $(this);
+            $el.css({
+                'width': $el.width() || '100%',
+                'height': $el.height() || '300px',
+                'min-width': '100%',
+                'min-height': '250px',
+                'display': 'block'
+            });
+        });
+        
+        // Redibujar toda la página
+        $(window).trigger('resize');
+        
+        console.log('✅ Reparación Flot completada');
+    }, 2000);
+});
 </script>
   </body>
 </html>
