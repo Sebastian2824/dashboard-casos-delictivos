@@ -817,38 +817,81 @@
       }
     </script>
 <!-- SCRIPT FINAL - CORRECCIÓN COMPLETA -->
-<!-- SCRIPT FINAL - FONDO AZUL USER HEADER -->
+<!-- SCRIPT FINAL - ANIMACIÓN Y BUSCADOR CORREGIDOS -->
 <script>
 // =====================================================
-// SCRIPT FINAL - TODOS LOS DETALLES CORREGIDOS
+// SCRIPT FINAL - ANIMACIÓN Y BUSCADOR CORREGIDOS
 // =====================================================
 
-// 1. REPARACIÓN COMPLETA DE COLORES Y DISEÑO
+// 1. REPARACIÓN COMPLETA CON ANIMACIÓN
 function forceAdminLTERepair() {
-    console.log('🎨 Aplicando diseño completo...');
+    console.log('🎨 Aplicando diseño completo con animación...');
     
-    // Aplicar estilos FINALES
+    // Aplicar estilos COMPLETOS
     const emergencyCSS = `
         <style id="adminlte-emergency-css">
-        /* DISEÑO COMPLETO COMO INDEX PRINCIPAL */
+        /* DISEÑO EXACTO DEL INDEX PRINCIPAL */
         body {
             background-color: #ecf0f5 !important;
             font-family: 'Source Sans Pro','Helvetica Neue',Helvetica,Arial,sans-serif !important;
         }
         
-        /* HEADER PRINCIPAL - NOMBRE BLANCO */
+        /* HEADER PRINCIPAL */
+        .main-header {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            max-height: 100px !important;
+            z-index: 1030 !important;
+        }
+        
         .main-header .navbar {
             background-color: #3c8dbc !important;
             border-color: #367fa9 !important;
+            margin-bottom: 0 !important;
+            margin-left: 230px !important;
+            border-radius: 0 !important;
         }
         
         .main-header .logo {
             background-color: #367fa9 !important;
             color: white !important;
             border-bottom: 0 solid transparent !important;
+            float: left !important;
+            height: 50px !important;
+            padding: 15px 15px !important;
+            font-size: 20px !important;
+            line-height: 20px !important;
+            width: 230px !important;
+            position: fixed !important;
+            left: 0 !important;
+            top: 0 !important;
+            z-index: 1031 !important;
+        }
+        
+        /* TOGGLE EN POSICIÓN ORIGINAL */
+        .main-header .navbar .sidebar-toggle {
+            color: white !important;
+            float: left !important;
+            padding: 15px 15px !important;
+            font-size: 16px !important;
+            background: transparent !important;
+            border: none !important;
+            margin: 0 !important;
+            display: block !important;
+        }
+        
+        .main-header .navbar .sidebar-toggle:hover {
+            background-color: #367fa9 !important;
+            color: white !important;
         }
         
         /* NOMBRE EN EL HEADER - COLOR BLANCO */
+        .navbar-custom-menu {
+            float: right !important;
+        }
+        
         .navbar-custom-menu .navbar-nav > li > a {
             color: white !important;
             background: transparent !important;
@@ -865,13 +908,45 @@ function forceAdminLTERepair() {
             font-weight: 600 !important;
         }
         
-        .main-header .navbar .sidebar-toggle {
-            color: white !important;
+        /* SIDEBAR - COMPLETAMENTE FIJO CON ANIMACIÓN */
+        .main-sidebar, .left-side {
+            background-color: #222d32 !important;
+            position: fixed !important;
+            top: 50px !important;
+            left: 0 !important;
+            bottom: 0 !important;
+            padding-top: 0 !important;
+            min-height: calc(100vh - 50px) !important;
+            width: 230px !important;
+            z-index: 810 !important;
+            overflow-y: auto !important;
+            overflow-x: hidden !important;
+            -webkit-transition: -webkit-transform 0.3s ease-in-out, width 0.3s ease-in-out !important;
+            -moz-transition: -moz-transform 0.3s ease-in-out, width 0.3s ease-in-out !important;
+            -o-transition: -o-transform 0.3s ease-in-out, width 0.3s ease-in-out !important;
+            transition: transform 0.3s ease-in-out, width 0.3s ease-in-out !important;
         }
         
-        .main-header .navbar .sidebar-toggle:hover {
-            background-color: #367fa9 !important;
-            color: white !important;
+        /* ANIMACIÓN DEL SIDEBAR AL PRESIONAR TOGGLE */
+        .sidebar-collapse .main-sidebar,
+        .sidebar-collapse .left-side {
+            -webkit-transform: translate(-230px, 0) !important;
+            -ms-transform: translate(-230px, 0) !important;
+            -o-transform: translate(-230px, 0) !important;
+            transform: translate(-230px, 0) !important;
+        }
+        
+        .sidebar-collapse .content-wrapper,
+        .sidebar-collapse .main-footer {
+            margin-left: 0 !important;
+        }
+        
+        .sidebar-open .main-sidebar,
+        .sidebar-open .left-side {
+            -webkit-transform: translate(0, 0) !important;
+            -ms-transform: translate(0, 0) !important;
+            -o-transform: translate(0, 0) !important;
+            transform: translate(0, 0) !important;
         }
         
         /* USER HEADER DROPDOWN - FONDO AZUL */
@@ -901,14 +976,6 @@ function forceAdminLTERepair() {
             display: block !important;
             font-size: 12px !important;
             margin-top: 5px !important;
-        }
-        
-        /* SIDEBAR - DISEÑO ORIGINAL */
-        .main-sidebar, .left-side {
-            background-color: #222d32 !important;
-            position: fixed !important;
-            top: 50px !important;
-            padding-top: 0 !important;
         }
         
         /* USER PANEL - COLORES CORREGIDOS */
@@ -963,6 +1030,8 @@ function forceAdminLTERepair() {
             list-style: none !important;
             margin: 0 !important;
             padding: 0 !important;
+            white-space: nowrap !important;
+            overflow: hidden !important;
         }
         
         .sidebar-menu > li {
@@ -1002,28 +1071,74 @@ function forceAdminLTERepair() {
             border-left-color: #3c8dbc !important;
         }
         
-        /* BUSCADOR */
+        /* BUSCADOR - COLORES CORREGIDOS */
         .sidebar-form {
-            border-radius: 3px !important;
-            border: 1px solid #374850 !important;
+            border-radius: 2px !important;
+            border: 1px solid #555 !important;
             margin: 10px 10px !important;
-            overflow: hidden !important;
         }
         
         .sidebar-form .form-control {
-            background: #374850 !important;
+            background: rgba(255,255,255,0.1) !important;
             border: 1px solid transparent !important;
             color: #666 !important;
             border-radius: 2px !important;
             height: 35px !important;
             font-size: 14px !important;
+            transition: all 0.3s ease !important;
+        }
+        
+        /* BUSCADOR AL ESCRIBIR - COLOR BLANCO */
+        .sidebar-form .form-control:focus {
+            background: rgba(255,255,255,0.2) !important;
+            color: white !important;
+            border-color: #555 !important;
+            box-shadow: none !important;
+        }
+        
+        .sidebar-form .form-control:focus::placeholder {
+            color: rgba(255,255,255,0.7) !important;
+        }
+        
+        .sidebar-form .btn {
+            background: rgba(255,255,255,0.1) !important;
+            color: #999 !important;
+            border-radius: 2px !important;
+            height: 35px !important;
+            border: none !important;
+            transition: all 0.3s ease !important;
+        }
+        
+        /* BOTÓN AL ESCRIBIR - COLOR BLANCO */
+        .sidebar-form .form-control:focus ~ .input-group-btn .btn {
+            color: white !important;
+            background: rgba(255,255,255,0.2) !important;
+        }
+        
+        /* ÍCONO DE BÚSQUEDA - COLOR GRIS POR DEFECTO, BLANCO AL ESCRIBIR */
+        .sidebar-form .fa-search {
+            color: #999 !important;
+            transition: color 0.3s ease !important;
+        }
+        
+        .sidebar-form .form-control:focus ~ .input-group-btn .fa-search {
+            color: white !important;
         }
         
         /* CONTENIDO PRINCIPAL */
+        .content-wrapper, .main-footer {
+            margin-left: 230px !important;
+            margin-top: 50px !important;
+            -webkit-transition: margin 0.3s ease-in-out !important;
+            -moz-transition: margin 0.3s ease-in-out !important;
+            -o-transition: margin 0.3s ease-in-out !important;
+            transition: margin 0.3s ease-in-out !important;
+        }
+        
         .content-wrapper {
             background-color: #ecf0f5 !important;
-            margin-left: 230px !important;
             min-height: calc(100vh - 101px) !important;
+            padding: 15px !important;
         }
         
         /* GRÁFICOS */
@@ -1053,51 +1168,97 @@ function forceAdminLTERepair() {
     // Agregar nuevo CSS
     document.head.insertAdjacentHTML('beforeend', emergencyCSS);
     
-    // Forzar nombre en header y user header
-    forceHeaderNameColor();
-    forceUserHeaderColor();
+    // Forzar sidebar completamente fijo
+    forceCompletelyFixedSidebar();
     
-    console.log('✅ Diseño completo aplicado');
+    // Agregar eventos al buscador
+    forceSearchBehavior();
+    
+    console.log('✅ Diseño con animación y buscador aplicado');
 }
 
-// 2. CORREGIR NOMBRE EN HEADER
-function forceHeaderNameColor() {
-    // Forzar color blanco en el nombre del header
-    const headerName = document.querySelector('.navbar-nav > .user-menu > a > span.hidden-xs');
-    if (headerName) {
-        headerName.style.color = 'white';
-        headerName.style.fontWeight = '600';
+// 2. SIDEBAR COMPLETAMENTE FIJO
+function forceCompletelyFixedSidebar() {
+    const sidebar = document.querySelector('.main-sidebar, .left-side');
+    if (sidebar) {
+        sidebar.style.position = 'fixed';
+        sidebar.style.top = '50px';
+        sidebar.style.left = '0';
+        sidebar.style.bottom = '0';
+        sidebar.style.height = 'calc(100vh - 50px)';
+        sidebar.style.overflowY = 'auto';
+        sidebar.style.overflowX = 'hidden';
+        sidebar.style.zIndex = '810';
     }
-    
-    // Forzar también cualquier otro texto en el header
-    const headerTexts = document.querySelectorAll('.navbar-custom-menu .navbar-nav > li > a');
-    headerTexts.forEach(text => {
-        text.style.color = 'white';
+}
+
+// 3. ANIMACIÓN DEL TOGGLE COMPLETA
+function forceToggleAnimation() {
+    const toggleButtons = document.querySelectorAll('.sidebar-toggle');
+    toggleButtons.forEach(button => {
+        // Solo agregar evento si no existe
+        if (!button.hasAttribute('data-listener-added')) {
+            button.setAttribute('data-listener-added', 'true');
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                const body = document.body;
+                
+                // Alternar entre colapsado y abierto
+                if (body.classList.contains('sidebar-collapse')) {
+                    body.classList.remove('sidebar-collapse');
+                    body.classList.add('sidebar-open');
+                } else {
+                    body.classList.remove('sidebar-open');
+                    body.classList.add('sidebar-collapse');
+                }
+            });
+        }
     });
 }
 
-// 3. CORREGIR FONDO DEL USER HEADER
-function forceUserHeaderColor() {
-    const userHeader = document.querySelector('.user-header');
-    if (userHeader) {
-        userHeader.style.backgroundColor = '#3c8dbc';
-        userHeader.style.color = 'white';
-        userHeader.style.textAlign = 'center';
-    }
-    
-    // Forzar también el texto dentro del user header
-    const userHeaderText = document.querySelector('.user-header p');
-    if (userHeaderText) {
-        userHeaderText.style.color = 'white';
-    }
-    
-    const userHeaderSmall = document.querySelector('.user-header small');
-    if (userHeaderSmall) {
-        userHeaderSmall.style.color = 'rgba(255,255,255,0.8)';
-    }
+// 4. COMPORTAMIENTO DEL BUSCADOR
+function forceSearchBehavior() {
+    const searchInputs = document.querySelectorAll('.sidebar-form .form-control');
+    searchInputs.forEach(input => {
+        // Evento focus - cambiar a blanco
+        input.addEventListener('focus', function() {
+            this.style.color = 'white';
+            this.style.backgroundColor = 'rgba(255,255,255,0.2)';
+            
+            // También cambiar el botón e ícono
+            const button = this.closest('.input-group').querySelector('.btn');
+            const icon = this.closest('.input-group').querySelector('.fa-search');
+            if (button) button.style.color = 'white';
+            if (icon) icon.style.color = 'white';
+        });
+        
+        // Evento blur - volver a gris
+        input.addEventListener('blur', function() {
+            if (!this.value) {
+                this.style.color = '#666';
+                this.style.backgroundColor = 'rgba(255,255,255,0.1)';
+                
+                const button = this.closest('.input-group').querySelector('.btn');
+                const icon = this.closest('.input-group').querySelector('.fa-search');
+                if (button) button.style.color = '#999';
+                if (icon) icon.style.color = '#999';
+            }
+        });
+        
+        // Evento input - mantener blanco si hay texto
+        input.addEventListener('input', function() {
+            if (this.value) {
+                this.style.color = 'white';
+                const button = this.closest('.input-group').querySelector('.btn');
+                const icon = this.closest('.input-group').querySelector('.fa-search');
+                if (button) button.style.color = 'white';
+                if (icon) icon.style.color = 'white';
+            }
+        });
+    });
 }
 
-// 4. SOLUCIÓN PARA FLOT
+// 5. SOLUCIÓN PARA FLOT
 function fixFlotDimensions() {
     if (!window.location.pathname.includes('flot')) return;
     
@@ -1117,7 +1278,7 @@ function fixFlotDimensions() {
     }, 2000);
 }
 
-// 5. INTERCEPTAR FLOT
+// 6. INTERCEPTAR FLOT
 function interceptFlotInitialization() {
     if (typeof $.plot === 'undefined') return;
     
@@ -1137,12 +1298,18 @@ function interceptFlotInitialization() {
     };
 }
 
-// 6. INICIALIZACIÓN PRINCIPAL
+// 7. INICIALIZACIÓN PRINCIPAL
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('🚀 Aplicando diseño final...');
+    console.log('🚀 Iniciando con animación y buscador...');
+    
+    // Asegurar clase inicial
+    document.body.className = 'skin-blue sidebar-mini';
     
     // Reparación inmediata
     forceAdminLTERepair();
+    
+    // Animación del toggle
+    setTimeout(forceToggleAnimation, 500);
     
     // Para Flot
     if (window.location.pathname.includes('flot')) {
@@ -1156,12 +1323,16 @@ document.addEventListener('DOMContentLoaded', function() {
     setTimeout(forceAdminLTERepair, 1000);
 });
 
-// 7. REPARACIÓN POST-CARGA
+// 8. REPARACIÓN POST-CARGA
 window.addEventListener('load', function() {
-    setTimeout(forceAdminLTERepair, 500);
+    setTimeout(function() {
+        forceAdminLTERepair();
+        forceToggleAnimation();
+        forceSearchBehavior();
+    }, 500);
 });
 
-console.log('🎉 Script final cargado - Sistema 100% completo');
+console.log('🎉 Script final con animación y buscador cargado');
 </script>
   </body>
 </html>
