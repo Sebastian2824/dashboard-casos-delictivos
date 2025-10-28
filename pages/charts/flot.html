@@ -816,26 +816,26 @@
                 + Math.round(series.percent) + "%</div>";
       }
     </script>
-<!-- SCRIPT CORREGIDO - COLORES Y DISEÑO EXACTO -->
+<!-- SCRIPT FINAL - CORRECCIÓN COMPLETA -->
 <script>
 // =====================================================
-// SCRIPT CORREGIDO - DISEÑO EXACTO COMO INDEX
+// SCRIPT FINAL - TODOS LOS DETALLES CORREGIDOS
 // =====================================================
 
-// 1. REPARACIÓN DE COLORES Y DISEÑO
+// 1. REPARACIÓN COMPLETA DE COLORES Y DISEÑO
 function forceAdminLTERepair() {
-    console.log('🎨 Aplicando diseño exacto del index...');
+    console.log('🎨 Aplicando diseño completo...');
     
-    // Aplicar estilos CORREGIDOS
+    // Aplicar estilos FINALES
     const emergencyCSS = `
         <style id="adminlte-emergency-css">
-        /* DISEÑO EXACTO COMO INDEX PRINCIPAL */
+        /* DISEÑO COMPLETO COMO INDEX PRINCIPAL */
         body {
             background-color: #ecf0f5 !important;
             font-family: 'Source Sans Pro','Helvetica Neue',Helvetica,Arial,sans-serif !important;
         }
         
-        /* HEADER PRINCIPAL */
+        /* HEADER PRINCIPAL - NOMBRE BLANCO */
         .main-header .navbar {
             background-color: #3c8dbc !important;
             border-color: #367fa9 !important;
@@ -845,11 +845,23 @@ function forceAdminLTERepair() {
             background-color: #367fa9 !important;
             color: white !important;
             border-bottom: 0 solid transparent !important;
-            font-family: 'Source Sans Pro','Helvetica Neue',Helvetica,Arial,sans-serif !important;
         }
         
-        .main-header .logo:hover {
-            background-color: #357ca5 !important;
+        /* NOMBRE EN EL HEADER - COLOR BLANCO */
+        .navbar-custom-menu .navbar-nav > li > a {
+            color: white !important;
+            background: transparent !important;
+        }
+        
+        .navbar-custom-menu .navbar-nav > li > a:hover {
+            background: rgba(0,0,0,0.1) !important;
+            color: white !important;
+        }
+        
+        /* TEXTO "Alexander Pierce" EN HEADER */
+        .navbar-nav > .user-menu > a > span.hidden-xs {
+            color: white !important;
+            font-weight: 600 !important;
         }
         
         .main-header .navbar .sidebar-toggle {
@@ -861,7 +873,7 @@ function forceAdminLTERepair() {
             color: white !important;
         }
         
-        /* SIDEBAR - MANTENER DISEÑO ORIGINAL */
+        /* SIDEBAR - DISEÑO ORIGINAL */
         .main-sidebar, .left-side {
             background-color: #222d32 !important;
             position: fixed !important;
@@ -905,7 +917,7 @@ function forceAdminLTERepair() {
             font-size: 11px !important;
         }
         
-        /* MAIN NAVIGATION - TEXTO BLANCO Y CENTRADO */
+        /* MAIN NAVIGATION - TEXTO CORRECTO */
         .sidebar-header {
             color: #4b646f !important;
             background: #1a2226 !important;
@@ -960,15 +972,7 @@ function forceAdminLTERepair() {
             border-left-color: #3c8dbc !important;
         }
         
-        /* ICONOS DEL MENÚ */
-        .sidebar-menu > li > a > .fa,
-        .sidebar-menu > li > a > .glyphicon,
-        .sidebar-menu > li > a > .ion {
-            width: 20px !important;
-            color: #b8c7ce !important;
-        }
-        
-        /* BUSCADOR - DISEÑO ORIGINAL */
+        /* BUSCADOR */
         .sidebar-form {
             border-radius: 3px !important;
             border: 1px solid #374850 !important;
@@ -985,36 +989,11 @@ function forceAdminLTERepair() {
             font-size: 14px !important;
         }
         
-        .sidebar-form .btn {
-            background: #374850 !important;
-            color: #999 !important;
-            border-radius: 2px !important;
-            height: 35px !important;
-        }
-        
         /* CONTENIDO PRINCIPAL */
         .content-wrapper {
             background-color: #ecf0f5 !important;
             margin-left: 230px !important;
             min-height: calc(100vh - 101px) !important;
-        }
-        
-        .content-header {
-            background: transparent !important;
-            padding: 15px !important;
-        }
-        
-        .content-header > h1 {
-            margin: 0 !important;
-            font-size: 24px !important;
-            color: #333 !important;
-        }
-        
-        .content-header > .breadcrumb {
-            float: right !important;
-            background: transparent !important;
-            margin-top: 0 !important;
-            margin-bottom: 0 !important;
         }
         
         /* GRÁFICOS */
@@ -1034,42 +1013,6 @@ function forceAdminLTERepair() {
             margin-bottom: 20px !important;
             box-shadow: 0 1px 1px rgba(0,0,0,0.1) !important;
         }
-        
-        .box-header {
-            color: #444 !important;
-            padding: 10px !important;
-            border-bottom: 1px solid #f4f4f4 !important;
-        }
-        
-        .box-header > .box-title {
-            font-size: 18px !important;
-            color: #444 !important;
-        }
-        
-        /* DROPDOWN USER MENU */
-        .navbar-custom-menu .dropdown-menu {
-            background: white !important;
-            border: 1px solid #d2d6de !important;
-        }
-        
-        .user-header {
-            background-color: #3c8dbc !important;
-            color: white !important;
-            text-align: center !important;
-        }
-        
-        .user-header > p {
-            color: rgba(255,255,255,0.8) !important;
-        }
-        
-        .user-body {
-            color: #333 !important;
-        }
-        
-        .user-footer {
-            background-color: #f9f9f9 !important;
-            color: #333 !important;
-        }
         </style>
     `;
     
@@ -1080,41 +1023,26 @@ function forceAdminLTERepair() {
     // Agregar nuevo CSS
     document.head.insertAdjacentHTML('beforeend', emergencyCSS);
     
-    // Forzar estructura del sidebar
-    forceSidebarStructure();
+    // Forzar nombre en header
+    forceHeaderNameColor();
     
-    console.log('✅ Diseño exacto aplicado');
+    console.log('✅ Diseño completo aplicado');
 }
 
-// 2. REPARAR ESTRUCTURA DEL SIDEBAR
-function forceSidebarStructure() {
-    // Asegurar que MAIN NAVIGATION esté en el color correcto
-    const mainNavigation = document.querySelector('.sidebar-header, .header');
-    if (mainNavigation) {
-        mainNavigation.style.color = '#4b646f';
-        mainNavigation.style.backgroundColor = '#1a2226';
-        mainNavigation.style.padding = '10px 25px 10px 15px';
-        mainNavigation.style.fontSize = '12px';
-        mainNavigation.style.textTransform = 'uppercase';
-        mainNavigation.style.fontWeight = 'bold';
+// 2. CORREGIR NOMBRE EN HEADER
+function forceHeaderNameColor() {
+    // Forzar color blanco en el nombre del header
+    const headerName = document.querySelector('.navbar-nav > .user-menu > a > span.hidden-xs');
+    if (headerName) {
+        headerName.style.color = 'white';
+        headerName.style.fontWeight = '600';
     }
     
-    // Asegurar colores del user panel
-    const userPanelInfo = document.querySelector('.user-panel .info');
-    if (userPanelInfo) {
-        userPanelInfo.style.color = '#fff';
-    }
-    
-    const userPanelName = document.querySelector('.user-panel .info p');
-    if (userPanelName) {
-        userPanelName.style.color = '#fff';
-        userPanelName.style.fontWeight = '600';
-    }
-    
-    const userPanelStatus = document.querySelector('.user-panel .info a');
-    if (userPanelStatus) {
-        userPanelStatus.style.color = '#b8c7ce';
-    }
+    // Forzar también cualquier otro texto en el header
+    const headerTexts = document.querySelectorAll('.navbar-custom-menu .navbar-nav > li > a');
+    headerTexts.forEach(text => {
+        text.style.color = 'white';
+    });
 }
 
 // 3. SOLUCIÓN PARA FLOT
@@ -1159,7 +1087,7 @@ function interceptFlotInitialization() {
 
 // 5. INICIALIZACIÓN PRINCIPAL
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('🚀 Aplicando diseño exacto...');
+    console.log('🚀 Aplicando diseño final...');
     
     // Reparación inmediata
     forceAdminLTERepair();
@@ -1181,7 +1109,7 @@ window.addEventListener('load', function() {
     setTimeout(forceAdminLTERepair, 500);
 });
 
-console.log('🎯 Script de diseño exacto cargado');
+console.log('🎉 Script final cargado - Sistema completo');
 </script>
   </body>
 </html>
