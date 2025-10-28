@@ -817,6 +817,7 @@
       }
     </script>
 <!-- SCRIPT FINAL - CORRECCIÓN COMPLETA -->
+<!-- SCRIPT FINAL - FONDO AZUL USER HEADER -->
 <script>
 // =====================================================
 // SCRIPT FINAL - TODOS LOS DETALLES CORREGIDOS
@@ -871,6 +872,35 @@ function forceAdminLTERepair() {
         .main-header .navbar .sidebar-toggle:hover {
             background-color: #367fa9 !important;
             color: white !important;
+        }
+        
+        /* USER HEADER DROPDOWN - FONDO AZUL */
+        .user-header {
+            background-color: #3c8dbc !important;
+            color: white !important;
+            text-align: center !important;
+            padding: 10px !important;
+            height: auto !important;
+        }
+        
+        .user-header img.img-circle {
+            border: 3px solid rgba(255,255,255,0.2) !important;
+            width: 90px !important;
+            height: 90px !important;
+        }
+        
+        .user-header p {
+            color: white !important;
+            margin: 10px 0 5px 0 !important;
+            font-size: 17px !important;
+            font-weight: 600 !important;
+        }
+        
+        .user-header small {
+            color: rgba(255,255,255,0.8) !important;
+            display: block !important;
+            font-size: 12px !important;
+            margin-top: 5px !important;
         }
         
         /* SIDEBAR - DISEÑO ORIGINAL */
@@ -1023,8 +1053,9 @@ function forceAdminLTERepair() {
     // Agregar nuevo CSS
     document.head.insertAdjacentHTML('beforeend', emergencyCSS);
     
-    // Forzar nombre en header
+    // Forzar nombre en header y user header
     forceHeaderNameColor();
+    forceUserHeaderColor();
     
     console.log('✅ Diseño completo aplicado');
 }
@@ -1045,7 +1076,28 @@ function forceHeaderNameColor() {
     });
 }
 
-// 3. SOLUCIÓN PARA FLOT
+// 3. CORREGIR FONDO DEL USER HEADER
+function forceUserHeaderColor() {
+    const userHeader = document.querySelector('.user-header');
+    if (userHeader) {
+        userHeader.style.backgroundColor = '#3c8dbc';
+        userHeader.style.color = 'white';
+        userHeader.style.textAlign = 'center';
+    }
+    
+    // Forzar también el texto dentro del user header
+    const userHeaderText = document.querySelector('.user-header p');
+    if (userHeaderText) {
+        userHeaderText.style.color = 'white';
+    }
+    
+    const userHeaderSmall = document.querySelector('.user-header small');
+    if (userHeaderSmall) {
+        userHeaderSmall.style.color = 'rgba(255,255,255,0.8)';
+    }
+}
+
+// 4. SOLUCIÓN PARA FLOT
 function fixFlotDimensions() {
     if (!window.location.pathname.includes('flot')) return;
     
@@ -1065,7 +1117,7 @@ function fixFlotDimensions() {
     }, 2000);
 }
 
-// 4. INTERCEPTAR FLOT
+// 5. INTERCEPTAR FLOT
 function interceptFlotInitialization() {
     if (typeof $.plot === 'undefined') return;
     
@@ -1085,7 +1137,7 @@ function interceptFlotInitialization() {
     };
 }
 
-// 5. INICIALIZACIÓN PRINCIPAL
+// 6. INICIALIZACIÓN PRINCIPAL
 document.addEventListener('DOMContentLoaded', function() {
     console.log('🚀 Aplicando diseño final...');
     
@@ -1104,12 +1156,12 @@ document.addEventListener('DOMContentLoaded', function() {
     setTimeout(forceAdminLTERepair, 1000);
 });
 
-// 6. REPARACIÓN POST-CARGA
+// 7. REPARACIÓN POST-CARGA
 window.addEventListener('load', function() {
     setTimeout(forceAdminLTERepair, 500);
 });
 
-console.log('🎉 Script final cargado - Sistema completo');
+console.log('🎉 Script final cargado - Sistema 100% completo');
 </script>
   </body>
 </html>
