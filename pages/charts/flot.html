@@ -821,9 +821,10 @@
 <!-- AL FINAL DEL ARCHIVO, REEMPLAZA EL SCRIPT ACTUAL CON ESTE: -->
 <!-- REEMPLAZA TODO TU SCRIPT FINAL CON ESTE: -->
 <!-- REEMPLAZA EL SCRIPT ANTERIOR CON ESTE: -->
+<!-- REEMPLAZA EL SCRIPT ANTERIOR CON ESTE: -->
 <script>
 // =====================================================
-// SCRIPT UNIVERSAL - FUNCIONA EN LOCAL Y GITHUB PAGES
+// SCRIPT UNIVERSAL COMPLETO - TODOS LOS ESTILOS INCLUIDOS
 // =====================================================
 
 // 1. DETECCIÓN AUTOMÁTICA DE ENTORNO
@@ -866,7 +867,6 @@ function fixGitHubPagesPaths() {
         const oldHref = link.getAttribute('href');
         const newHref = oldHref.replace('../../', `${basePath}/`);
         link.setAttribute('href', newHref);
-        console.log('🔗 Enlace corregido:', oldHref, '→', newHref);
     });
     
     // Corregir scripts
@@ -882,24 +882,15 @@ function fixGitHubPagesPaths() {
         const newHref = oldHref.replace('../../', `${basePath}/`);
         link.setAttribute('href', newHref);
     });
-    
-    // Corregir imágenes
-    document.querySelectorAll('img[src*="../../"]').forEach(img => {
-        const oldSrc = img.getAttribute('src');
-        const newSrc = oldSrc.replace('../../', `${basePath}/`);
-        img.setAttribute('src', newSrc);
-    });
 }
 
-// 3. FORZAR ESTILOS ADMINLTE (PARA AMBOS ENTORNOS)
+// 3. FORZAR ESTILOS ADMINLTE COMPLETOS
 function forceAdminLTEStyles() {
-    console.log('🎨 Forzando estilos AdminLTE...');
-    
-    const { isGitHubPages } = detectEnvironment();
+    console.log('🎨 Forzando estilos AdminLTE completos...');
     
     const emergencyCSS = `
-        <style id="adminlte-universal-css">
-        /* ESTILOS UNIVERSALES - FUNCIONAN EN CUALQUIER ENTORNO */
+        <style id="adminlte-complete-css">
+        /* ===== ESTILOS UNIVERSALES - FUNCIONAN EN CUALQUIER ENTORNO ===== */
         
         /* HEADER PRINCIPAL - COLORES GARANTIZADOS */
         .skin-blue .main-header .navbar {
@@ -934,9 +925,95 @@ function forceAdminLTEStyles() {
         
         .navbar-nav > .user-menu > a > span.hidden-xs {
             color: white !important;
+            font-weight: 600;
         }
         
-        /* SIDEBAR - COLORES GARANTIZADOS */
+        /* ===== DROPDOWN DEL USUARIO - ESTILOS COMPLETOS ===== */
+        .navbar-nav > .user-menu > .dropdown-menu {
+            border-top-left-radius: 4px;
+            border-top-right-radius: 4px;
+            padding: 0;
+            border-top-width: 0;
+            width: 280px;
+        }
+        
+        .user-header {
+            background-color: #3c8dbc !important;
+            color: white !important;
+            text-align: center !important;
+            padding: 20px !important;
+            height: auto !important;
+            border-top-left-radius: 4px;
+            border-top-right-radius: 4px;
+        }
+        
+        .user-header img.img-circle {
+            border: 3px solid rgba(255,255,255,0.2) !important;
+            width: 90px !important;
+            height: 90px !important;
+            margin-bottom: 15px;
+        }
+        
+        .user-header p {
+            color: white !important;
+            margin: 10px 0 5px 0 !important;
+            font-size: 17px !important;
+            font-weight: 600 !important;
+            line-height: 1.2;
+        }
+        
+        .user-header small {
+            color: rgba(255,255,255,0.8) !important;
+            display: block !important;
+            font-size: 12px !important;
+            margin-top: 5px !important;
+        }
+        
+        .user-body {
+            padding: 15px !important;
+            border-bottom: 1px solid #f4f4f4;
+            border-top: 1px solid #f4f4f4;
+        }
+        
+        .user-body .col-xs-4 {
+            padding: 0 5px;
+        }
+        
+        .user-body a {
+            color: #555 !important;
+            font-size: 14px;
+            text-decoration: none;
+        }
+        
+        .user-body a:hover {
+            color: #3c8dbc !important;
+        }
+        
+        .user-footer {
+            background-color: #f9f9f9;
+            padding: 15px !important;
+            border-bottom-left-radius: 4px;
+            border-bottom-right-radius: 4px;
+        }
+        
+        .user-footer .btn {
+            border-radius: 3px;
+            font-size: 13px;
+            padding: 6px 12px;
+        }
+        
+        .user-footer .btn-default {
+            background-color: #f4f4f4;
+            border-color: #ddd;
+            color: #444;
+        }
+        
+        .user-footer .btn-default:hover {
+            background-color: #e7e7e7;
+            border-color: #adadad;
+        }
+        
+        /* ===== SIDEBAR - COLORES GARANTIZADOS ===== */
         .main-sidebar {
             background-color: #222d32 !important;
             position: fixed;
@@ -950,34 +1027,65 @@ function forceAdminLTEStyles() {
         }
         
         /* USER PANEL - COLORES CORRECTOS */
+        .user-panel {
+            padding: 10px !important;
+            border-bottom: 1px solid #1a2226 !important;
+        }
+        
+        .user-panel > .image > img {
+            width: 45px !important;
+            height: 45px !important;
+        }
+        
         .user-panel > .info {
             color: white !important;
+            padding: 5px 5px 5px 15px !important;
+            line-height: 1 !important;
         }
         
         .user-panel > .info > p {
             color: white !important;
             font-weight: 600;
+            margin-bottom: 5px;
+            font-size: 14px;
         }
         
         .user-panel > .info > a {
             color: #b8c7ce !important;
+            font-size: 11px;
+            text-decoration: none;
+            padding: 0;
+        }
+        
+        .user-panel > .info > a > .fa-circle {
+            color: #00a65a !important;
+            font-size: 11px;
         }
         
         /* MAIN NAVIGATION - COLORES */
         .sidebar-menu > li.header {
             color: #4b646f !important;
             background: #1a2226 !important;
+            padding: 10px 25px 10px 15px;
+            font-size: 12px;
+            text-transform: uppercase;
+            font-weight: bold;
+            letter-spacing: 1px;
         }
         
         .sidebar-menu > li > a {
             color: #b8c7ce !important;
             border-left: 3px solid transparent;
+            padding: 12px 5px 12px 15px;
+            display: block;
+            font-size: 14px;
         }
         
         .sidebar-menu > li > a:hover {
             color: #fff !important;
             background: #1e282c !important;
             border-left-color: #3c8dbc !important;
+            text-decoration: none;
         }
         
         .sidebar-menu > li.active > a {
@@ -986,14 +1094,77 @@ function forceAdminLTEStyles() {
             border-left-color: #3c8dbc !important;
         }
         
-        /* CONTENIDO */
+        /* ===== BARRA DE BÚSQUEDA - ESTILOS COMPLETOS ===== */
+        .sidebar-form {
+            border-radius: 2px !important;
+            border: 1px solid #555 !important;
+            margin: 10px 10px !important;
+            overflow: hidden;
+        }
+        
+        .sidebar-form .form-control {
+            background: rgba(255,255,255,0.1) !important;
+            border: 1px solid transparent !important;
+            color: #666 !important;
+            border-radius: 2px !important;
+            height: 35px !important;
+            font-size: 14px !important;
+            transition: all 0.3s ease !important;
+            box-shadow: none !important;
+        }
+        
+        .sidebar-form .form-control::placeholder {
+            color: #999 !important;
+        }
+        
+        .sidebar-form .form-control:focus {
+            background: rgba(255,255,255,0.2) !important;
+            color: white !important;
+            border-color: #555 !important;
+            box-shadow: none !important;
+        }
+        
+        .sidebar-form .form-control:focus::placeholder {
+            color: rgba(255,255,255,0.7) !important;
+        }
+        
+        .sidebar-form .btn {
+            background: rgba(255,255,255,0.1) !important;
+            color: #999 !important;
+            border-radius: 2px !important;
+            height: 35px !important;
+            border: none !important;
+            transition: all 0.3s ease !important;
+            box-shadow: none !important;
+        }
+        
+        .sidebar-form .form-control:focus ~ .input-group-btn .btn {
+            color: white !important;
+            background: rgba(255,255,255,0.2) !important;
+        }
+        
+        .sidebar-form .fa-search {
+            color: #999 !important;
+            transition: color 0.3s ease !important;
+        }
+        
+        .sidebar-form .form-control:focus ~ .input-group-btn .fa-search {
+            color: white !important;
+        }
+        
+        /* ===== CONTENIDO PRINCIPAL ===== */
         .content-wrapper, .main-footer {
             margin-left: 230px;
             transition: margin-left 0.3s ease-in-out;
             background-color: #ecf0f5;
         }
         
-        /* ANIMACIONES SIDEBAR */
+        .content-wrapper {
+            min-height: calc(100vh - 101px);
+            padding: 15px;
+        }
+        
+        /* ===== ANIMACIONES SIDEBAR ===== */
         .sidebar-collapse .main-sidebar {
             transform: translate(-230px, 0) !important;
         }
@@ -1007,53 +1178,46 @@ function forceAdminLTEStyles() {
             transform: translate(0, 0) !important;
         }
         
-        /* BUSCADOR */
-        .sidebar-form {
-            border: 1px solid #555;
-            margin: 10px;
-            border-radius: 2px;
+        /* ===== DROPDOWNS GENERALES ===== */
+        .dropdown-menu {
+            box-shadow: 0 6px 12px rgba(0,0,0,0.175);
+            border: 1px solid rgba(0,0,0,0.15);
+            border-radius: 4px;
         }
         
-        .sidebar-form .form-control {
-            background: rgba(255,255,255,0.1);
-            border: none;
-            color: #666;
+        .dropdown-menu > li > a {
+            color: #555;
+            padding: 8px 20px;
+            font-size: 14px;
         }
         
-        .sidebar-form .form-control:focus {
-            background: rgba(255,255,255,0.2);
-            color: white !important;
-        }
-        
-        .sidebar-form .form-control:focus ~ .input-group-btn .btn,
-        .sidebar-form .form-control:focus ~ .input-group-btn .fa-search {
-            color: white !important;
+        .dropdown-menu > li > a:hover {
+            background-color: #f5f5f5;
+            color: #262626;
         }
         </style>
     `;
     
     // Remover CSS anterior si existe
-    const oldCSS = document.getElementById('adminlte-universal-css');
+    const oldCSS = document.getElementById('adminlte-complete-css');
     if (oldCSS) oldCSS.remove();
     
     // Agregar nuevo CSS
     document.head.insertAdjacentHTML('beforeend', emergencyCSS);
     
-    console.log('✅ Estilos universales aplicados');
+    console.log('✅ Estilos completos aplicados');
 }
 
-// 4. REPARACIÓN DEL SIDEBAR TOGGLE (FUNCIONALIDAD)
+// 4. REPARACIÓN DEL SIDEBAR TOGGLE
 function repairSidebarToggle() {
     console.log('🎯 Reparando sidebar toggle...');
     
     const toggleButtons = document.querySelectorAll('.sidebar-toggle');
     
     toggleButtons.forEach(button => {
-        // Clonar y reemplazar para limpiar event listeners rotos
         const newButton = button.cloneNode(true);
         button.parentNode.replaceChild(newButton, button);
         
-        // Agregar event listener robusto
         newButton.addEventListener('click', function(e) {
             e.preventDefault();
             e.stopImmediatePropagation();
@@ -1065,7 +1229,6 @@ function repairSidebarToggle() {
             const content = document.querySelector('.content-wrapper');
             const footer = document.querySelector('.main-footer');
             
-            // Alternar clases con animación
             if (body.classList.contains('sidebar-collapse')) {
                 // EXPANDIR
                 body.classList.remove('sidebar-collapse');
@@ -1089,8 +1252,6 @@ function repairSidebarToggle() {
             }
         });
     });
-    
-    console.log('✅ Sidebar toggle reparado');
 }
 
 // 5. VERIFICACIÓN DE ESTADO INICIAL
@@ -1118,40 +1279,14 @@ function checkInitialState() {
     }
 }
 
-// 6. CARGA DINÁMICA DE RECURSOS FALTANTES (GITHUB PAGES)
-function loadMissingResources() {
-    const { isGitHubPages } = detectEnvironment();
-    
-    if (!isGitHubPages) return;
-    
-    console.log('📦 Verificando recursos en GitHub Pages...');
-    
-    // Verificar si AdminLTE CSS está cargado
-    const adminLTELoaded = document.querySelector('link[href*="AdminLTE.min.css"]');
-    if (!adminLTELoaded) {
-        console.log('⚠️ AdminLTE CSS no encontrado, cargando desde CDN...');
-        
-        // Cargar AdminLTE desde CDN como respaldo
-        const adminLTECSS = document.createElement('link');
-        adminLTECSS.rel = 'stylesheet';
-        adminLTECSS.href = 'https://cdnjs.cloudflare.com/ajax/libs/admin-lte/2.4.18/css/AdminLTE.min.css';
-        document.head.appendChild(adminLTECSS);
-        
-        const adminLTESkins = document.createElement('link');
-        adminLTESkins.rel = 'stylesheet';
-        adminLTESkins.href = 'https://cdnjs.cloudflare.com/ajax/libs/admin-lte/2.4.18/css/skins/skin-blue.min.css';
-        document.head.appendChild(adminLTESkins);
-    }
-}
-
-// 7. INICIALIZACIÓN PRINCIPAL
+// 6. INICIALIZACIÓN PRINCIPAL
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('🎬 DOM cargado - Iniciando sistema universal...');
+    console.log('🎬 DOM cargado - Iniciando sistema completo...');
     
     // Paso 1: Detectar entorno y corregir rutas
     setTimeout(fixGitHubPagesPaths, 100);
     
-    // Paso 2: Forzar estilos (funciona en ambos entornos)
+    // Paso 2: Forzar estilos completos
     setTimeout(forceAdminLTEStyles, 200);
     
     // Paso 3: Reparar funcionalidad
@@ -1159,12 +1294,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Paso 4: Verificar estado
     setTimeout(checkInitialState, 400);
-    
-    // Paso 5: Cargar recursos faltantes si es necesario
-    setTimeout(loadMissingResources, 500);
 });
 
-// 8. REPARACIÓN POST-CARGA
+// 7. REPARACIÓN POST-CARGA
 window.addEventListener('load', function() {
     console.log('🏁 Página cargada - Aplicando ajustes finales...');
     
@@ -1172,16 +1304,16 @@ window.addEventListener('load', function() {
         // Verificación final
         checkInitialState();
         
-        // Forzar estilos una vez más por si acaso
+        // Forzar estilos una vez más
         forceAdminLTEStyles();
         
         const { isGitHubPages } = detectEnvironment();
-        console.log('✅ Sistema universal listo - GitHub Pages:', isGitHubPages);
+        console.log('✅ Sistema completo listo - GitHub Pages:', isGitHubPages);
         
     }, 1000);
 });
 
-console.log('🌐 Script universal cargado - Compatible con Local y GitHub Pages');
+console.log('🌐 Script completo cargado - Todos los estilos incluidos');
 </script>
   </body>
 </html>
