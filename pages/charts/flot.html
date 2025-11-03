@@ -832,324 +832,101 @@
 -->
 <script>
 // =====================================================
-// SCRIPT UNIVERSAL ADMINLTE - PARA TODAS LAS PÁGINAS
+// CONVERSOR AUTOMÁTICO DE RUTAS PARA GITHUB PAGES
+// Específico para: https://sebastian2824.github.io/dashboard-casos-delictivos/
 // =====================================================
 
-// 1. DETECCIÓN AUTOMÁTICA DE ENTORNO Y RUTAS
-function detectEnvironmentAndPaths() {
+// Configuración específica de tu repositorio
+const GITHUB_PAGES_BASE = 'https://sebastian2824.github.io/dashboard-casos-delictivos';
+
+function convertRelativePathsToAbsolute() {
     const currentUrl = window.location.href;
-    const currentPath = window.location.pathname;
-    const isGitHubPages = currentUrl.includes('github.io');
-    const repoName = extractRepoName(currentUrl);
     
-    // Determinar depth según la ubicación de la página
-    let depth = '';
-    if (currentPath.includes('/pages/')) {
-        depth = '../../'; // Para pages/charts/, pages/tables/, etc.
-    } else if (currentPath.includes('/charts/') || currentPath.includes('/tables/')) {
-        depth = '../'; // Para subcarpetas dentro de pages/
-    } else {
-        depth = './'; // Para raíz
-    }
-    
-    console.log('🌍 Entorno detectado:', {
-        isGitHubPages: isGitHubPages,
-        repoName: repoName,
-        currentPath: currentPath,
-        depth: depth
-    });
-    
-    return { isGitHubPages, repoName, depth };
-}
-
-function extractRepoName(url) {
-    if (!url.includes('github.io')) return '';
-    const match = url.match(/https?:\/\/([^\/]+)\.github\.io\/([^\/]+)/);
-    return match ? match[2] : '';
-}
-
-// 2. CORRECCIÓN INTELIGENTE DE RUTAS
-function fixAllPaths() {
-    const { isGitHubPages, repoName, depth } = detectEnvironmentAndPaths();
-    
-    if (!isGitHubPages) {
-        console.log('✅ Entorno local - Rutas preservadas');
+    // Solo aplicar en GitHub Pages
+    if (!currentUrl.includes('github.io')) {
+        console.log('✅ Entorno local - Manteniendo rutas relativas');
         return;
     }
     
-    console.log('🔄 Corrigiendo rutas para GitHub Pages...');
+    console.log('🔄 Convirtiendo rutas relativas a absolutas para GitHub Pages...');
     
-    const basePath = `/${repoName}`;
-    
-    // Corregir enlaces de navegación
-    document.querySelectorAll('a[href]').forEach(link => {
-        const href = link.getAttribute('href');
-        if (href.startsWith('../../') || href.startsWith('../') || href.startsWith('./')) {
-            const newHref = href.replace(/^(\.\.\/|\.\/)+/, `${basePath}/`);
-            link.setAttribute('href', newHref);
-        }
+    // 1. CONVERTIR HOJAS DE ESTILO (CSS)
+    document.querySelectorAll('link[href*="../../"]').forEach(link => {
+        const oldHref = link.getAttribute('href');
+        const newHref = convertPath(oldHref);
+        link.setAttribute('href', newHref);
+        console.log('🎨 CSS:', oldHref, '→', newHref);
     });
     
-    // Corregir recursos (CSS, JS, imágenes)
-    const resources = [
-        ...document.querySelectorAll('link[href*="../"]'),
-        ...document.querySelectorAll('script[src*="../"]'),
-        ...document.querySelectorAll('img[src*="../"]')
-    ];
-    
-    resources.forEach(resource => {
-        const attr = resource.getAttribute('href') ? 'href' : 'src';
-        const oldPath = resource.getAttribute(attr);
-        if (oldPath && (oldPath.includes('../') || oldPath.includes('./'))) {
-            const newPath = oldPath.replace(/^(\.\.\/|\.\/)+/, `${basePath}/`);
-            resource.setAttribute(attr, newPath);
-        }
+    // 2. CONVERTIR SCRIPTS (JS)
+    document.querySelectorAll('script[src*="../../"]').forEach(script => {
+        const oldSrc = script.getAttribute('src');
+        const newSrc = convertPath(oldSrc);
+        script.setAttribute('src', newSrc);
+        console.log('⚡ JS:', oldSrc, '→', newSrc);
     });
-}
-
-// 3. ESTILOS UNIVERSALES ADMINLTE
-function applyUniversalAdminLTEStyles() {
-    console.log('🎨 Aplicando estilos universales AdminLTE...');
     
-    const universalCSS = `
-        <style id="adminlte-universal-styles">
-        /* ===== ESTILOS UNIVERSALES ADMINLTE ===== */
-        
-        /* HEADER PRINCIPAL */
-        .skin-blue .main-header .navbar {
-            background-color: #3c8dbc !important;
-            border-color: #367fa9 !important;
-        }
-        
-        .skin-blue .main-header .logo {
-            background-color: #367fa9 !important;
-            color: white !important;
-        }
-        
-        .skin-blue .main-header .navbar .sidebar-toggle {
-            color: white !important;
-        }
-        
-        /* TEXTO EN HEADER */
-        .navbar-custom-menu .navbar-nav > li > a,
-        .navbar-nav > .user-menu > a > span.hidden-xs {
-            color: white !important;
-        }
-        
-        /* DROPDOWN DEL USUARIO */
-        .user-header {
-            background-color: #3c8dbc !important;
-            color: white !important;
-        }
-        
-        .user-header img.img-circle {
-            border: 3px solid rgba(255,255,255,0.2) !important;
-        }
-        
-        .user-header p,
-        .user-header small {
-            color: white !important;
-        }
-        
-        /* SIDEBAR */
-        .main-sidebar {
-            background-color: #222d32 !important;
-        }
-        
-        .user-panel > .info {
-            color: white !important;
-        }
-        
-        .user-panel > .info > p {
-            color: white !important;
-        }
-        
-        .user-panel > .info > a {
-            color: #b8c7ce !important;
-        }
-        
-        .sidebar-menu > li.header {
-            color: #4b646f !important;
-            background: #1a2226 !important;
-        }
-        
-        .sidebar-menu > li > a {
-            color: #b8c7ce !important;
-        }
-        
-        .sidebar-menu > li > a:hover,
-        .sidebar-menu > li.active > a {
-            color: #fff !important;
-            background: #1e282c !important;
-            border-left-color: #3c8dbc !important;
-        }
-        
-        /* BARRA DE BÚSQUEDA */
-        .sidebar-form {
-            border: 1px solid #555 !important;
-        }
-        
-        .sidebar-form .form-control {
-            background: rgba(255,255,255,0.1) !important;
-            color: #666 !important;
-        }
-        
-        .sidebar-form .form-control:focus {
-            background: rgba(255,255,255,0.2) !important;
-            color: white !important;
-        }
-        
-        .sidebar-form .btn {
-            background: rgba(255,255,255,0.1) !important;
-            color: #999 !important;
-        }
-        
-        .sidebar-form .form-control:focus ~ .input-group-btn .btn,
-        .sidebar-form .form-control:focus ~ .input-group-btn .fa-search {
-            color: white !important;
-        }
-        
-        /* LAYOUT Y ANIMACIONES */
-        .main-sidebar {
-            transition: transform 0.3s ease-in-out !important;
-        }
-        
-        .content-wrapper, .main-footer {
-            transition: margin-left 0.3s ease-in-out !important;
-            background-color: #ecf0f5;
-        }
-        
-        .sidebar-collapse .main-sidebar {
-            transform: translate(-230px, 0) !important;
-        }
-        
-        .sidebar-collapse .content-wrapper,
-        .sidebar-collapse .main-footer {
-            margin-left: 0 !important;
-        }
-        
-        .sidebar-open .main-sidebar {
-            transform: translate(0, 0) !important;
-        }
-        
-        /* CONTENIDO GENERAL */
-        .content-wrapper {
-            min-height: calc(100vh - 101px);
-        }
-        
-        .box {
-            background: white;
-            border-top: 3px solid #d2d6de;
-            border-radius: 3px;
-            margin-bottom: 20px;
-            box-shadow: 0 1px 1px rgba(0,0,0,0.1);
-        }
-        </style>
-    `;
-    
-    // Remover CSS anterior si existe
-    const oldCSS = document.getElementById('adminlte-universal-styles');
-    if (oldCSS) oldCSS.remove();
-    
-    // Agregar nuevo CSS
-    document.head.insertAdjacentHTML('beforeend', universalCSS);
-}
-
-// 4. REPARACIÓN DEL SIDEBAR TOGGLE (UNIVERSAL)
-function repairSidebarToggleUniversal() {
-    const toggleButtons = document.querySelectorAll('.sidebar-toggle');
-    
-    toggleButtons.forEach(button => {
-        // Solo reparar si no funciona
-        button.addEventListener('click', function(e) {
-            const body = document.body;
-            
-            // Si no pasa nada después de 100ms, forzar la acción
-            setTimeout(() => {
-                if (!body.classList.contains('sidebar-collapse') && !body.classList.contains('sidebar-open')) {
-                    console.log('🔄 Forzando acción del sidebar...');
-                    
-                    if (body.classList.contains('sidebar-collapse')) {
-                        body.classList.remove('sidebar-collapse');
-                        body.classList.add('sidebar-open');
-                    } else {
-                        body.classList.remove('sidebar-open');
-                        body.classList.add('sidebar-collapse');
-                    }
-                    
-                    // Sincronizar contenido
-                    const content = document.querySelector('.content-wrapper');
-                    const footer = document.querySelector('.main-footer');
-                    const sidebar = document.querySelector('.main-sidebar');
-                    
-                    if (body.classList.contains('sidebar-collapse')) {
-                        if (content) content.style.marginLeft = '0';
-                        if (footer) footer.style.marginLeft = '0';
-                        if (sidebar) sidebar.style.transform = 'translate(-230px, 0)';
-                    } else {
-                        if (content) content.style.marginLeft = '230px';
-                        if (footer) footer.style.marginLeft = '230px';
-                        if (sidebar) sidebar.style.transform = 'translate(0, 0)';
-                    }
-                }
-            }, 100);
-        });
+    // 3. CONVERTIR IMÁGENES
+    document.querySelectorAll('img[src*="../../"]').forEach(img => {
+        const oldSrc = img.getAttribute('src');
+        const newSrc = convertPath(oldSrc);
+        img.setAttribute('src', newSrc);
+        console.log('🖼️ IMG:', oldSrc, '→', newSrc);
     });
+    
+    // 4. CONVERTIR ENLACES DE NAVEGACIÓN (opcional)
+    document.querySelectorAll('a[href*="../../"]').forEach(link => {
+        const oldHref = link.getAttribute('href');
+        const newHref = convertPath(oldHref);
+        link.setAttribute('href', newHref);
+        console.log('🔗 LINK:', oldHref, '→', newHref);
+    });
+    
+    console.log('✅ Todas las rutas convertidas correctamente');
 }
 
-// 5. SINCRONIZACIÓN AUTOMÁTICA DEL LAYOUT
-function setupLayoutSynchronization() {
-    const body = document.body;
-    const content = document.querySelector('.content-wrapper');
-    const footer = document.querySelector('.main-footer');
-    const sidebar = document.querySelector('.main-sidebar');
+// Función para convertir rutas relativas a absolutas
+function convertPath(relativePath) {
+    // Eliminar los ../../
+    const cleanPath = relativePath.replace('../../', '');
     
-    // Establecer estado inicial
-    function syncLayout() {
-        if (body.classList.contains('sidebar-collapse')) {
-            if (content) content.style.marginLeft = '0';
-            if (footer) footer.style.marginLeft = '0';
-            if (sidebar) sidebar.style.transform = 'translate(-230px, 0)';
+    // Construir URL absoluta
+    return `${GITHUB_PAGES_BASE}/${cleanPath}`;
+}
+
+// 5. VERIFICAR Y CARGAR RECURSOS FALTANTES
+function verifyAndLoadResources() {
+    console.log('🔍 Verificando carga de recursos...');
+    
+    // Verificar si AdminLTE se cargó correctamente
+    setTimeout(() => {
+        const bodyStyles = window.getComputedStyle(document.body);
+        const backgroundColor = bodyStyles.backgroundColor;
+        
+        // Si el fondo es blanco (default), significa que los estilos no cargaron
+        if (backgroundColor === 'rgb(255, 255, 255)' || backgroundColor === '#ffffff') {
+            console.warn('⚠️ Los estilos no cargaron, aplicando respaldo...');
+            loadBackupStyles();
         } else {
-            if (content) content.style.marginLeft = '230px';
-            if (footer) footer.style.marginLeft = '230px';
-            if (sidebar) sidebar.style.transform = 'translate(0, 0)';
+            console.log('✅ Estilos cargados correctamente');
         }
-    }
-    
-    // Observar cambios en las clases del body
-    const observer = new MutationObserver(function(mutations) {
-        mutations.forEach(function(mutation) {
-            if (mutation.attributeName === 'class') {
-                setTimeout(syncLayout, 10);
-            }
-        });
-    });
-    
-    observer.observe(body, { attributes: true });
-    
-    // Sincronizar inicialmente
-    syncLayout();
+    }, 2000);
 }
 
-// 6. CARGA DE RECURSOS DE RESPALDO (SOLO GITHUB PAGES)
-function loadFallbackResources() {
-    const { isGitHubPages } = detectEnvironmentAndPaths();
+// 6. CARGAR ESTILOS DE RESPALDO DESDE CDN
+function loadBackupStyles() {
+    console.log('📦 Cargando estilos de respaldo desde CDN...');
     
-    if (!isGitHubPages) return;
-    
-    // Verificar si AdminLTE CSS está cargado
-    const adminLTELoaded = document.querySelector('link[href*="AdminLTE"]');
-    if (!adminLTELoaded) {
-        console.log('📦 Cargando AdminLTE desde CDN...');
-        
-        // Cargar Bootstrap (dependencia)
+    // Cargar Bootstrap desde CDN
+    if (!document.querySelector('link[href*="bootstrap"]')) {
         const bootstrapCSS = document.createElement('link');
         bootstrapCSS.rel = 'stylesheet';
         bootstrapCSS.href = 'https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css';
         document.head.appendChild(bootstrapCSS);
-        
-        // Cargar AdminLTE
+    }
+    
+    // Cargar AdminLTE desde CDN
+    if (!document.querySelector('link[href*="AdminLTE"]')) {
         const adminLTECSS = document.createElement('link');
         adminLTECSS.rel = 'stylesheet';
         adminLTECSS.href = 'https://cdnjs.cloudflare.com/ajax/libs/admin-lte/2.4.18/css/AdminLTE.min.css';
@@ -1160,49 +937,34 @@ function loadFallbackResources() {
         adminLTESkins.href = 'https://cdnjs.cloudflare.com/ajax/libs/admin-lte/2.4.18/css/skins/skin-blue.min.css';
         document.head.appendChild(adminLTESkins);
     }
+    
+    // Cargar Font Awesome desde CDN
+    if (!document.querySelector('link[href*="font-awesome"]')) {
+        const fontAwesome = document.createElement('link');
+        fontAwesome.rel = 'stylesheet';
+        fontAwesome.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css';
+        document.head.appendChild(fontAwesome);
+    }
 }
 
-// 7. INICIALIZACIÓN PRINCIPAL UNIVERSAL
-function initializeUniversalAdminLTE() {
-    console.log('🚀 Iniciando AdminLTE Universal...');
-    
-    // Paso 1: Corregir rutas si es necesario
-    fixAllPaths();
-    
-    // Paso 2: Aplicar estilos universales
-    applyUniversalAdminLTEStyles();
-    
-    // Paso 3: Configurar sincronización del layout
-    setupLayoutSynchronization();
-    
-    // Paso 4: Reparar funcionalidades
-    repairSidebarToggleUniversal();
-    
-    // Paso 5: Cargar recursos de respaldo
-    loadFallbackResources();
-    
-    // Paso 6: Asegurar clases base
-    setTimeout(() => {
-        if (!document.body.classList.contains('skin-blue')) {
-            document.body.classList.add('skin-blue', 'sidebar-mini');
-        }
-    }, 500);
-    
-    console.log('✅ AdminLTE Universal inicializado');
-}
-
-// 8. EJECUCIÓN AUTOMÁTICA
+// 7. EJECUCIÓN PRINCIPAL
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('📄 Página cargada - Ejecutando AdminLTE Universal');
-    initializeUniversalAdminLTE();
+    console.log('🚀 Iniciando conversión de rutas...');
+    
+    // Convertir rutas inmediatamente
+    convertRelativePathsToAbsolute();
+    
+    // Verificar después de un tiempo
+    setTimeout(verifyAndLoadResources, 1000);
 });
 
+// 8. EJECUCIÓN POST-CARGA POR SI ACASO
 window.addEventListener('load', function() {
-    console.log('🖼️ Recursos cargados - Verificaciones finales');
-    setTimeout(initializeUniversalAdminLTE, 100);
+    console.log('🏁 Página cargada - Verificación final');
+    setTimeout(verifyAndLoadResources, 500);
 });
 
-console.log('🌐 Script Universal AdminLTE cargado - Listo para cualquier página');
+console.log('🔄 Conversor de rutas cargado - Listo para GitHub Pages');
 </script>
   </body>
 </html>
