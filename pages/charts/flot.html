@@ -820,50 +820,125 @@
 <!-- SCRIPT FINAL - ANIMACIÓN Y BUSCADOR CORREGIDOS -->
 <!-- AL FINAL DEL ARCHIVO, REEMPLAZA EL SCRIPT ACTUAL CON ESTE: -->
 <!-- REEMPLAZA TODO TU SCRIPT FINAL CON ESTE: -->
+<!-- REEMPLAZA EL SCRIPT ANTERIOR CON ESTE: -->
 <script>
 // =====================================================
-// SCRIPT CORREGIDO - ADMINLTE COMPLETAMENTE FUNCIONAL
+// SCRIPT UNIVERSAL - FUNCIONA EN LOCAL Y GITHUB PAGES
 // =====================================================
 
-// 1. INICIALIZACIÓN FORZADA DE ADMINLTE
-function forceAdminLTEInitialization() {
-    console.log('🚀 Forzando inicialización de AdminLTE...');
+// 1. DETECCIÓN AUTOMÁTICA DE ENTORNO
+function detectEnvironment() {
+    const currentUrl = window.location.href;
+    const isGitHubPages = currentUrl.includes('github.io') || currentUrl.includes('.github.io');
+    const repoName = extractRepoName(currentUrl);
     
-    // Asegurar que el body tenga las clases correctas
-    document.body.className = 'skin-blue sidebar-mini';
+    console.log('🌍 Entorno detectado:', {
+        isGitHubPages: isGitHubPages,
+        repoName: repoName,
+        currentUrl: currentUrl
+    });
     
-    // Forzar la inicialización del layout de AdminLTE
-    if (typeof $.AdminLTE !== 'undefined') {
-        console.log('✅ AdminLTE encontrado, activando layout...');
-        $.AdminLTE.layout.activate();
-        $.AdminLTE.layout.fix();
-        $.AdminLTE.layout.fixSidebar();
-    } else {
-        console.log('⚠️ AdminLTE no disponible, usando respaldo...');
-        initializeFallbackAdminLTE();
-    }
+    return { isGitHubPages, repoName };
 }
 
-// 2. INICIALIZACIÓN DE RESPALDO COMPLETA
-function initializeFallbackAdminLTE() {
-    console.log('🔄 Iniciando respaldo completo de AdminLTE...');
+function extractRepoName(url) {
+    if (!url.includes('github.io')) return '';
+    const match = url.match(/https?:\/\/([^\/]+)\.github\.io\/([^\/]+)/);
+    return match ? match[2] : '';
+}
+
+// 2. CORRECCIÓN DE RUTAS PARA GITHUB PAGES
+function fixGitHubPagesPaths() {
+    const { isGitHubPages, repoName } = detectEnvironment();
     
-    // CSS de emergencia mínimo
+    if (!isGitHubPages) {
+        console.log('✅ Entorno local - Rutas OK');
+        return;
+    }
+    
+    console.log('🔄 Corrigiendo rutas para GitHub Pages...');
+    
+    // Base path para GitHub Pages
+    const basePath = `/${repoName}`;
+    
+    // Corregir enlaces de navegación
+    document.querySelectorAll('a[href*="../../"]').forEach(link => {
+        const oldHref = link.getAttribute('href');
+        const newHref = oldHref.replace('../../', `${basePath}/`);
+        link.setAttribute('href', newHref);
+        console.log('🔗 Enlace corregido:', oldHref, '→', newHref);
+    });
+    
+    // Corregir scripts
+    document.querySelectorAll('script[src*="../../"]').forEach(script => {
+        const oldSrc = script.getAttribute('src');
+        const newSrc = oldSrc.replace('../../', `${basePath}/`);
+        script.setAttribute('src', newSrc);
+    });
+    
+    // Corregir stylesheets
+    document.querySelectorAll('link[href*="../../"]').forEach(link => {
+        const oldHref = link.getAttribute('href');
+        const newHref = oldHref.replace('../../', `${basePath}/`);
+        link.setAttribute('href', newHref);
+    });
+    
+    // Corregir imágenes
+    document.querySelectorAll('img[src*="../../"]').forEach(img => {
+        const oldSrc = img.getAttribute('src');
+        const newSrc = oldSrc.replace('../../', `${basePath}/`);
+        img.setAttribute('src', newSrc);
+    });
+}
+
+// 3. FORZAR ESTILOS ADMINLTE (PARA AMBOS ENTORNOS)
+function forceAdminLTEStyles() {
+    console.log('🎨 Forzando estilos AdminLTE...');
+    
+    const { isGitHubPages } = detectEnvironment();
+    
     const emergencyCSS = `
-        <style id="adminlte-fallback-css">
-        /* ESTILOS MÍNIMOS PARA FUNCIONALIDAD */
+        <style id="adminlte-universal-css">
+        /* ESTILOS UNIVERSALES - FUNCIONAN EN CUALQUIER ENTORNO */
+        
+        /* HEADER PRINCIPAL - COLORES GARANTIZADOS */
         .skin-blue .main-header .navbar {
-            background-color: #3c8dbc;
+            background-color: #3c8dbc !important;
+            border-color: #367fa9 !important;
             margin-left: 230px;
         }
         
         .skin-blue .main-header .logo {
-            background-color: #367fa9;
-            color: white;
+            background-color: #367fa9 !important;
+            color: white !important;
+            border-bottom: 1px solid #367fa9 !important;
             width: 230px;
         }
         
+        .skin-blue .main-header .navbar .sidebar-toggle {
+            color: white !important;
+            float: left;
+            background: transparent;
+            border: none;
+        }
+        
+        .skin-blue .main-header .navbar .sidebar-toggle:hover {
+            background-color: rgba(0,0,0,0.1) !important;
+            color: white !important;
+        }
+        
+        /* TEXTO BLANCO EN HEADER */
+        .navbar-custom-menu .navbar-nav > li > a {
+            color: white !important;
+        }
+        
+        .navbar-nav > .user-menu > a > span.hidden-xs {
+            color: white !important;
+        }
+        
+        /* SIDEBAR - COLORES GARANTIZADOS */
         .main-sidebar {
+            background-color: #222d32 !important;
             position: fixed;
             top: 0;
             left: 0;
@@ -871,17 +946,56 @@ function initializeFallbackAdminLTE() {
             height: 100vh;
             width: 230px;
             z-index: 810;
-            background: #222d32;
+            transition: transform 0.3s ease-in-out;
         }
         
+        /* USER PANEL - COLORES CORRECTOS */
+        .user-panel > .info {
+            color: white !important;
+        }
+        
+        .user-panel > .info > p {
+            color: white !important;
+            font-weight: 600;
+        }
+        
+        .user-panel > .info > a {
+            color: #b8c7ce !important;
+        }
+        
+        /* MAIN NAVIGATION - COLORES */
+        .sidebar-menu > li.header {
+            color: #4b646f !important;
+            background: #1a2226 !important;
+        }
+        
+        .sidebar-menu > li > a {
+            color: #b8c7ce !important;
+            border-left: 3px solid transparent;
+        }
+        
+        .sidebar-menu > li > a:hover {
+            color: #fff !important;
+            background: #1e282c !important;
+            border-left-color: #3c8dbc !important;
+        }
+        
+        .sidebar-menu > li.active > a {
+            color: #fff !important;
+            background: #1e282c !important;
+            border-left-color: #3c8dbc !important;
+        }
+        
+        /* CONTENIDO */
         .content-wrapper, .main-footer {
             margin-left: 230px;
             transition: margin-left 0.3s ease-in-out;
+            background-color: #ecf0f5;
         }
         
-        /* ESTADOS DEL SIDEBAR */
+        /* ANIMACIONES SIDEBAR */
         .sidebar-collapse .main-sidebar {
-            transform: translate(-230px, 0);
+            transform: translate(-230px, 0) !important;
         }
         
         .sidebar-collapse .content-wrapper,
@@ -890,27 +1004,52 @@ function initializeFallbackAdminLTE() {
         }
         
         .sidebar-open .main-sidebar {
-            transform: translate(0, 0);
+            transform: translate(0, 0) !important;
+        }
+        
+        /* BUSCADOR */
+        .sidebar-form {
+            border: 1px solid #555;
+            margin: 10px;
+            border-radius: 2px;
+        }
+        
+        .sidebar-form .form-control {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: #666;
+        }
+        
+        .sidebar-form .form-control:focus {
+            background: rgba(255,255,255,0.2);
+            color: white !important;
+        }
+        
+        .sidebar-form .form-control:focus ~ .input-group-btn .btn,
+        .sidebar-form .form-control:focus ~ .input-group-btn .fa-search {
+            color: white !important;
         }
         </style>
     `;
     
     // Remover CSS anterior si existe
-    const oldCSS = document.getElementById('adminlte-fallback-css');
+    const oldCSS = document.getElementById('adminlte-universal-css');
     if (oldCSS) oldCSS.remove();
     
     // Agregar nuevo CSS
     document.head.insertAdjacentHTML('beforeend', emergencyCSS);
+    
+    console.log('✅ Estilos universales aplicados');
 }
 
-// 3. REPARACIÓN COMPLETA DEL SIDEBAR TOGGLE
+// 4. REPARACIÓN DEL SIDEBAR TOGGLE (FUNCIONALIDAD)
 function repairSidebarToggle() {
     console.log('🎯 Reparando sidebar toggle...');
     
     const toggleButtons = document.querySelectorAll('.sidebar-toggle');
     
     toggleButtons.forEach(button => {
-        // Remover cualquier event listener existente que pueda estar roto
+        // Clonar y reemplazar para limpiar event listeners rotos
         const newButton = button.cloneNode(true);
         button.parentNode.replaceChild(newButton, button);
         
@@ -926,9 +1065,9 @@ function repairSidebarToggle() {
             const content = document.querySelector('.content-wrapper');
             const footer = document.querySelector('.main-footer');
             
-            // Alternar clases
+            // Alternar clases con animación
             if (body.classList.contains('sidebar-collapse')) {
-                // EXPANDIR - Mostrar sidebar
+                // EXPANDIR
                 body.classList.remove('sidebar-collapse');
                 body.classList.add('sidebar-open');
                 
@@ -938,7 +1077,7 @@ function repairSidebarToggle() {
                 
                 console.log('📖 Sidebar expandido');
             } else {
-                // COLAPSAR - Ocultar sidebar
+                // COLAPSAR
                 body.classList.remove('sidebar-open');
                 body.classList.add('sidebar-collapse');
                 
@@ -949,12 +1088,12 @@ function repairSidebarToggle() {
                 console.log('📕 Sidebar colapsado');
             }
         });
-        
-        console.log('✅ Sidebar toggle reparado');
     });
+    
+    console.log('✅ Sidebar toggle reparado');
 }
 
-// 4. VERIFICACIÓN DE ESTADO INICIAL
+// 5. VERIFICACIÓN DE ESTADO INICIAL
 function checkInitialState() {
     console.log('🔍 Verificando estado inicial...');
     
@@ -962,109 +1101,87 @@ function checkInitialState() {
     const content = document.querySelector('.content-wrapper');
     const sidebar = document.querySelector('.main-sidebar');
     
-    // Verificar si el sidebar debería estar visible
-    const shouldSidebarBeVisible = !body.classList.contains('sidebar-collapse');
-    
-    if (shouldSidebarBeVisible && content && content.offsetLeft === 0) {
-        console.log('⚠️ Contenido no sincronizado, corrigiendo...');
-        content.style.marginLeft = '230px';
-        if (sidebar) sidebar.style.transform = 'translate(0, 0)';
+    // Asegurar clases base
+    if (!body.classList.contains('skin-blue')) {
+        body.classList.add('skin-blue', 'sidebar-mini');
     }
     
-    if (!shouldSidebarBeVisible && content && content.offsetLeft > 0) {
-        console.log('⚠️ Sidebar debería estar oculto, corrigiendo...');
-        content.style.marginLeft = '0';
+    // Verificar sincronización
+    const shouldSidebarBeVisible = !body.classList.contains('sidebar-collapse');
+    
+    if (shouldSidebarBeVisible) {
+        if (content) content.style.marginLeft = '230px';
+        if (sidebar) sidebar.style.transform = 'translate(0, 0)';
+    } else {
+        if (content) content.style.marginLeft = '0';
         if (sidebar) sidebar.style.transform = 'translate(-230px, 0)';
     }
 }
 
-// 5. OBSERVADOR PARA CAMBIOS DINÁMICOS
-function setupLayoutObserver() {
-    const body = document.body;
+// 6. CARGA DINÁMICA DE RECURSOS FALTANTES (GITHUB PAGES)
+function loadMissingResources() {
+    const { isGitHubPages } = detectEnvironment();
     
-    const observer = new MutationObserver(function(mutations) {
-        mutations.forEach(function(mutation) {
-            if (mutation.attributeName === 'class') {
-                console.log('🔄 Cambio detectado en clases del body');
-                setTimeout(checkInitialState, 10);
-            }
-        });
-    });
+    if (!isGitHubPages) return;
     
-    observer.observe(body, { attributes: true });
-    console.log('👀 Observador de layout activado');
-}
-
-// 6. REPARACIÓN PARA MÓVILES
-function fixMobileLayout() {
-    if (window.innerWidth <= 767) {
-        console.log('📱 Modo móvil detectado, colapsando sidebar...');
-        document.body.classList.add('sidebar-collapse');
-        document.body.classList.remove('sidebar-open');
+    console.log('📦 Verificando recursos en GitHub Pages...');
+    
+    // Verificar si AdminLTE CSS está cargado
+    const adminLTELoaded = document.querySelector('link[href*="AdminLTE.min.css"]');
+    if (!adminLTELoaded) {
+        console.log('⚠️ AdminLTE CSS no encontrado, cargando desde CDN...');
         
-        const content = document.querySelector('.content-wrapper');
-        const footer = document.querySelector('.main-footer');
-        if (content) content.style.marginLeft = '0';
-        if (footer) footer.style.marginLeft = '0';
+        // Cargar AdminLTE desde CDN como respaldo
+        const adminLTECSS = document.createElement('link');
+        adminLTECSS.rel = 'stylesheet';
+        adminLTECSS.href = 'https://cdnjs.cloudflare.com/ajax/libs/admin-lte/2.4.18/css/AdminLTE.min.css';
+        document.head.appendChild(adminLTECSS);
+        
+        const adminLTESkins = document.createElement('link');
+        adminLTESkins.rel = 'stylesheet';
+        adminLTESkins.href = 'https://cdnjs.cloudflare.com/ajax/libs/admin-lte/2.4.18/css/skins/skin-blue.min.css';
+        document.head.appendChild(adminLTESkins);
     }
 }
 
-// 7. INICIALIZACIÓN PRINCIPAL ROBUSTA
+// 7. INICIALIZACIÓN PRINCIPAL
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('🎬 DOM cargado - Iniciando AdminLTE...');
+    console.log('🎬 DOM cargado - Iniciando sistema universal...');
     
-    // Paso 1: Forzar AdminLTE
-    setTimeout(forceAdminLTEInitialization, 100);
+    // Paso 1: Detectar entorno y corregir rutas
+    setTimeout(fixGitHubPagesPaths, 100);
     
-    // Paso 2: Reparar sidebar toggle
+    // Paso 2: Forzar estilos (funciona en ambos entornos)
+    setTimeout(forceAdminLTEStyles, 200);
+    
+    // Paso 3: Reparar funcionalidad
     setTimeout(repairSidebarToggle, 300);
     
-    // Paso 3: Verificar estado
-    setTimeout(checkInitialState, 500);
+    // Paso 4: Verificar estado
+    setTimeout(checkInitialState, 400);
     
-    // Paso 4: Configurar observador
-    setTimeout(setupLayoutObserver, 700);
-    
-    // Paso 5: Reparar móviles
-    setTimeout(fixMobileLayout, 900);
+    // Paso 5: Cargar recursos faltantes si es necesario
+    setTimeout(loadMissingResources, 500);
 });
 
-// 8. REPARACIÓN POST-CARGA COMPLETA
+// 8. REPARACIÓN POST-CARGA
 window.addEventListener('load', function() {
-    console.log('🏁 Página completamente cargada - Verificaciones finales...');
+    console.log('🏁 Página cargada - Aplicando ajustes finales...');
     
-    // Esperar a que todos los recursos carguen
     setTimeout(function() {
-        console.log('🔧 Aplicando reparaciones finales...');
-        
-        // Forzar verificación final
+        // Verificación final
         checkInitialState();
         
-        // Verificar que el toggle funcione
-        const toggle = document.querySelector('.sidebar-toggle');
-        if (toggle) {
-            console.log('✅ Toggle disponible:', toggle);
-        } else {
-            console.log('❌ Toggle no encontrado');
-        }
+        // Forzar estilos una vez más por si acaso
+        forceAdminLTEStyles();
         
-        // Verificar estado actual
-        const body = document.body;
-        console.log('📊 Estado actual:', {
-            sidebarCollapse: body.classList.contains('sidebar-collapse'),
-            sidebarOpen: body.classList.contains('sidebar-open'),
-            contentMargin: document.querySelector('.content-wrapper')?.style.marginLeft
-        });
+        const { isGitHubPages } = detectEnvironment();
+        console.log('✅ Sistema universal listo - GitHub Pages:', isGitHubPages);
         
     }, 1000);
 });
 
-// 9. MANEJADOR DE ERRORES GLOBAL
-window.addEventListener('error', function(e) {
-    console.error('🚨 Error global detectado:', e.error);
-});
-
-console.log('🎉 Script de AdminLTE cargado - Listo para reparar');
+console.log('🌐 Script universal cargado - Compatible con Local y GitHub Pages');
 </script>
   </body>
 </html>
