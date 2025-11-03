@@ -822,24 +822,44 @@
 <!-- REEMPLAZA TODO TU SCRIPT FINAL CON ESTE: -->
 <!-- REEMPLAZA EL SCRIPT ANTERIOR CON ESTE: -->
 <!-- REEMPLAZA EL SCRIPT ANTERIOR CON ESTE: -->
+<!-- 
+   SCRIPT UNIVERSAL - FUNCIONA EN TODAS LAS PÁGINAS
+   Coloca este script al final de CADA archivo HTML en:
+   - pages/charts/
+   - pages/tables/ 
+   - pages/calendar/
+   - Y cualquier otra carpeta
+-->
 <script>
 // =====================================================
-// SCRIPT UNIVERSAL COMPLETO - TODOS LOS ESTILOS INCLUIDOS
+// SCRIPT UNIVERSAL ADMINLTE - PARA TODAS LAS PÁGINAS
 // =====================================================
 
-// 1. DETECCIÓN AUTOMÁTICA DE ENTORNO
-function detectEnvironment() {
+// 1. DETECCIÓN AUTOMÁTICA DE ENTORNO Y RUTAS
+function detectEnvironmentAndPaths() {
     const currentUrl = window.location.href;
-    const isGitHubPages = currentUrl.includes('github.io') || currentUrl.includes('.github.io');
+    const currentPath = window.location.pathname;
+    const isGitHubPages = currentUrl.includes('github.io');
     const repoName = extractRepoName(currentUrl);
+    
+    // Determinar depth según la ubicación de la página
+    let depth = '';
+    if (currentPath.includes('/pages/')) {
+        depth = '../../'; // Para pages/charts/, pages/tables/, etc.
+    } else if (currentPath.includes('/charts/') || currentPath.includes('/tables/')) {
+        depth = '../'; // Para subcarpetas dentro de pages/
+    } else {
+        depth = './'; // Para raíz
+    }
     
     console.log('🌍 Entorno detectado:', {
         isGitHubPages: isGitHubPages,
         repoName: repoName,
-        currentUrl: currentUrl
+        currentPath: currentPath,
+        depth: depth
     });
     
-    return { isGitHubPages, repoName };
+    return { isGitHubPages, repoName, depth };
 }
 
 function extractRepoName(url) {
@@ -848,323 +868,157 @@ function extractRepoName(url) {
     return match ? match[2] : '';
 }
 
-// 2. CORRECCIÓN DE RUTAS PARA GITHUB PAGES
-function fixGitHubPagesPaths() {
-    const { isGitHubPages, repoName } = detectEnvironment();
+// 2. CORRECCIÓN INTELIGENTE DE RUTAS
+function fixAllPaths() {
+    const { isGitHubPages, repoName, depth } = detectEnvironmentAndPaths();
     
     if (!isGitHubPages) {
-        console.log('✅ Entorno local - Rutas OK');
+        console.log('✅ Entorno local - Rutas preservadas');
         return;
     }
     
     console.log('🔄 Corrigiendo rutas para GitHub Pages...');
     
-    // Base path para GitHub Pages
     const basePath = `/${repoName}`;
     
     // Corregir enlaces de navegación
-    document.querySelectorAll('a[href*="../../"]').forEach(link => {
-        const oldHref = link.getAttribute('href');
-        const newHref = oldHref.replace('../../', `${basePath}/`);
-        link.setAttribute('href', newHref);
+    document.querySelectorAll('a[href]').forEach(link => {
+        const href = link.getAttribute('href');
+        if (href.startsWith('../../') || href.startsWith('../') || href.startsWith('./')) {
+            const newHref = href.replace(/^(\.\.\/|\.\/)+/, `${basePath}/`);
+            link.setAttribute('href', newHref);
+        }
     });
     
-    // Corregir scripts
-    document.querySelectorAll('script[src*="../../"]').forEach(script => {
-        const oldSrc = script.getAttribute('src');
-        const newSrc = oldSrc.replace('../../', `${basePath}/`);
-        script.setAttribute('src', newSrc);
-    });
+    // Corregir recursos (CSS, JS, imágenes)
+    const resources = [
+        ...document.querySelectorAll('link[href*="../"]'),
+        ...document.querySelectorAll('script[src*="../"]'),
+        ...document.querySelectorAll('img[src*="../"]')
+    ];
     
-    // Corregir stylesheets
-    document.querySelectorAll('link[href*="../../"]').forEach(link => {
-        const oldHref = link.getAttribute('href');
-        const newHref = oldHref.replace('../../', `${basePath}/`);
-        link.setAttribute('href', newHref);
+    resources.forEach(resource => {
+        const attr = resource.getAttribute('href') ? 'href' : 'src';
+        const oldPath = resource.getAttribute(attr);
+        if (oldPath && (oldPath.includes('../') || oldPath.includes('./'))) {
+            const newPath = oldPath.replace(/^(\.\.\/|\.\/)+/, `${basePath}/`);
+            resource.setAttribute(attr, newPath);
+        }
     });
 }
 
-// 3. FORZAR ESTILOS ADMINLTE COMPLETOS
-function forceAdminLTEStyles() {
-    console.log('🎨 Forzando estilos AdminLTE completos...');
+// 3. ESTILOS UNIVERSALES ADMINLTE
+function applyUniversalAdminLTEStyles() {
+    console.log('🎨 Aplicando estilos universales AdminLTE...');
     
-    const emergencyCSS = `
-        <style id="adminlte-complete-css">
-        /* ===== ESTILOS UNIVERSALES - FUNCIONAN EN CUALQUIER ENTORNO ===== */
+    const universalCSS = `
+        <style id="adminlte-universal-styles">
+        /* ===== ESTILOS UNIVERSALES ADMINLTE ===== */
         
-        /* HEADER PRINCIPAL - COLORES GARANTIZADOS */
+        /* HEADER PRINCIPAL */
         .skin-blue .main-header .navbar {
             background-color: #3c8dbc !important;
             border-color: #367fa9 !important;
-            margin-left: 230px;
         }
         
         .skin-blue .main-header .logo {
             background-color: #367fa9 !important;
             color: white !important;
-            border-bottom: 1px solid #367fa9 !important;
-            width: 230px;
         }
         
         .skin-blue .main-header .navbar .sidebar-toggle {
             color: white !important;
-            float: left;
-            background: transparent;
-            border: none;
         }
         
-        .skin-blue .main-header .navbar .sidebar-toggle:hover {
-            background-color: rgba(0,0,0,0.1) !important;
-            color: white !important;
-        }
-        
-        /* TEXTO BLANCO EN HEADER */
-        .navbar-custom-menu .navbar-nav > li > a {
-            color: white !important;
-        }
-        
+        /* TEXTO EN HEADER */
+        .navbar-custom-menu .navbar-nav > li > a,
         .navbar-nav > .user-menu > a > span.hidden-xs {
             color: white !important;
-            font-weight: 600;
         }
         
-        /* ===== DROPDOWN DEL USUARIO - ESTILOS COMPLETOS ===== */
-        .navbar-nav > .user-menu > .dropdown-menu {
-            border-top-left-radius: 4px;
-            border-top-right-radius: 4px;
-            padding: 0;
-            border-top-width: 0;
-            width: 280px;
-        }
-        
+        /* DROPDOWN DEL USUARIO */
         .user-header {
             background-color: #3c8dbc !important;
             color: white !important;
-            text-align: center !important;
-            padding: 20px !important;
-            height: auto !important;
-            border-top-left-radius: 4px;
-            border-top-right-radius: 4px;
         }
         
         .user-header img.img-circle {
             border: 3px solid rgba(255,255,255,0.2) !important;
-            width: 90px !important;
-            height: 90px !important;
-            margin-bottom: 15px;
         }
         
-        .user-header p {
-            color: white !important;
-            margin: 10px 0 5px 0 !important;
-            font-size: 17px !important;
-            font-weight: 600 !important;
-            line-height: 1.2;
-        }
-        
+        .user-header p,
         .user-header small {
-            color: rgba(255,255,255,0.8) !important;
-            display: block !important;
-            font-size: 12px !important;
-            margin-top: 5px !important;
+            color: white !important;
         }
         
-        .user-body {
-            padding: 15px !important;
-            border-bottom: 1px solid #f4f4f4;
-            border-top: 1px solid #f4f4f4;
-        }
-        
-        .user-body .col-xs-4 {
-            padding: 0 5px;
-        }
-        
-        .user-body a {
-            color: #555 !important;
-            font-size: 14px;
-            text-decoration: none;
-        }
-        
-        .user-body a:hover {
-            color: #3c8dbc !important;
-        }
-        
-        .user-footer {
-            background-color: #f9f9f9;
-            padding: 15px !important;
-            border-bottom-left-radius: 4px;
-            border-bottom-right-radius: 4px;
-        }
-        
-        .user-footer .btn {
-            border-radius: 3px;
-            font-size: 13px;
-            padding: 6px 12px;
-        }
-        
-        .user-footer .btn-default {
-            background-color: #f4f4f4;
-            border-color: #ddd;
-            color: #444;
-        }
-        
-        .user-footer .btn-default:hover {
-            background-color: #e7e7e7;
-            border-color: #adadad;
-        }
-        
-        /* ===== SIDEBAR - COLORES GARANTIZADOS ===== */
+        /* SIDEBAR */
         .main-sidebar {
             background-color: #222d32 !important;
-            position: fixed;
-            top: 0;
-            left: 0;
-            padding-top: 50px;
-            height: 100vh;
-            width: 230px;
-            z-index: 810;
-            transition: transform 0.3s ease-in-out;
-        }
-        
-        /* USER PANEL - COLORES CORRECTOS */
-        .user-panel {
-            padding: 10px !important;
-            border-bottom: 1px solid #1a2226 !important;
-        }
-        
-        .user-panel > .image > img {
-            width: 45px !important;
-            height: 45px !important;
         }
         
         .user-panel > .info {
             color: white !important;
-            padding: 5px 5px 5px 15px !important;
-            line-height: 1 !important;
         }
         
         .user-panel > .info > p {
             color: white !important;
-            font-weight: 600;
-            margin-bottom: 5px;
-            font-size: 14px;
         }
         
         .user-panel > .info > a {
             color: #b8c7ce !important;
-            font-size: 11px;
-            text-decoration: none;
-            padding: 0;
         }
         
-        .user-panel > .info > a > .fa-circle {
-            color: #00a65a !important;
-            font-size: 11px;
-        }
-        
-        /* MAIN NAVIGATION - COLORES */
         .sidebar-menu > li.header {
             color: #4b646f !important;
             background: #1a2226 !important;
-            padding: 10px 25px 10px 15px;
-            font-size: 12px;
-            text-transform: uppercase;
-            font-weight: bold;
-            letter-spacing: 1px;
         }
         
         .sidebar-menu > li > a {
             color: #b8c7ce !important;
-            border-left: 3px solid transparent;
-            padding: 12px 5px 12px 15px;
-            display: block;
-            font-size: 14px;
         }
         
-        .sidebar-menu > li > a:hover {
-            color: #fff !important;
-            background: #1e282c !important;
-            border-left-color: #3c8dbc !important;
-            text-decoration: none;
-        }
-        
+        .sidebar-menu > li > a:hover,
         .sidebar-menu > li.active > a {
             color: #fff !important;
             background: #1e282c !important;
             border-left-color: #3c8dbc !important;
         }
         
-        /* ===== BARRA DE BÚSQUEDA - ESTILOS COMPLETOS ===== */
+        /* BARRA DE BÚSQUEDA */
         .sidebar-form {
-            border-radius: 2px !important;
             border: 1px solid #555 !important;
-            margin: 10px 10px !important;
-            overflow: hidden;
         }
         
         .sidebar-form .form-control {
             background: rgba(255,255,255,0.1) !important;
-            border: 1px solid transparent !important;
             color: #666 !important;
-            border-radius: 2px !important;
-            height: 35px !important;
-            font-size: 14px !important;
-            transition: all 0.3s ease !important;
-            box-shadow: none !important;
-        }
-        
-        .sidebar-form .form-control::placeholder {
-            color: #999 !important;
         }
         
         .sidebar-form .form-control:focus {
             background: rgba(255,255,255,0.2) !important;
             color: white !important;
-            border-color: #555 !important;
-            box-shadow: none !important;
-        }
-        
-        .sidebar-form .form-control:focus::placeholder {
-            color: rgba(255,255,255,0.7) !important;
         }
         
         .sidebar-form .btn {
             background: rgba(255,255,255,0.1) !important;
             color: #999 !important;
-            border-radius: 2px !important;
-            height: 35px !important;
-            border: none !important;
-            transition: all 0.3s ease !important;
-            box-shadow: none !important;
         }
         
-        .sidebar-form .form-control:focus ~ .input-group-btn .btn {
-            color: white !important;
-            background: rgba(255,255,255,0.2) !important;
-        }
-        
-        .sidebar-form .fa-search {
-            color: #999 !important;
-            transition: color 0.3s ease !important;
-        }
-        
+        .sidebar-form .form-control:focus ~ .input-group-btn .btn,
         .sidebar-form .form-control:focus ~ .input-group-btn .fa-search {
             color: white !important;
         }
         
-        /* ===== CONTENIDO PRINCIPAL ===== */
+        /* LAYOUT Y ANIMACIONES */
+        .main-sidebar {
+            transition: transform 0.3s ease-in-out !important;
+        }
+        
         .content-wrapper, .main-footer {
-            margin-left: 230px;
-            transition: margin-left 0.3s ease-in-out;
+            transition: margin-left 0.3s ease-in-out !important;
             background-color: #ecf0f5;
         }
         
-        .content-wrapper {
-            min-height: calc(100vh - 101px);
-            padding: 15px;
-        }
-        
-        /* ===== ANIMACIONES SIDEBAR ===== */
         .sidebar-collapse .main-sidebar {
             transform: translate(-230px, 0) !important;
         }
@@ -1178,142 +1032,177 @@ function forceAdminLTEStyles() {
             transform: translate(0, 0) !important;
         }
         
-        /* ===== DROPDOWNS GENERALES ===== */
-        .dropdown-menu {
-            box-shadow: 0 6px 12px rgba(0,0,0,0.175);
-            border: 1px solid rgba(0,0,0,0.15);
-            border-radius: 4px;
+        /* CONTENIDO GENERAL */
+        .content-wrapper {
+            min-height: calc(100vh - 101px);
         }
         
-        .dropdown-menu > li > a {
-            color: #555;
-            padding: 8px 20px;
-            font-size: 14px;
-        }
-        
-        .dropdown-menu > li > a:hover {
-            background-color: #f5f5f5;
-            color: #262626;
+        .box {
+            background: white;
+            border-top: 3px solid #d2d6de;
+            border-radius: 3px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 1px rgba(0,0,0,0.1);
         }
         </style>
     `;
     
     // Remover CSS anterior si existe
-    const oldCSS = document.getElementById('adminlte-complete-css');
+    const oldCSS = document.getElementById('adminlte-universal-styles');
     if (oldCSS) oldCSS.remove();
     
     // Agregar nuevo CSS
-    document.head.insertAdjacentHTML('beforeend', emergencyCSS);
-    
-    console.log('✅ Estilos completos aplicados');
+    document.head.insertAdjacentHTML('beforeend', universalCSS);
 }
 
-// 4. REPARACIÓN DEL SIDEBAR TOGGLE
-function repairSidebarToggle() {
-    console.log('🎯 Reparando sidebar toggle...');
-    
+// 4. REPARACIÓN DEL SIDEBAR TOGGLE (UNIVERSAL)
+function repairSidebarToggleUniversal() {
     const toggleButtons = document.querySelectorAll('.sidebar-toggle');
     
     toggleButtons.forEach(button => {
-        const newButton = button.cloneNode(true);
-        button.parentNode.replaceChild(newButton, button);
-        
-        newButton.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopImmediatePropagation();
-            
-            console.log('🖱️ Sidebar toggle clickeado');
-            
+        // Solo reparar si no funciona
+        button.addEventListener('click', function(e) {
             const body = document.body;
-            const sidebar = document.querySelector('.main-sidebar');
-            const content = document.querySelector('.content-wrapper');
-            const footer = document.querySelector('.main-footer');
             
-            if (body.classList.contains('sidebar-collapse')) {
-                // EXPANDIR
-                body.classList.remove('sidebar-collapse');
-                body.classList.add('sidebar-open');
-                
-                if (content) content.style.marginLeft = '230px';
-                if (footer) footer.style.marginLeft = '230px';
-                if (sidebar) sidebar.style.transform = 'translate(0, 0)';
-                
-                console.log('📖 Sidebar expandido');
-            } else {
-                // COLAPSAR
-                body.classList.remove('sidebar-open');
-                body.classList.add('sidebar-collapse');
-                
-                if (content) content.style.marginLeft = '0';
-                if (footer) footer.style.marginLeft = '0';
-                if (sidebar) sidebar.style.transform = 'translate(-230px, 0)';
-                
-                console.log('📕 Sidebar colapsado');
-            }
+            // Si no pasa nada después de 100ms, forzar la acción
+            setTimeout(() => {
+                if (!body.classList.contains('sidebar-collapse') && !body.classList.contains('sidebar-open')) {
+                    console.log('🔄 Forzando acción del sidebar...');
+                    
+                    if (body.classList.contains('sidebar-collapse')) {
+                        body.classList.remove('sidebar-collapse');
+                        body.classList.add('sidebar-open');
+                    } else {
+                        body.classList.remove('sidebar-open');
+                        body.classList.add('sidebar-collapse');
+                    }
+                    
+                    // Sincronizar contenido
+                    const content = document.querySelector('.content-wrapper');
+                    const footer = document.querySelector('.main-footer');
+                    const sidebar = document.querySelector('.main-sidebar');
+                    
+                    if (body.classList.contains('sidebar-collapse')) {
+                        if (content) content.style.marginLeft = '0';
+                        if (footer) footer.style.marginLeft = '0';
+                        if (sidebar) sidebar.style.transform = 'translate(-230px, 0)';
+                    } else {
+                        if (content) content.style.marginLeft = '230px';
+                        if (footer) footer.style.marginLeft = '230px';
+                        if (sidebar) sidebar.style.transform = 'translate(0, 0)';
+                    }
+                }
+            }, 100);
         });
     });
 }
 
-// 5. VERIFICACIÓN DE ESTADO INICIAL
-function checkInitialState() {
-    console.log('🔍 Verificando estado inicial...');
-    
+// 5. SINCRONIZACIÓN AUTOMÁTICA DEL LAYOUT
+function setupLayoutSynchronization() {
     const body = document.body;
     const content = document.querySelector('.content-wrapper');
+    const footer = document.querySelector('.main-footer');
     const sidebar = document.querySelector('.main-sidebar');
     
-    // Asegurar clases base
-    if (!body.classList.contains('skin-blue')) {
-        body.classList.add('skin-blue', 'sidebar-mini');
+    // Establecer estado inicial
+    function syncLayout() {
+        if (body.classList.contains('sidebar-collapse')) {
+            if (content) content.style.marginLeft = '0';
+            if (footer) footer.style.marginLeft = '0';
+            if (sidebar) sidebar.style.transform = 'translate(-230px, 0)';
+        } else {
+            if (content) content.style.marginLeft = '230px';
+            if (footer) footer.style.marginLeft = '230px';
+            if (sidebar) sidebar.style.transform = 'translate(0, 0)';
+        }
     }
     
-    // Verificar sincronización
-    const shouldSidebarBeVisible = !body.classList.contains('sidebar-collapse');
+    // Observar cambios en las clases del body
+    const observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            if (mutation.attributeName === 'class') {
+                setTimeout(syncLayout, 10);
+            }
+        });
+    });
     
-    if (shouldSidebarBeVisible) {
-        if (content) content.style.marginLeft = '230px';
-        if (sidebar) sidebar.style.transform = 'translate(0, 0)';
-    } else {
-        if (content) content.style.marginLeft = '0';
-        if (sidebar) sidebar.style.transform = 'translate(-230px, 0)';
+    observer.observe(body, { attributes: true });
+    
+    // Sincronizar inicialmente
+    syncLayout();
+}
+
+// 6. CARGA DE RECURSOS DE RESPALDO (SOLO GITHUB PAGES)
+function loadFallbackResources() {
+    const { isGitHubPages } = detectEnvironmentAndPaths();
+    
+    if (!isGitHubPages) return;
+    
+    // Verificar si AdminLTE CSS está cargado
+    const adminLTELoaded = document.querySelector('link[href*="AdminLTE"]');
+    if (!adminLTELoaded) {
+        console.log('📦 Cargando AdminLTE desde CDN...');
+        
+        // Cargar Bootstrap (dependencia)
+        const bootstrapCSS = document.createElement('link');
+        bootstrapCSS.rel = 'stylesheet';
+        bootstrapCSS.href = 'https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css';
+        document.head.appendChild(bootstrapCSS);
+        
+        // Cargar AdminLTE
+        const adminLTECSS = document.createElement('link');
+        adminLTECSS.rel = 'stylesheet';
+        adminLTECSS.href = 'https://cdnjs.cloudflare.com/ajax/libs/admin-lte/2.4.18/css/AdminLTE.min.css';
+        document.head.appendChild(adminLTECSS);
+        
+        const adminLTESkins = document.createElement('link');
+        adminLTESkins.rel = 'stylesheet';
+        adminLTESkins.href = 'https://cdnjs.cloudflare.com/ajax/libs/admin-lte/2.4.18/css/skins/skin-blue.min.css';
+        document.head.appendChild(adminLTESkins);
     }
 }
 
-// 6. INICIALIZACIÓN PRINCIPAL
+// 7. INICIALIZACIÓN PRINCIPAL UNIVERSAL
+function initializeUniversalAdminLTE() {
+    console.log('🚀 Iniciando AdminLTE Universal...');
+    
+    // Paso 1: Corregir rutas si es necesario
+    fixAllPaths();
+    
+    // Paso 2: Aplicar estilos universales
+    applyUniversalAdminLTEStyles();
+    
+    // Paso 3: Configurar sincronización del layout
+    setupLayoutSynchronization();
+    
+    // Paso 4: Reparar funcionalidades
+    repairSidebarToggleUniversal();
+    
+    // Paso 5: Cargar recursos de respaldo
+    loadFallbackResources();
+    
+    // Paso 6: Asegurar clases base
+    setTimeout(() => {
+        if (!document.body.classList.contains('skin-blue')) {
+            document.body.classList.add('skin-blue', 'sidebar-mini');
+        }
+    }, 500);
+    
+    console.log('✅ AdminLTE Universal inicializado');
+}
+
+// 8. EJECUCIÓN AUTOMÁTICA
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('🎬 DOM cargado - Iniciando sistema completo...');
-    
-    // Paso 1: Detectar entorno y corregir rutas
-    setTimeout(fixGitHubPagesPaths, 100);
-    
-    // Paso 2: Forzar estilos completos
-    setTimeout(forceAdminLTEStyles, 200);
-    
-    // Paso 3: Reparar funcionalidad
-    setTimeout(repairSidebarToggle, 300);
-    
-    // Paso 4: Verificar estado
-    setTimeout(checkInitialState, 400);
+    console.log('📄 Página cargada - Ejecutando AdminLTE Universal');
+    initializeUniversalAdminLTE();
 });
 
-// 7. REPARACIÓN POST-CARGA
 window.addEventListener('load', function() {
-    console.log('🏁 Página cargada - Aplicando ajustes finales...');
-    
-    setTimeout(function() {
-        // Verificación final
-        checkInitialState();
-        
-        // Forzar estilos una vez más
-        forceAdminLTEStyles();
-        
-        const { isGitHubPages } = detectEnvironment();
-        console.log('✅ Sistema completo listo - GitHub Pages:', isGitHubPages);
-        
-    }, 1000);
+    console.log('🖼️ Recursos cargados - Verificaciones finales');
+    setTimeout(initializeUniversalAdminLTE, 100);
 });
 
-console.log('🌐 Script completo cargado - Todos los estilos incluidos');
+console.log('🌐 Script Universal AdminLTE cargado - Listo para cualquier página');
 </script>
   </body>
 </html>
