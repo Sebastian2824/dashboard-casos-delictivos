@@ -5,16 +5,16 @@
     <title>AdminLTE 2 | Flot Charts</title>
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
     <!-- Bootstrap 3.3.2 -->
-    <link href="../../bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <!-- Font Awesome Icons (HTTPS) -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
     <!-- Ionicons (HTTPS) -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet" type="text/css" />
     <!-- Theme style -->
-    <link href="../../dist/css/AdminLTE.min.css" rel="stylesheet" type="text/css" />
+    <link href="dist/css/AdminLTE.min.css" rel="stylesheet" type="text/css" />
     <!-- AdminLTE Skins. Choose a skin from the css/skins 
          folder instead of downloading all of them to reduce the load. -->
-    <link href="../../dist/css/skins/_all-skins.min.css" rel="stylesheet" type="text/css" />
+    <link href="dist/css/skins/_all-skins.min.css" rel="stylesheet" type="text/css" />
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -531,23 +531,23 @@
     </div><!-- ./wrapper -->
 
     <!-- jQuery 2.1.3 -->
-    <script src="../../plugins/jQuery/jQuery-2.1.3.min.js"></script>
+    <script src="plugins/jQuery/jQuery-2.1.3.min.js"></script>
     <!-- Bootstrap 3.3.2 JS -->
-    <script src="../../bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
     <!-- FastClick -->
-    <script src='../../plugins/fastclick/fastclick.min.js'></script>
+    <script src='plugins/fastclick/fastclick.min.js'></script>
     <!-- AdminLTE App -->
-    <script src="../../dist/js/app.min.js" type="text/javascript"></script>
+    <script src="dist/js/app.min.js" type="text/javascript"></script>
     <!-- AdminLTE for demo purposes -->
-    <script src="../../dist/js/demo.js" type="text/javascript"></script>
+    <script src="dist/js/demo.js" type="text/javascript"></script>
     <!-- FLOT CHARTS -->
-    <script src="../../plugins/flot/jquery.flot.min.js" type="text/javascript"></script>
+    <script src="plugins/flot/jquery.flot.min.js" type="text/javascript"></script>
     <!-- FLOT RESIZE PLUGIN - allows the chart to redraw when the window is resized -->
-    <script src="../../plugins/flot/jquery.flot.resize.min.js" type="text/javascript"></script>
+    <script src="plugins/flot/jquery.flot.resize.min.js" type="text/javascript"></script>
     <!-- FLOT PIE PLUGIN - also used to draw donut charts -->
-    <script src="../../plugins/flot/jquery.flot.pie.min.js" type="text/javascript"></script>
+    <script src="plugins/flot/jquery.flot.pie.min.js" type="text/javascript"></script>
     <!-- FLOT CATEGORIES PLUGIN - Used to draw bar charts -->
-    <script src="../../plugins/flot/jquery.flot.categories.min.js" type="text/javascript"></script>
+    <script src="plugins/flot/jquery.flot.categories.min.js" type="text/javascript"></script>
 
     <!-- Page script -->
     <script type="text/javascript">
@@ -830,216 +830,103 @@
    - pages/calendar/
    - Y cualquier otra carpeta
 -->
+<!-- 
+   SCRIPT UNIVERSAL - FUNCIONA EN TODAS LAS PÁGINAS
+   Coloca este script al final de CADA archivo HTML en:
+   - pages/charts/
+   - pages/tables/ 
+   - pages/calendar/
+   - Y cualquier otra carpeta
+-->
 <script>
 // =====================================================
-// CONVERSOR AUTOMÁTICO DE RUTAS PARA GITHUB PAGES
-// Con verificación mejorada de estilos
+// SCRIPT UNIVERSAL ADMINLTE - PARA TODAS LAS PÁGINAS
 // =====================================================
 
-// Configuración específica de tu repositorio
-const GITHUB_PAGES_BASE = 'https://sebastian2824.github.io/dashboard-casos-delictivos';
-const GITHUB_REPO_BASE = 'https://github.com/Sebastian2824/dashboard-casos-delictivos';
-
-function convertRelativePathsToAbsolute() {
+// 1. DETECCIÓN AUTOMÁTICA DE ENTORNO Y RUTAS
+function detectEnvironmentAndPaths() {
     const currentUrl = window.location.href;
+    const currentPath = window.location.pathname;
+    const isGitHubPages = currentUrl.includes('github.io');
+    const repoName = extractRepoName(currentUrl);
     
-    // Solo aplicar en GitHub Pages
-    if (!currentUrl.includes('github.io')) {
-        console.log('✅ Entorno local - Manteniendo rutas relativas');
+    // Determinar depth según la ubicación de la página
+    let depth = '';
+    if (currentPath.includes('/pages/')) {
+        depth = '../../'; // Para pages/charts/, pages/tables/, etc.
+    } else if (currentPath.includes('/charts/') || currentPath.includes('/tables/')) {
+        depth = '../'; // Para subcarpetas dentro de pages/
+    } else {
+        depth = './'; // Para raíz
+    }
+    
+    console.log('🌍 Entorno detectado:', {
+        isGitHubPages: isGitHubPages,
+        repoName: repoName,
+        currentPath: currentPath,
+        depth: depth
+    });
+    
+    return { isGitHubPages, repoName, depth };
+}
+
+function extractRepoName(url) {
+    if (!url.includes('github.io')) return '';
+    const match = url.match(/https?:\/\/([^\/]+)\.github\.io\/([^\/]+)/);
+    return match ? match[2] : '';
+}
+
+// 2. CORRECCIÓN INTELIGENTE DE RUTAS
+function fixAllPaths() {
+    const { isGitHubPages, repoName, depth } = detectEnvironmentAndPaths();
+    
+    if (!isGitHubPages) {
+        console.log('✅ Entorno local - Rutas preservadas');
         return;
     }
     
-    console.log('🔄 Convirtiendo rutas relativas a absolutas para GitHub Pages...');
+    console.log('🔄 Corrigiendo rutas para GitHub Pages...');
     
-    // 1. CONVERTIR HOJAS DE ESTILO (CSS) - Para GitHub Pages funcional
-    document.querySelectorAll('link[href*="../../"]').forEach(link => {
-        const oldHref = link.getAttribute('href');
-        const newHref = convertAssetPath(oldHref);
-        link.setAttribute('href', newHref);
-        console.log('🎨 CSS:', oldHref, '→', newHref);
-    });
+    const basePath = `/${repoName}`;
     
-    // 2. CONVERTIR SCRIPTS (JS) - Para GitHub Pages funcional
-    document.querySelectorAll('script[src*="../../"]').forEach(script => {
-        const oldSrc = script.getAttribute('src');
-        const newSrc = convertAssetPath(oldSrc);
-        script.setAttribute('src', newSrc);
-        console.log('⚡ JS:', oldSrc, '→', newSrc);
-    });
-    
-    // 3. CONVERTIR IMÁGENES - Para GitHub Pages funcional
-    document.querySelectorAll('img[src*="../../"]').forEach(img => {
-        const oldSrc = img.getAttribute('src');
-        const newSrc = convertAssetPath(oldSrc);
-        img.setAttribute('src', newSrc);
-        console.log('🖼️ IMG:', oldSrc, '→', newSrc);
-    });
-    
-    // 4. CONVERTIR ENLACES DE NAVEGACIÓN - Para estructura GitHub
-    document.querySelectorAll('a[href*="../../"]').forEach(link => {
-        const oldHref = link.getAttribute('href');
-        const newHref = convertNavigationPath(oldHref);
-        link.setAttribute('href', newHref);
-        console.log('🔗 LINK:', oldHref, '→', newHref);
-    });
-    
-    console.log('✅ Todas las rutas convertidas correctamente');
-}
-
-// Función para convertir ASSETS (CSS, JS, imágenes) - Para funcionalidad
-function convertAssetPath(relativePath) {
-    const cleanPath = relativePath.replace('../../', '');
-    return `${GITHUB_PAGES_BASE}/${cleanPath}`;
-}
-
-// Función para convertir ENLACES DE NAVEGACIÓN - Para explorar repositorio
-function convertNavigationPath(relativePath) {
-    const cleanPath = relativePath.replace('../../', '');
-    const isFile = cleanPath.includes('.');
-    const isCssFile = cleanPath.includes('.css') || cleanPath.includes('.js') || cleanPath.includes('.html');
-    
-    if (isFile && !isCssFile) {
-        return `${GITHUB_REPO_BASE}/blob/master/${cleanPath}`;
-    } else if (isCssFile) {
-        return `${GITHUB_PAGES_BASE}/${cleanPath}`;
-    } else {
-        return `${GITHUB_REPO_BASE}/tree/master/${cleanPath}`;
-    }
-}
-
-// 5. VERIFICACIÓN MEJORADA DE ESTILOS
-function verifyAndLoadResources() {
-    console.log('🔍 Verificando carga de recursos...');
-    
-    // Verificación más precisa - buscar elementos específicos de AdminLTE
-    setTimeout(() => {
-        const hasAdminLTEStyles = checkAdminLTEStyles();
-        
-        if (!hasAdminLTEStyles) {
-            console.warn('⚠️ Los estilos de AdminLTE no cargaron, aplicando respaldo...');
-            loadBackupStyles();
-        } else {
-            console.log('✅ Estilos de AdminLTE cargados correctamente');
+    // Corregir enlaces de navegación
+    document.querySelectorAll('a[href]').forEach(link => {
+        const href = link.getAttribute('href');
+        if (href.startsWith('../../') || href.startsWith('../') || href.startsWith('./')) {
+            const newHref = href.replace(/^(\.\.\/|\.\/)+/, `${basePath}/`);
+            link.setAttribute('href', newHref);
         }
-    }, 3000); // Dar más tiempo para que carguen los estilos
-}
-
-// 6. VERIFICACIÓN PRECISA DE ADMINLTE
-function checkAdminLTEStyles() {
-    // Verificar múltiples elementos de AdminLTE
-    const checks = [
-        // Verificar si el sidebar tiene estilos de AdminLTE
-        () => {
-            const sidebar = document.querySelector('.main-sidebar');
-            if (!sidebar) return false;
-            const styles = window.getComputedStyle(sidebar);
-            return styles.backgroundColor === 'rgb(34, 45, 50)'; // #222d32
-        },
-        
-        // Verificar si el header tiene estilos de AdminLTE
-        () => {
-            const navbar = document.querySelector('.main-header .navbar');
-            if (!navbar) return false;
-            const styles = window.getComputedStyle(navbar);
-            return styles.backgroundColor === 'rgb(60, 141, 188)'; // #3c8dbc
-        },
-        
-        // Verificar si hay clases específicas de AdminLTE aplicadas
-        () => {
-            return document.body.classList.contains('skin-blue') && 
-                   document.body.classList.contains('sidebar-mini');
-        },
-        
-        // Verificar si los boxes de AdminLTE tienen estilos
-        () => {
-            const box = document.querySelector('.box');
-            if (!box) return true; // Si no hay boxes, no es determinante
-            const styles = window.getComputedStyle(box);
-            return styles.backgroundColor === 'rgb(255, 255, 255)'; // Blanco
-        }
+    });
+    
+    // Corregir recursos (CSS, JS, imágenes)
+    const resources = [
+        ...document.querySelectorAll('link[href*="../"]'),
+        ...document.querySelectorAll('script[src*="../"]'),
+        ...document.querySelectorAll('img[src*="../"]')
     ];
     
-    // Contar cuántas verificaciones pasan
-    const passedChecks = checks.filter(check => check()).length;
-    console.log(`📊 Verificación de estilos: ${passedChecks}/${checks.length} pruebas pasadas`);
-    
-    // Considerar que los estilos cargaron si al menos 2 verificaciones pasan
-    return passedChecks >= 2;
-}
-
-// 7. CARGAR ESTILOS DE RESPALDO DESDE CDN (SOLO SI ES NECESARIO)
-function loadBackupStyles() {
-    console.log('📦 Cargando estilos de respaldo desde CDN...');
-    
-    // Verificar primero si ya están cargados los CDN para no duplicar
-    const existingCDN = document.querySelector('link[href*="cdnjs"]');
-    if (existingCDN) {
-        console.log('✅ Los estilos CDN ya están cargados');
-        return;
-    }
-    
-    // Cargar Bootstrap desde CDN
-    const bootstrapCSS = document.createElement('link');
-    bootstrapCSS.rel = 'stylesheet';
-    bootstrapCSS.href = 'https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css';
-    document.head.appendChild(bootstrapCSS);
-    
-    // Cargar AdminLTE desde CDN
-    const adminLTECSS = document.createElement('link');
-    adminLTECSS.rel = 'stylesheet';
-    adminLTECSS.href = 'https://cdnjs.cloudflare.com/ajax/libs/admin-lte/2.4.18/css/AdminLTE.min.css';
-    document.head.appendChild(adminLTECSS);
-    
-    const adminLTESkins = document.createElement('link');
-    adminLTESkins.rel = 'stylesheet';
-    adminLTESkins.href = 'https://cdnjs.cloudflare.com/ajax/libs/admin-lte/2.4.18/css/skins/skin-blue.min.css';
-    document.head.appendChild(adminLTESkins);
-    
-    // Cargar Font Awesome desde CDN
-    const fontAwesome = document.createElement('link');
-    fontAwesome.rel = 'stylesheet';
-    fontAwesome.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css';
-    document.head.appendChild(fontAwesome);
-    
-    // Cargar Ionicons desde CDN
-    const ionicons = document.createElement('link');
-    ionicons.rel = 'stylesheet';
-    ionicons.href = 'https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css';
-    document.head.appendChild(ionicons);
-    
-    console.log('✅ Todos los estilos CDN cargados');
-}
-
-// 8. CONVERSIÓN ESPECÍFICA PARA VER ARCHIVOS EN GITHUB
-function convertFileViewLinks() {
-    console.log('📄 Convirtiendo enlaces para ver archivos en GitHub...');
-    
-    document.querySelectorAll('a[href*="../../"]').forEach(link => {
-        const oldHref = link.getAttribute('href');
-        const linkText = link.textContent.toLowerCase();
-        
-        if (linkText.includes('ver') || linkText.includes('source') || linkText.includes('código')) {
-            const newHref = `${GITHUB_REPO_BASE}/blob/master/${oldHref.replace('../../', '')}`;
-            link.setAttribute('href', newHref);
-            console.log('👁️ VER ARCHIVO:', oldHref, '→', newHref);
+    resources.forEach(resource => {
+        const attr = resource.getAttribute('href') ? 'href' : 'src';
+        const oldPath = resource.getAttribute(attr);
+        if (oldPath && (oldPath.includes('../') || oldPath.includes('./'))) {
+            const newPath = oldPath.replace(/^(\.\.\/|\.\/)+/, `${basePath}/`);
+            resource.setAttribute(attr, newPath);
         }
     });
 }
 
-// 9. FORZAR ESTILOS SI FALLAN (RESPALDO EXTRA)
-function forceAdminLTEStyles() {
-    console.log('🎨 Aplicando estilos de respaldo forzados...');
+// 3. ESTILOS UNIVERSALES ADMINLTE
+function applyUniversalAdminLTEStyles() {
+    console.log('🎨 Aplicando estilos universales AdminLTE...');
     
-    const forcedCSS = `
-        <style id="forced-adminlte-styles">
-        /* Estilos mínimos para asegurar funcionalidad */
-        body.skin-blue {
-            background-color: #ecf0f5 !important;
-            font-family: 'Source Sans Pro', sans-serif !important;
-        }
+    const universalCSS = `
+        <style id="adminlte-universal-styles">
+        /* ===== ESTILOS UNIVERSALES ADMINLTE ===== */
         
+        /* HEADER PRINCIPAL */
         .skin-blue .main-header .navbar {
             background-color: #3c8dbc !important;
+            border-color: #367fa9 !important;
         }
         
         .skin-blue .main-header .logo {
@@ -1047,55 +934,283 @@ function forceAdminLTEStyles() {
             color: white !important;
         }
         
+        .skin-blue .main-header .navbar .sidebar-toggle {
+            color: white !important;
+        }
+        
+        /* TEXTO EN HEADER */
+        .navbar-custom-menu .navbar-nav > li > a,
+        .navbar-nav > .user-menu > a > span.hidden-xs {
+            color: white !important;
+        }
+        
+        /* DROPDOWN DEL USUARIO */
+        .user-header {
+            background-color: #3c8dbc !important;
+            color: white !important;
+        }
+        
+        .user-header img.img-circle {
+            border: 3px solid rgba(255,255,255,0.2) !important;
+        }
+        
+        .user-header p,
+        .user-header small {
+            color: white !important;
+        }
+        
+        /* SIDEBAR */
         .main-sidebar {
             background-color: #222d32 !important;
         }
         
+        .user-panel > .info {
+            color: white !important;
+        }
+        
+        .user-panel > .info > p {
+            color: white !important;
+        }
+        
+        .user-panel > .info > a {
+            color: #b8c7ce !important;
+        }
+        
+        .sidebar-menu > li.header {
+            color: #4b646f !important;
+            background: #1a2226 !important;
+        }
+        
+        .sidebar-menu > li > a {
+            color: #b8c7ce !important;
+        }
+        
+        .sidebar-menu > li > a:hover,
+        .sidebar-menu > li.active > a {
+            color: #fff !important;
+            background: #1e282c !important;
+            border-left-color: #3c8dbc !important;
+        }
+        
+        /* BARRA DE BÚSQUEDA */
+        .sidebar-form {
+            border: 1px solid #555 !important;
+        }
+        
+        .sidebar-form .form-control {
+            background: rgba(255,255,255,0.1) !important;
+            color: #666 !important;
+        }
+        
+        .sidebar-form .form-control:focus {
+            background: rgba(255,255,255,0.2) !important;
+            color: white !important;
+        }
+        
+        .sidebar-form .btn {
+            background: rgba(255,255,255,0.1) !important;
+            color: #999 !important;
+        }
+        
+        .sidebar-form .form-control:focus ~ .input-group-btn .btn,
+        .sidebar-form .form-control:focus ~ .input-group-btn .fa-search {
+            color: white !important;
+        }
+        
+        /* LAYOUT Y ANIMACIONES */
+        .main-sidebar {
+            transition: transform 0.3s ease-in-out !important;
+        }
+        
+        .content-wrapper, .main-footer {
+            transition: margin-left 0.3s ease-in-out !important;
+            background-color: #ecf0f5;
+        }
+        
+        .sidebar-collapse .main-sidebar {
+            transform: translate(-230px, 0) !important;
+        }
+        
+        .sidebar-collapse .content-wrapper,
+        .sidebar-collapse .main-footer {
+            margin-left: 0 !important;
+        }
+        
+        .sidebar-open .main-sidebar {
+            transform: translate(0, 0) !important;
+        }
+        
+        /* CONTENIDO GENERAL */
         .content-wrapper {
-            margin-left: 230px !important;
-            background-color: #ecf0f5 !important;
+            min-height: calc(100vh - 101px);
         }
         
         .box {
-            background: white !important;
-            border-radius: 3px !important;
-            box-shadow: 0 1px 1px rgba(0,0,0,0.1) !important;
+            background: white;
+            border-top: 3px solid #d2d6de;
+            border-radius: 3px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 1px rgba(0,0,0,0.1);
         }
         </style>
     `;
     
-    // Remover si existe
-    const existingForced = document.getElementById('forced-adminlte-styles');
-    if (existingForced) existingForced.remove();
+    // Remover CSS anterior si existe
+    const oldCSS = document.getElementById('adminlte-universal-styles');
+    if (oldCSS) oldCSS.remove();
     
-    // Agregar nuevos estilos
-    document.head.insertAdjacentHTML('beforeend', forcedCSS);
+    // Agregar nuevo CSS
+    document.head.insertAdjacentHTML('beforeend', universalCSS);
 }
 
-// 10. EJECUCIÓN PRINCIPAL MEJORADA
+// 4. REPARACIÓN DEL SIDEBAR TOGGLE (UNIVERSAL)
+function repairSidebarToggleUniversal() {
+    const toggleButtons = document.querySelectorAll('.sidebar-toggle');
+    
+    toggleButtons.forEach(button => {
+        // Solo reparar si no funciona
+        button.addEventListener('click', function(e) {
+            const body = document.body;
+            
+            // Si no pasa nada después de 100ms, forzar la acción
+            setTimeout(() => {
+                if (!body.classList.contains('sidebar-collapse') && !body.classList.contains('sidebar-open')) {
+                    console.log('🔄 Forzando acción del sidebar...');
+                    
+                    if (body.classList.contains('sidebar-collapse')) {
+                        body.classList.remove('sidebar-collapse');
+                        body.classList.add('sidebar-open');
+                    } else {
+                        body.classList.remove('sidebar-open');
+                        body.classList.add('sidebar-collapse');
+                    }
+                    
+                    // Sincronizar contenido
+                    const content = document.querySelector('.content-wrapper');
+                    const footer = document.querySelector('.main-footer');
+                    const sidebar = document.querySelector('.main-sidebar');
+                    
+                    if (body.classList.contains('sidebar-collapse')) {
+                        if (content) content.style.marginLeft = '0';
+                        if (footer) footer.style.marginLeft = '0';
+                        if (sidebar) sidebar.style.transform = 'translate(-230px, 0)';
+                    } else {
+                        if (content) content.style.marginLeft = '230px';
+                        if (footer) footer.style.marginLeft = '230px';
+                        if (sidebar) sidebar.style.transform = 'translate(0, 0)';
+                    }
+                }
+            }, 100);
+        });
+    });
+}
+
+// 5. SINCRONIZACIÓN AUTOMÁTICA DEL LAYOUT
+function setupLayoutSynchronization() {
+    const body = document.body;
+    const content = document.querySelector('.content-wrapper');
+    const footer = document.querySelector('.main-footer');
+    const sidebar = document.querySelector('.main-sidebar');
+    
+    // Establecer estado inicial
+    function syncLayout() {
+        if (body.classList.contains('sidebar-collapse')) {
+            if (content) content.style.marginLeft = '0';
+            if (footer) footer.style.marginLeft = '0';
+            if (sidebar) sidebar.style.transform = 'translate(-230px, 0)';
+        } else {
+            if (content) content.style.marginLeft = '230px';
+            if (footer) footer.style.marginLeft = '230px';
+            if (sidebar) sidebar.style.transform = 'translate(0, 0)';
+        }
+    }
+    
+    // Observar cambios en las clases del body
+    const observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            if (mutation.attributeName === 'class') {
+                setTimeout(syncLayout, 10);
+            }
+        });
+    });
+    
+    observer.observe(body, { attributes: true });
+    
+    // Sincronizar inicialmente
+    syncLayout();
+}
+
+// 6. CARGA DE RECURSOS DE RESPALDO (SOLO GITHUB PAGES)
+function loadFallbackResources() {
+    const { isGitHubPages } = detectEnvironmentAndPaths();
+    
+    if (!isGitHubPages) return;
+    
+    // Verificar si AdminLTE CSS está cargado
+    const adminLTELoaded = document.querySelector('link[href*="AdminLTE"]');
+    if (!adminLTELoaded) {
+        console.log('📦 Cargando AdminLTE desde CDN...');
+        
+        // Cargar Bootstrap (dependencia)
+        const bootstrapCSS = document.createElement('link');
+        bootstrapCSS.rel = 'stylesheet';
+        bootstrapCSS.href = 'https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css';
+        document.head.appendChild(bootstrapCSS);
+        
+        // Cargar AdminLTE
+        const adminLTECSS = document.createElement('link');
+        adminLTECSS.rel = 'stylesheet';
+        adminLTECSS.href = 'https://cdnjs.cloudflare.com/ajax/libs/admin-lte/2.4.18/css/AdminLTE.min.css';
+        document.head.appendChild(adminLTECSS);
+        
+        const adminLTESkins = document.createElement('link');
+        adminLTESkins.rel = 'stylesheet';
+        adminLTESkins.href = 'https://cdnjs.cloudflare.com/ajax/libs/admin-lte/2.4.18/css/skins/skin-blue.min.css';
+        document.head.appendChild(adminLTESkins);
+    }
+}
+
+// 7. INICIALIZACIÓN PRINCIPAL UNIVERSAL
+function initializeUniversalAdminLTE() {
+    console.log('🚀 Iniciando AdminLTE Universal...');
+    
+    // Paso 1: Corregir rutas si es necesario
+    fixAllPaths();
+    
+    // Paso 2: Aplicar estilos universales
+    applyUniversalAdminLTEStyles();
+    
+    // Paso 3: Configurar sincronización del layout
+    setupLayoutSynchronization();
+    
+    // Paso 4: Reparar funcionalidades
+    repairSidebarToggleUniversal();
+    
+    // Paso 5: Cargar recursos de respaldo
+    loadFallbackResources();
+    
+    // Paso 6: Asegurar clases base
+    setTimeout(() => {
+        if (!document.body.classList.contains('skin-blue')) {
+            document.body.classList.add('skin-blue', 'sidebar-mini');
+        }
+    }, 500);
+    
+    console.log('✅ AdminLTE Universal inicializado');
+}
+
+// 8. EJECUCIÓN AUTOMÁTICA
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('🚀 Iniciando conversión inteligente de rutas...');
-    
-    // Convertir rutas inmediatamente
-    convertRelativePathsToAbsolute();
-    
-    // Conversión específica para ver archivos
-    setTimeout(convertFileViewLinks, 300);
-    
-    // Verificar después de más tiempo
-    setTimeout(verifyAndLoadResources, 2000);
-    
-    // Aplicar estilos forzados como respaldo
-    setTimeout(forceAdminLTEStyles, 1000);
+    console.log('📄 Página cargada - Ejecutando AdminLTE Universal');
+    initializeUniversalAdminLTE();
 });
 
-// 11. EJECUCIÓN POST-CARGA
 window.addEventListener('load', function() {
-    console.log('🏁 Página cargada - Verificación final');
-    setTimeout(verifyAndLoadResources, 1000);
+    console.log('🖼️ Recursos cargados - Verificaciones finales');
+    setTimeout(initializeUniversalAdminLTE, 100);
 });
 
-console.log('🔄 Conversor mejorado cargado - Con verificación precisa de estilos');
+console.log('🌐 Script Universal AdminLTE cargado - Listo para cualquier página');
 </script>
   </body>
 </html>
