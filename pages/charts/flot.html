@@ -833,11 +833,13 @@
 <script>
 // =====================================================
 // CONVERSOR AUTOMÁTICO DE RUTAS PARA GITHUB PAGES
+// Incluye /blob/master/ para ver archivos y /tree/master/ para carpetas
 // Específico para: https://sebastian2824.github.io/dashboard-casos-delictivos/
 // =====================================================
 
 // Configuración específica de tu repositorio
 const GITHUB_PAGES_BASE = 'https://sebastian2824.github.io/dashboard-casos-delictivos';
+const GITHUB_REPO_BASE = 'https://github.com/Sebastian2824/dashboard-casos-delictivos';
 
 function convertRelativePathsToAbsolute() {
     const currentUrl = window.location.href;
@@ -850,34 +852,34 @@ function convertRelativePathsToAbsolute() {
     
     console.log('🔄 Convirtiendo rutas relativas a absolutas para GitHub Pages...');
     
-    // 1. CONVERTIR HOJAS DE ESTILO (CSS)
+    // 1. CONVERTIR HOJAS DE ESTILO (CSS) - Para GitHub Pages funcional
     document.querySelectorAll('link[href*="../../"]').forEach(link => {
         const oldHref = link.getAttribute('href');
-        const newHref = convertPath(oldHref);
+        const newHref = convertAssetPath(oldHref); // Usar función para assets
         link.setAttribute('href', newHref);
         console.log('🎨 CSS:', oldHref, '→', newHref);
     });
     
-    // 2. CONVERTIR SCRIPTS (JS)
+    // 2. CONVERTIR SCRIPTS (JS) - Para GitHub Pages funcional
     document.querySelectorAll('script[src*="../../"]').forEach(script => {
         const oldSrc = script.getAttribute('src');
-        const newSrc = convertPath(oldSrc);
+        const newSrc = convertAssetPath(oldSrc); // Usar función para assets
         script.setAttribute('src', newSrc);
         console.log('⚡ JS:', oldSrc, '→', newSrc);
     });
     
-    // 3. CONVERTIR IMÁGENES
+    // 3. CONVERTIR IMÁGENES - Para GitHub Pages funcional
     document.querySelectorAll('img[src*="../../"]').forEach(img => {
         const oldSrc = img.getAttribute('src');
-        const newSrc = convertPath(oldSrc);
+        const newSrc = convertAssetPath(oldSrc); // Usar función para assets
         img.setAttribute('src', newSrc);
         console.log('🖼️ IMG:', oldSrc, '→', newSrc);
     });
     
-    // 4. CONVERTIR ENLACES DE NAVEGACIÓN (opcional)
+    // 4. CONVERTIR ENLACES DE NAVEGACIÓN - Para estructura GitHub
     document.querySelectorAll('a[href*="../../"]').forEach(link => {
         const oldHref = link.getAttribute('href');
-        const newHref = convertPath(oldHref);
+        const newHref = convertNavigationPath(oldHref); // Función diferente para navegación
         link.setAttribute('href', newHref);
         console.log('🔗 LINK:', oldHref, '→', newHref);
     });
@@ -885,13 +887,34 @@ function convertRelativePathsToAbsolute() {
     console.log('✅ Todas las rutas convertidas correctamente');
 }
 
-// Función para convertir rutas relativas a absolutas
-function convertPath(relativePath) {
+// Función para convertir ASSETS (CSS, JS, imágenes) - Para funcionalidad
+function convertAssetPath(relativePath) {
     // Eliminar los ../../
     const cleanPath = relativePath.replace('../../', '');
     
-    // Construir URL absoluta
+    // Construir URL absoluta SIN /blob/master/ para assets funcionales
     return `${GITHUB_PAGES_BASE}/${cleanPath}`;
+}
+
+// Función para convertir ENLACES DE NAVEGACIÓN - Para explorar repositorio
+function convertNavigationPath(relativePath) {
+    // Eliminar los ../../
+    const cleanPath = relativePath.replace('../../', '');
+    
+    // Determinar si es archivo o carpeta
+    const isFile = cleanPath.includes('.');
+    const isCssFile = cleanPath.includes('.css') || cleanPath.includes('.js') || cleanPath.includes('.html');
+    
+    if (isFile && !isCssFile) {
+        // Para ver archivos individuales en GitHub
+        return `${GITHUB_REPO_BASE}/blob/master/${cleanPath}`;
+    } else if (isCssFile) {
+        // Para archivos CSS/JS/HTML - mantener funcionalidad
+        return `${GITHUB_PAGES_BASE}/${cleanPath}`;
+    } else {
+        // Para carpetas
+        return `${GITHUB_REPO_BASE}/tree/master/${cleanPath}`;
+    }
 }
 
 // 5. VERIFICAR Y CARGAR RECURSOS FALTANTES
@@ -945,26 +968,55 @@ function loadBackupStyles() {
         fontAwesome.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css';
         document.head.appendChild(fontAwesome);
     }
+    
+    // Cargar Ionicons desde CDN
+    if (!document.querySelector('link[href*="ionicons"]')) {
+        const ionicons = document.createElement('link');
+        ionicons.rel = 'stylesheet';
+        ionicons.href = 'https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css';
+        document.head.appendChild(ionicons);
+    }
 }
 
-// 7. EJECUCIÓN PRINCIPAL
+// 7. CONVERSIÓN ESPECÍFICA PARA VER ARCHIVOS EN GITHUB
+function convertFileViewLinks() {
+    console.log('📄 Convirtiendo enlaces para ver archivos en GitHub...');
+    
+    // Enlaces específicos para ver archivos fuente
+    document.querySelectorAll('a[href*="../../"]').forEach(link => {
+        const oldHref = link.getAttribute('href');
+        const linkText = link.textContent.toLowerCase();
+        
+        // Si el texto del enlace sugiere que es para "ver código" o similar
+        if (linkText.includes('ver') || linkText.includes('source') || linkText.includes('código')) {
+            const newHref = `${GITHUB_REPO_BASE}/blob/master/${oldHref.replace('../../', '')}`;
+            link.setAttribute('href', newHref);
+            console.log('👁️ VER ARCHIVO:', oldHref, '→', newHref);
+        }
+    });
+}
+
+// 8. EJECUCIÓN PRINCIPAL MEJORADA
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('🚀 Iniciando conversión de rutas...');
+    console.log('🚀 Iniciando conversión inteligente de rutas...');
     
     // Convertir rutas inmediatamente
     convertRelativePathsToAbsolute();
+    
+    // Conversión específica para ver archivos
+    setTimeout(convertFileViewLinks, 300);
     
     // Verificar después de un tiempo
     setTimeout(verifyAndLoadResources, 1000);
 });
 
-// 8. EJECUCIÓN POST-CARGA POR SI ACASO
+// 9. EJECUCIÓN POST-CARGA
 window.addEventListener('load', function() {
     console.log('🏁 Página cargada - Verificación final');
     setTimeout(verifyAndLoadResources, 500);
 });
 
-console.log('🔄 Conversor de rutas cargado - Listo para GitHub Pages');
+console.log('🔄 Conversor inteligente de rutas cargado - Con soporte para /blob/master/');
 </script>
   </body>
 </html>
