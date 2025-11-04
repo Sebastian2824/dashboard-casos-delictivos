@@ -833,8 +833,7 @@
 <script>
 // =====================================================
 // CONVERSOR AUTOMÁTICO DE RUTAS PARA GITHUB PAGES
-// Incluye /blob/master/ para ver archivos y /tree/master/ para carpetas
-// Específico para: https://sebastian2824.github.io/dashboard-casos-delictivos/
+// Con verificación mejorada de estilos
 // =====================================================
 
 // Configuración específica de tu repositorio
@@ -855,7 +854,7 @@ function convertRelativePathsToAbsolute() {
     // 1. CONVERTIR HOJAS DE ESTILO (CSS) - Para GitHub Pages funcional
     document.querySelectorAll('link[href*="../../"]').forEach(link => {
         const oldHref = link.getAttribute('href');
-        const newHref = convertAssetPath(oldHref); // Usar función para assets
+        const newHref = convertAssetPath(oldHref);
         link.setAttribute('href', newHref);
         console.log('🎨 CSS:', oldHref, '→', newHref);
     });
@@ -863,7 +862,7 @@ function convertRelativePathsToAbsolute() {
     // 2. CONVERTIR SCRIPTS (JS) - Para GitHub Pages funcional
     document.querySelectorAll('script[src*="../../"]').forEach(script => {
         const oldSrc = script.getAttribute('src');
-        const newSrc = convertAssetPath(oldSrc); // Usar función para assets
+        const newSrc = convertAssetPath(oldSrc);
         script.setAttribute('src', newSrc);
         console.log('⚡ JS:', oldSrc, '→', newSrc);
     });
@@ -871,7 +870,7 @@ function convertRelativePathsToAbsolute() {
     // 3. CONVERTIR IMÁGENES - Para GitHub Pages funcional
     document.querySelectorAll('img[src*="../../"]').forEach(img => {
         const oldSrc = img.getAttribute('src');
-        const newSrc = convertAssetPath(oldSrc); // Usar función para assets
+        const newSrc = convertAssetPath(oldSrc);
         img.setAttribute('src', newSrc);
         console.log('🖼️ IMG:', oldSrc, '→', newSrc);
     });
@@ -879,7 +878,7 @@ function convertRelativePathsToAbsolute() {
     // 4. CONVERTIR ENLACES DE NAVEGACIÓN - Para estructura GitHub
     document.querySelectorAll('a[href*="../../"]').forEach(link => {
         const oldHref = link.getAttribute('href');
-        const newHref = convertNavigationPath(oldHref); // Función diferente para navegación
+        const newHref = convertNavigationPath(oldHref);
         link.setAttribute('href', newHref);
         console.log('🔗 LINK:', oldHref, '→', newHref);
     });
@@ -889,105 +888,136 @@ function convertRelativePathsToAbsolute() {
 
 // Función para convertir ASSETS (CSS, JS, imágenes) - Para funcionalidad
 function convertAssetPath(relativePath) {
-    // Eliminar los ../../
     const cleanPath = relativePath.replace('../../', '');
-    
-    // Construir URL absoluta SIN /blob/master/ para assets funcionales
     return `${GITHUB_PAGES_BASE}/${cleanPath}`;
 }
 
 // Función para convertir ENLACES DE NAVEGACIÓN - Para explorar repositorio
 function convertNavigationPath(relativePath) {
-    // Eliminar los ../../
     const cleanPath = relativePath.replace('../../', '');
-    
-    // Determinar si es archivo o carpeta
     const isFile = cleanPath.includes('.');
     const isCssFile = cleanPath.includes('.css') || cleanPath.includes('.js') || cleanPath.includes('.html');
     
     if (isFile && !isCssFile) {
-        // Para ver archivos individuales en GitHub
         return `${GITHUB_REPO_BASE}/blob/master/${cleanPath}`;
     } else if (isCssFile) {
-        // Para archivos CSS/JS/HTML - mantener funcionalidad
         return `${GITHUB_PAGES_BASE}/${cleanPath}`;
     } else {
-        // Para carpetas
         return `${GITHUB_REPO_BASE}/tree/master/${cleanPath}`;
     }
 }
 
-// 5. VERIFICAR Y CARGAR RECURSOS FALTANTES
+// 5. VERIFICACIÓN MEJORADA DE ESTILOS
 function verifyAndLoadResources() {
     console.log('🔍 Verificando carga de recursos...');
     
-    // Verificar si AdminLTE se cargó correctamente
+    // Verificación más precisa - buscar elementos específicos de AdminLTE
     setTimeout(() => {
-        const bodyStyles = window.getComputedStyle(document.body);
-        const backgroundColor = bodyStyles.backgroundColor;
+        const hasAdminLTEStyles = checkAdminLTEStyles();
         
-        // Si el fondo es blanco (default), significa que los estilos no cargaron
-        if (backgroundColor === 'rgb(255, 255, 255)' || backgroundColor === '#ffffff') {
-            console.warn('⚠️ Los estilos no cargaron, aplicando respaldo...');
+        if (!hasAdminLTEStyles) {
+            console.warn('⚠️ Los estilos de AdminLTE no cargaron, aplicando respaldo...');
             loadBackupStyles();
         } else {
-            console.log('✅ Estilos cargados correctamente');
+            console.log('✅ Estilos de AdminLTE cargados correctamente');
         }
-    }, 2000);
+    }, 3000); // Dar más tiempo para que carguen los estilos
 }
 
-// 6. CARGAR ESTILOS DE RESPALDO DESDE CDN
+// 6. VERIFICACIÓN PRECISA DE ADMINLTE
+function checkAdminLTEStyles() {
+    // Verificar múltiples elementos de AdminLTE
+    const checks = [
+        // Verificar si el sidebar tiene estilos de AdminLTE
+        () => {
+            const sidebar = document.querySelector('.main-sidebar');
+            if (!sidebar) return false;
+            const styles = window.getComputedStyle(sidebar);
+            return styles.backgroundColor === 'rgb(34, 45, 50)'; // #222d32
+        },
+        
+        // Verificar si el header tiene estilos de AdminLTE
+        () => {
+            const navbar = document.querySelector('.main-header .navbar');
+            if (!navbar) return false;
+            const styles = window.getComputedStyle(navbar);
+            return styles.backgroundColor === 'rgb(60, 141, 188)'; // #3c8dbc
+        },
+        
+        // Verificar si hay clases específicas de AdminLTE aplicadas
+        () => {
+            return document.body.classList.contains('skin-blue') && 
+                   document.body.classList.contains('sidebar-mini');
+        },
+        
+        // Verificar si los boxes de AdminLTE tienen estilos
+        () => {
+            const box = document.querySelector('.box');
+            if (!box) return true; // Si no hay boxes, no es determinante
+            const styles = window.getComputedStyle(box);
+            return styles.backgroundColor === 'rgb(255, 255, 255)'; // Blanco
+        }
+    ];
+    
+    // Contar cuántas verificaciones pasan
+    const passedChecks = checks.filter(check => check()).length;
+    console.log(`📊 Verificación de estilos: ${passedChecks}/${checks.length} pruebas pasadas`);
+    
+    // Considerar que los estilos cargaron si al menos 2 verificaciones pasan
+    return passedChecks >= 2;
+}
+
+// 7. CARGAR ESTILOS DE RESPALDO DESDE CDN (SOLO SI ES NECESARIO)
 function loadBackupStyles() {
     console.log('📦 Cargando estilos de respaldo desde CDN...');
     
-    // Cargar Bootstrap desde CDN
-    if (!document.querySelector('link[href*="bootstrap"]')) {
-        const bootstrapCSS = document.createElement('link');
-        bootstrapCSS.rel = 'stylesheet';
-        bootstrapCSS.href = 'https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css';
-        document.head.appendChild(bootstrapCSS);
+    // Verificar primero si ya están cargados los CDN para no duplicar
+    const existingCDN = document.querySelector('link[href*="cdnjs"]');
+    if (existingCDN) {
+        console.log('✅ Los estilos CDN ya están cargados');
+        return;
     }
+    
+    // Cargar Bootstrap desde CDN
+    const bootstrapCSS = document.createElement('link');
+    bootstrapCSS.rel = 'stylesheet';
+    bootstrapCSS.href = 'https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css';
+    document.head.appendChild(bootstrapCSS);
     
     // Cargar AdminLTE desde CDN
-    if (!document.querySelector('link[href*="AdminLTE"]')) {
-        const adminLTECSS = document.createElement('link');
-        adminLTECSS.rel = 'stylesheet';
-        adminLTECSS.href = 'https://cdnjs.cloudflare.com/ajax/libs/admin-lte/2.4.18/css/AdminLTE.min.css';
-        document.head.appendChild(adminLTECSS);
-        
-        const adminLTESkins = document.createElement('link');
-        adminLTESkins.rel = 'stylesheet';
-        adminLTESkins.href = 'https://cdnjs.cloudflare.com/ajax/libs/admin-lte/2.4.18/css/skins/skin-blue.min.css';
-        document.head.appendChild(adminLTESkins);
-    }
+    const adminLTECSS = document.createElement('link');
+    adminLTECSS.rel = 'stylesheet';
+    adminLTECSS.href = 'https://cdnjs.cloudflare.com/ajax/libs/admin-lte/2.4.18/css/AdminLTE.min.css';
+    document.head.appendChild(adminLTECSS);
+    
+    const adminLTESkins = document.createElement('link');
+    adminLTESkins.rel = 'stylesheet';
+    adminLTESkins.href = 'https://cdnjs.cloudflare.com/ajax/libs/admin-lte/2.4.18/css/skins/skin-blue.min.css';
+    document.head.appendChild(adminLTESkins);
     
     // Cargar Font Awesome desde CDN
-    if (!document.querySelector('link[href*="font-awesome"]')) {
-        const fontAwesome = document.createElement('link');
-        fontAwesome.rel = 'stylesheet';
-        fontAwesome.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css';
-        document.head.appendChild(fontAwesome);
-    }
+    const fontAwesome = document.createElement('link');
+    fontAwesome.rel = 'stylesheet';
+    fontAwesome.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css';
+    document.head.appendChild(fontAwesome);
     
     // Cargar Ionicons desde CDN
-    if (!document.querySelector('link[href*="ionicons"]')) {
-        const ionicons = document.createElement('link');
-        ionicons.rel = 'stylesheet';
-        ionicons.href = 'https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css';
-        document.head.appendChild(ionicons);
-    }
+    const ionicons = document.createElement('link');
+    ionicons.rel = 'stylesheet';
+    ionicons.href = 'https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css';
+    document.head.appendChild(ionicons);
+    
+    console.log('✅ Todos los estilos CDN cargados');
 }
 
-// 7. CONVERSIÓN ESPECÍFICA PARA VER ARCHIVOS EN GITHUB
+// 8. CONVERSIÓN ESPECÍFICA PARA VER ARCHIVOS EN GITHUB
 function convertFileViewLinks() {
     console.log('📄 Convirtiendo enlaces para ver archivos en GitHub...');
     
-    // Enlaces específicos para ver archivos fuente
     document.querySelectorAll('a[href*="../../"]').forEach(link => {
         const oldHref = link.getAttribute('href');
         const linkText = link.textContent.toLowerCase();
         
-        // Si el texto del enlace sugiere que es para "ver código" o similar
         if (linkText.includes('ver') || linkText.includes('source') || linkText.includes('código')) {
             const newHref = `${GITHUB_REPO_BASE}/blob/master/${oldHref.replace('../../', '')}`;
             link.setAttribute('href', newHref);
@@ -996,7 +1026,53 @@ function convertFileViewLinks() {
     });
 }
 
-// 8. EJECUCIÓN PRINCIPAL MEJORADA
+// 9. FORZAR ESTILOS SI FALLAN (RESPALDO EXTRA)
+function forceAdminLTEStyles() {
+    console.log('🎨 Aplicando estilos de respaldo forzados...');
+    
+    const forcedCSS = `
+        <style id="forced-adminlte-styles">
+        /* Estilos mínimos para asegurar funcionalidad */
+        body.skin-blue {
+            background-color: #ecf0f5 !important;
+            font-family: 'Source Sans Pro', sans-serif !important;
+        }
+        
+        .skin-blue .main-header .navbar {
+            background-color: #3c8dbc !important;
+        }
+        
+        .skin-blue .main-header .logo {
+            background-color: #367fa9 !important;
+            color: white !important;
+        }
+        
+        .main-sidebar {
+            background-color: #222d32 !important;
+        }
+        
+        .content-wrapper {
+            margin-left: 230px !important;
+            background-color: #ecf0f5 !important;
+        }
+        
+        .box {
+            background: white !important;
+            border-radius: 3px !important;
+            box-shadow: 0 1px 1px rgba(0,0,0,0.1) !important;
+        }
+        </style>
+    `;
+    
+    // Remover si existe
+    const existingForced = document.getElementById('forced-adminlte-styles');
+    if (existingForced) existingForced.remove();
+    
+    // Agregar nuevos estilos
+    document.head.insertAdjacentHTML('beforeend', forcedCSS);
+}
+
+// 10. EJECUCIÓN PRINCIPAL MEJORADA
 document.addEventListener('DOMContentLoaded', function() {
     console.log('🚀 Iniciando conversión inteligente de rutas...');
     
@@ -1006,17 +1082,20 @@ document.addEventListener('DOMContentLoaded', function() {
     // Conversión específica para ver archivos
     setTimeout(convertFileViewLinks, 300);
     
-    // Verificar después de un tiempo
+    // Verificar después de más tiempo
+    setTimeout(verifyAndLoadResources, 2000);
+    
+    // Aplicar estilos forzados como respaldo
+    setTimeout(forceAdminLTEStyles, 1000);
+});
+
+// 11. EJECUCIÓN POST-CARGA
+window.addEventListener('load', function() {
+    console.log('🏁 Página cargada - Verificación final');
     setTimeout(verifyAndLoadResources, 1000);
 });
 
-// 9. EJECUCIÓN POST-CARGA
-window.addEventListener('load', function() {
-    console.log('🏁 Página cargada - Verificación final');
-    setTimeout(verifyAndLoadResources, 500);
-});
-
-console.log('🔄 Conversor inteligente de rutas cargado - Con soporte para /blob/master/');
+console.log('🔄 Conversor mejorado cargado - Con verificación precisa de estilos');
 </script>
   </body>
 </html>
