@@ -1056,31 +1056,30 @@
         </div>
     </div>
     <div class="box-body chat" id="chat-box" style="height: 300px; overflow-y: auto;">
-        <!-- Mensaje de bienvenida -->
-        <!-- En la sección del chat, actualiza el mensaje de bienvenida: -->
-<div class="item">
-    <img src="https://png.pngtree.com/png-clipart/20230405/original/pngtree-head-robot-avatar-music-logo-png-image_9025565.png" alt="user image" class="online"/>
-    <p class="message">
-        <a href="#" class="name">
-            <small class="text-muted pull-right"><i class="fa fa-clock-o"></i> Justo ahora</small>
-            Asistente
-        </a>
-        ¡Hola! Soy tu asistente de análisis de datos delictivos. Puedo ayudarte a consultar información sobre:
-        <br><br>
-        <strong>🔍 Consultas disponibles:</strong><br>
-        • "Total de delitos en [año]"<br>
-        • "Delitos más comunes en [año]"<br>
-        • "Comisarías con más casos"<br>
-        • "Distritos con mayor incidencia"<br>
-        • "Evolución mensual de [año]"<br>
-        • "Tipos de delito por turno"<br>
-        • "Estadísticas de [comisaría]"<br>
-        • <strong>"Buscar casos en [dirección]"</strong><br>
-        • <strong>"Mostrar casos de [tipo de delito]"</strong><br>
-        <br>
-        <em>Ejemplos: "Buscar en Av. Lima 123", "Mostrar robos agravados", "Total de delitos en 2025"</em>
-    </p>
-</div>
+        <div class="item">
+            <img src="https://png.pngtree.com/png-clipart/20230405/original/pngtree-head-robot-avatar-music-logo-png-image_9025565.png" alt="user image" class="online"/>
+            <p class="message">
+                <a href="#" class="name">
+                    <small class="text-muted pull-right"><i class="fa fa-clock-o"></i> Justo ahora</small>
+                    Asistente
+                </a>
+                ¡Hola! Soy tu asistente de análisis de datos delictivos. Puedo ayudarte a consultar información sobre:
+                <br><br>
+                <strong>🔍 Consultas disponibles:</strong><br>
+                • "Total de delitos en [año]"<br>
+                • "Delitos más comunes en [año]"<br>
+                • "Comisarías con más casos"<br>
+                • "Distritos con mayor incidencia"<br>
+                • "Evolución mensual de [año]"<br>
+                • "Tipos de delito por turno"<br>
+                • "Estadísticas de [comisaría]"<br>
+                • <strong>"Buscar casos en [dirección]"</strong><br>
+                • <strong>"Mostrar casos de [tipo de delito]"</strong><br>
+                • <strong>"[tipo de delito] en [mes] [año]"</strong><br>
+                <br>
+                <em>Ejemplos: "Buscar en Av. Lima 123", "Mostrar robos agravados", "Robos agravados en enero 2025", "Total de delitos en 2025"</em>
+            </p>
+        </div>
     </div>
     <div class="box-footer">
         <div class="input-group">
@@ -1091,15 +1090,14 @@
                 </button>
             </div>
         </div>
-        <!-- Sugerencias rápidas -->
-        <!-- En el footer del chat, actualiza los botones: -->
-<div style="margin-top: 10px; text-align: center;">
-    <small class="text-muted">Sugerencias: </small>
-    <button class="btn btn-xs btn-default" onclick="quickQuery('total 2025')">Total 2025</button>
-    <button class="btn btn-xs btn-default" onclick="quickQuery('delitos comunes')">Delitos comunes</button>
-    <button class="btn btn-xs btn-default" onclick="quickQuery('buscar dirección')">Buscar dirección</button>
-    <button class="btn btn-xs btn-default" onclick="quickQuery('robos agravados')">Robos agravados</button>
-</div>
+        <!-- Sugerencias rápidas actualizadas -->
+        <div style="margin-top: 10px; text-align: center;">
+            <small class="text-muted">Sugerencias: </small>
+            <button class="btn btn-xs btn-default" onclick="quickQuery('total 2025')">Total 2025</button>
+            <button class="btn btn-xs btn-default" onclick="quickQuery('robos agravados')">Robos agravados</button>
+            <button class="btn btn-xs btn-default" onclick="quickQuery('robos agravados en enero 2025')">Robos en enero</button>
+            <button class="btn btn-xs btn-default" onclick="quickQuery('buscar dirección')">Buscar dirección</button>
+        </div>
     </div>
 </div>
 
@@ -1161,33 +1159,64 @@
     </div>
 </div><!-- /.box -->
 
-              <!-- quick email widget -->
-              <div class="box box-info">
-                <div class="box-header">
-                  <i class="fa fa-envelope"></i>
-                  <h3 class="box-title">Quick Email</h3>
-                  <!-- tools box -->
-                  <div class="pull-right box-tools">
-                    <button class="btn btn-info btn-sm" data-widget="remove" data-toggle="tooltip" title="Remove"><i class="fa fa-times"></i></button>
-                  </div><!-- /. tools -->
+              <!-- Sección de Escaneo de tu Ubicación -->
+<div class="box box-danger">
+    <div class="box-header">
+        <i class="fa fa-shield"></i>
+        <h3 class="box-title">Mapa de Seguridad Personal</h3>
+        <div class="box-tools pull-right">
+            <button class="btn btn-box-tool" onclick="toggleSafetyMode()" id="safety-toggle">
+                <i class="fa fa-power-off"></i> Activar
+            </button>
+        </div>
+    </div>
+    <div class="box-body">
+        <!-- Estado del sistema -->
+        <div id="safety-status" class="alert alert-info">
+            <i class="fa fa-info-circle"></i> Sistema de seguridad desactivado
+        </div>
+        
+        <!-- Información de ubicación actual -->
+        <div id="location-info" style="display: none;">
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Tu ubicación:</strong></p>
+                    <p id="current-location">Obteniendo ubicación...</p>
                 </div>
-                <div class="box-body">
-                  <form action="#" method="post">
-                    <div class="form-group">
-                      <input type="email" class="form-control" name="emailto" placeholder="Email to:"/>
-                    </div>
-                    <div class="form-group">
-                      <input type="text" class="form-control" name="subject" placeholder="Subject"/>
-                    </div>
-                    <div>
-                      <textarea class="textarea" placeholder="Message" style="width: 100%; height: 125px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;"></textarea>
-                    </div>
-                  </form>
+                <div class="col-md-6">
+                    <p><strong>Estado:</strong> <span id="safety-level" class="label label-success">Seguro</span></p>
+                    <p><strong>Casos cercanos:</strong> <span id="nearby-cases">0</span></p>
                 </div>
-                <div class="box-footer clearfix">
-                  <button class="pull-right btn btn-default" id="sendEmail">Send <i class="fa fa-arrow-circle-right"></i></button>
-                </div>
-              </div>
+            </div>
+        </div>
+        
+        <!-- Mapa de seguridad -->
+        <div id="safety-map" style="height: 250px; width: 100%; border: 1px solid #ccc; border-radius: 5px; margin-top: 10px; display: none;"></div>
+        
+        <!-- Alertas -->
+        <div id="safety-alerts" style="display: none; margin-top: 10px;">
+            <!-- Las alertas aparecerán aquí dinámicamente -->
+        </div>
+    </div>
+    <div class="box-footer">
+        <div class="row">
+            <div class="col-md-6">
+                <small class="text-muted">Radio de alerta:</small>
+                <select id="alert-radius" class="form-control input-sm">
+                    <option value="500">500 metros</option>
+                    <option value="1000" selected>1 km</option>
+                    <option value="2000">2 km</option>
+                    <option value="5000">5 km</option>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <button class="btn btn-default btn-sm btn-block" onclick="refreshSafetyMap()">
+                    <i class="fa fa-refresh"></i> Actualizar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 
             </section><!-- /.Left col -->
             <!-- right col (We are only adding the ID to make the widgets sortable)-->
@@ -1481,6 +1510,7 @@ var map;
 var markers = [];
 var crimeData = [];
 var currentFilteredData = [];
+
 
 // Función para cargar datos JSON
 async function loadJSONData() {
@@ -2631,14 +2661,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <!-- Script completo del chat con todas las funciones -->
 <script>
-// Variables para el chat
+// Variables para el chat - MEJORADAS
 var chatHistory = [];
 var currentSearchState = null;
-var lastUsedYear = 2025; // Variable para recordar el último año usado
+var lastUsedYear = 2025;
+var currentFilteredData = [];
 
 // Inicializar el chat
 function initChat() {
-    console.log('Inicializando asistente de chat...');
+    console.log('Inicializando asistente de chat mejorado...');
     
     document.getElementById('send-chat').addEventListener('click', processUserQuery);
     document.getElementById('chat-input').addEventListener('keypress', function(e) {
@@ -2653,13 +2684,13 @@ function initChat() {
     });
 }
 
-// Consultas rápidas
+// Consultas rápidas - ACTUALIZADAS
 function quickQuery(queryType) {
     const queries = {
         'total 2025': 'Total de delitos en 2025',
-        'delitos comunes': 'Cuáles son los delitos más comunes en 2025',
-        'buscar dirección': 'Buscar casos en ',
-        'robos agravados': 'Mostrar casos de robo agravado'
+        'robos agravados': 'Mostrar robos agravados',
+        'robos agravados en enero 2025': 'Robos agravados en enero 2025',
+        'buscar dirección': 'Buscar casos en '
     };
     
     const query = queries[queryType] || queryType;
@@ -2672,7 +2703,7 @@ function quickQuery(queryType) {
     }
 }
 
-// Procesar consulta del usuario
+// Procesar consulta del usuario - MEJORADA
 function processUserQuery() {
     const input = document.getElementById('chat-input');
     const query = input.value.trim();
@@ -2687,7 +2718,6 @@ function processUserQuery() {
         
         if (currentSearchState) {
             response = processFollowUpQuery(query, currentSearchState);
-            // NO resetear currentSearchState aquí, solo en casos específicos
         } else {
             response = generateResponse(query);
         }
@@ -2696,31 +2726,39 @@ function processUserQuery() {
     }, 1000);
 }
 
-// Procesar consultas de seguimiento - CORREGIDO
+// Procesar consultas de seguimiento - COMPLETAMENTE REESCRITA
 function processFollowUpQuery(query, state) {
     const lowerQuery = query.toLowerCase();
     
     if (state.type === 'crime_type_year') {
-        const yearMatch = query.match(/\b(20\d{2})\b/);
-        if (yearMatch) {
-            const year = parseInt(yearMatch[1]);
-            lastUsedYear = year; // Actualizar el último año usado
-            return generateCrimeTypeCases(state.crimeType, year);
+        const monthYearResult = parseMonthAndYear(query);
+        if (monthYearResult.month && monthYearResult.year) {
+            return generateCrimeTypeCases(state.crimeType, monthYearResult.year, monthYearResult.month);
+        } else if (monthYearResult.year) {
+            return generateCrimeTypeCases(state.crimeType, monthYearResult.year, null);
+        } else {
+            return "❌ No entendí el año. Por favor especifica un año, por ejemplo: '2025' o 'enero 2025'";
+        }
+    }
+    else if (state.type === 'crime_type_month') {
+        const monthYearResult = parseMonthAndYear(query);
+        if (monthYearResult.year) {
+            return generateCrimeTypeCases(state.crimeType, monthYearResult.year, monthYearResult.month);
         } else {
             return "❌ No entendí el año. Por favor especifica un año, por ejemplo: '2025'";
         }
     }
     else if (state.type === 'crime_type_location') {
-        const result = generateCrimeTypeLocationCases(state.crimeType, state.year, query);
-        currentSearchState = null; // Solo resetear después de completar la búsqueda por ubicación
+        const result = generateCrimeTypeLocationCases(state.crimeType, state.year, query, state.month);
+        currentSearchState = null;
         return result;
     }
     
-    currentSearchState = null; // Resetear si no se entendió
+    currentSearchState = null;
     return "🤔 No entendí tu respuesta. ¿Podrías ser más específico?";
 }
 
-// Generar respuesta principal - CORREGIDO para usar último año
+// Generar respuesta principal - COMPLETAMENTE REESCRITA
 function generateResponse(query) {
     if (!crimeData || crimeData.length === 0) {
         return "⚠️ Lo siento, no hay datos disponibles en este momento. Por favor intenta más tarde.";
@@ -2728,31 +2766,71 @@ function generateResponse(query) {
     
     const lowerQuery = query.toLowerCase();
     
-    // Búsqueda por dirección
+    // 1. Búsqueda por dirección
     if (lowerQuery.includes('buscar') && (lowerQuery.includes('dirección') || lowerQuery.includes('direccion') || lowerQuery.includes('en ') || lowerQuery.includes('calle') || lowerQuery.includes('av.') || lowerQuery.includes('av ') || lowerQuery.includes('jr.'))) {
         return searchByAddress(query);
     }
     
-    // Búsqueda por tipo de delito
-    if (lowerQuery.includes('mostrar') || lowerQuery.includes('casos de') || lowerQuery.includes('buscar') || esTipoDeDelito(lowerQuery)) {
-        return searchByCrimeType(query);
+    // 2. Búsqueda por tipo de delito con mes y año (NUEVA FUNCIONALIDAD)
+    const crimeTypeMonthYear = detectCrimeTypeMonthYear(query);
+    if (crimeTypeMonthYear.crimeType) {
+        if (crimeTypeMonthYear.month && crimeTypeMonthYear.year) {
+            // Caso completo: tipo + mes + año
+            return generateCrimeTypeCases(crimeTypeMonthYear.crimeType, crimeTypeMonthYear.year, crimeTypeMonthYear.month);
+        } else if (crimeTypeMonthYear.year) {
+            // Caso: tipo + año
+            return generateCrimeTypeCases(crimeTypeMonthYear.crimeType, crimeTypeMonthYear.year, null);
+        } else {
+            // Solo tipo de delito - preguntar por año
+            currentSearchState = {
+                type: 'crime_type_year',
+                crimeType: crimeTypeMonthYear.crimeType
+            };
+            return `🔍 Encontré el tipo de delito: <strong>${crimeTypeMonthYear.crimeType}</strong>. ¿De qué año quieres ver los casos? (ej: 2025, 2024, etc.)`;
+        }
     }
     
-    // Consultas existentes - USAR ÚLTIMO AÑO EN LUGAR DE 2025 POR DEFECTO
+    // 3. Consultas generales por año (funcionalidad existente mejorada)
     const yearMatch = query.match(/\b(20\d{2})\b/);
     const year = yearMatch ? parseInt(yearMatch[1]) : lastUsedYear;
+    
+    // Detectar si hay mes en la consulta
+    const monthResult = parseMonth(query);
+    const month = monthResult.month;
     
     // Actualizar lastUsedYear si se especificó un año nuevo
     if (yearMatch) {
         lastUsedYear = year;
     }
     
-    const yearData = crimeData.filter(crime => crime.año_hecho === year);
+    const yearData = month ? 
+        crimeData.filter(crime => crime.año_hecho === year && crime.mes_hecho === month) :
+        crimeData.filter(crime => crime.año_hecho === year);
     
     if (yearData.length === 0) {
-        return `❌ No hay datos disponibles para el año ${year}. Los años disponibles son: ${getAvailableYears()}`;
+        const monthName = month ? getMonthName(month) + ' ' : '';
+        return `❌ No hay datos disponibles para ${monthName}${year}. Los años disponibles son: ${getAvailableYears()}`;
     }
     
+    // Consultas específicas con filtro de mes
+    if (month) {
+        const monthName = getMonthName(month);
+        
+        if (lowerQuery.includes('total') && lowerQuery.includes('delito')) {
+            return generateTotalResponse(yearData, year, monthName);
+        }
+        else if (lowerQuery.includes('delito') && (lowerQuery.includes('común') || lowerQuery.includes('frecuente'))) {
+            return generateCommonCrimesResponse(yearData, year, monthName);
+        }
+        else if (lowerQuery.includes('comisaría') || lowerQuery.includes('comisaria')) {
+            return generateComisariasResponse(yearData, year, monthName);
+        }
+        else {
+            return generateMonthlySummaryResponse(yearData, year, month);
+        }
+    }
+    
+    // Consultas sin mes específico (funcionalidad original)
     if (lowerQuery.includes('total') && lowerQuery.includes('delito')) {
         return generateTotalResponse(yearData, year);
     }
@@ -2779,86 +2857,122 @@ function generateResponse(query) {
     }
 }
 
-// ========== FUNCIONES DE BÚSQUEDA AVANZADA ==========
+// ========== NUEVAS FUNCIONES PARA MANEJO DE MESES ==========
 
-function searchByAddress(query) {
-    const searchTerms = query.toLowerCase()
-        .replace('buscar', '')
-        .replace('dirección', '')
-        .replace('direccion', '')
-        .replace('en', '')
-        .replace('calle', '')
-        .replace('av.', '')
-        .replace('av ', '')
-        .replace('jr.', '')
-        .trim()
-        .split(' ')
-        .filter(term => term.length > 2);
-    
-    if (searchTerms.length === 0) {
-        return "❌ Por favor especifica una dirección para buscar. Ejemplo: 'Buscar en Av. Lima 123'";
-    }
-    
-    const matches = crimeData.filter(crime => {
-        if (!crime.direccion_hecho) return false;
-        const direccion = crime.direccion_hecho.toLowerCase();
-        return searchTerms.some(term => direccion.includes(term));
-    });
-    
-    if (matches.length === 0) {
-        return `🔍 No se encontraron casos en la dirección que mencionas. Los términos buscados fueron: "${searchTerms.join(', ')}"`;
-    }
-    
-    if (matches.length === 1) {
-        return generateSingleCaseResponse(matches[0]);
-    }
-    
-    return generateAddressSearchResults(matches, searchTerms);
-}
-
-function searchByCrimeType(query) {
+// Detectar tipo de delito, mes y año en una consulta
+function detectCrimeTypeMonthYear(query) {
+    const lowerQuery = query.toLowerCase();
     const crimeType = detectCrimeType(query);
     
     if (!crimeType) {
-        return "❌ No pude identificar el tipo de delito. Por sé más específico, por ejemplo: 'Mostrar casos de robo agravado' o 'Buscar hurtos'";
+        return { crimeType: null, month: null, year: null };
     }
     
-    currentSearchState = {
-        type: 'crime_type_year',
-        crimeType: crimeType
-    };
+    const monthResult = parseMonth(query);
+    const yearMatch = query.match(/\b(20\d{2})\b/);
+    const year = yearMatch ? parseInt(yearMatch[1]) : null;
     
-    return `🔍 Encontré el tipo de delito: <strong>${crimeType}</strong>. ¿De qué año quieres ver los casos? (ej: 2025, 2024, etc.)`;
+    return {
+        crimeType: crimeType,
+        month: monthResult.month,
+        year: year
+    };
 }
 
-function generateCrimeTypeCases(crimeType, year) {
-    const matches = crimeData.filter(crime => 
+// Parsear mes y año de una consulta
+function parseMonthAndYear(query) {
+    const monthResult = parseMonth(query);
+    const yearMatch = query.match(/\b(20\d{2})\b/);
+    const year = yearMatch ? parseInt(yearMatch[1]) : null;
+    
+    return {
+        month: monthResult.month,
+        year: year,
+        monthName: monthResult.monthName
+    };
+}
+
+// Parsear mes de una consulta
+function parseMonth(query) {
+    const lowerQuery = query.toLowerCase();
+    const monthPatterns = {
+        1: ['enero', 'ene', '01', '1'],
+        2: ['febrero', 'feb', '02', '2'],
+        3: ['marzo', 'mar', '03', '3'],
+        4: ['abril', 'abr', '04', '4'],
+        5: ['mayo', 'may', '05', '5'],
+        6: ['junio', 'jun', '06', '6'],
+        7: ['julio', 'jul', '07', '7'],
+        8: ['agosto', 'ago', '08', '8'],
+        9: ['septiembre', 'sep', '09', '9'],
+        10: ['octubre', 'oct', '10'],
+        11: ['noviembre', 'nov', '11'],
+        12: ['diciembre', 'dic', '12']
+    };
+    
+    for (const [monthNumber, patterns] of Object.entries(monthPatterns)) {
+        if (patterns.some(pattern => lowerQuery.includes(pattern))) {
+            return {
+                month: parseInt(monthNumber),
+                monthName: getMonthName(parseInt(monthNumber))
+            };
+        }
+    }
+    
+    return { month: null, monthName: null };
+}
+
+// Obtener nombre del mes
+function getMonthName(monthNumber) {
+    const months = [
+        'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+        'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+    ];
+    return months[monthNumber - 1] || 'Desconocido';
+}
+
+// ========== FUNCIONES DE BÚSQUEDA POR TIPO DE DELITO MEJORADAS ==========
+
+// Generar casos por tipo de delito (MEJORADA para manejar mes)
+function generateCrimeTypeCases(crimeType, year, month = null) {
+    let matches = crimeData.filter(crime => 
         crime.año_hecho === year && 
         (crime.modalidad_hecho === crimeType || crime.subtipo_hecho === crimeType)
     );
     
-    if (matches.length === 0) {
-        currentSearchState = null; // Resetear estado
-        return `❌ No se encontraron casos de <strong>${crimeType}</strong> en el año ${year}.`;
+    // Aplicar filtro de mes si se especificó
+    if (month) {
+        matches = matches.filter(crime => crime.mes_hecho === month);
     }
     
+    if (matches.length === 0) {
+        currentSearchState = null;
+        const monthText = month ? ` en ${getMonthName(month)}` : '';
+        return `❌ No se encontraron casos de <strong>${crimeType}</strong> en ${year}${monthText}.`;
+    }
+    
+    // Guardar datos filtrados para consultas posteriores
+    currentFilteredData = matches;
+    
     if (matches.length <= 10) {
-        currentSearchState = null; // Resetear estado
-        return generateCrimeCasesTable(matches, crimeType, year);
+        currentSearchState = null;
+        return generateCrimeCasesTable(matches, crimeType, year, month);
     }
     
     currentSearchState = {
         type: 'crime_type_location',
         crimeType: crimeType,
         year: year,
+        month: month,
         matches: matches
     };
     
-    return `📊 Encontré <strong>${matches.length.toLocaleString()} casos</strong> de ${crimeType} en ${year}. Como son muchos, ¿podrías especificar una ubicación para filtrar? (ej: "Lima", "Miraflores", "Av. Lima", etc.)`;
+    const monthText = month ? ` en ${getMonthName(month)}` : '';
+    return `📊 Encontré <strong>${matches.length.toLocaleString()} casos</strong> de ${crimeType} en ${year}${monthText}. Como son muchos, ¿podrías especificar una ubicación para filtrar? (ej: "Lima", "Miraflores", "Av. Lima", etc.)`;
 }
 
-// CORREGIDO: Esta función ahora maneja correctamente la búsqueda por ubicación
-function generateCrimeTypeLocationCases(crimeType, year, locationQuery) {
+// Generar casos por tipo de delito y ubicación (MEJORADA)
+function generateCrimeTypeLocationCases(crimeType, year, locationQuery, month = null) {
     const locationTerms = locationQuery.toLowerCase().split(' ').filter(term => term.length > 2);
     
     if (!currentSearchState || !currentSearchState.matches) {
@@ -2872,25 +2986,31 @@ function generateCrimeTypeLocationCases(crimeType, year, locationQuery) {
     });
     
     if (filteredMatches.length === 0) {
-        return `❌ No se encontraron casos de <strong>${crimeType}</strong> en ${year} que coincidan con "${locationQuery}". Intenta con otros términos de ubicación.`;
+        const monthText = month ? ` en ${getMonthName(month)}` : '';
+        return `❌ No se encontraron casos de <strong>${crimeType}</strong> en ${year}${monthText} que coincidan con "${locationQuery}". Intenta con otros términos de ubicación.`;
     }
     
-    return generateCrimeCasesTable(filteredMatches, crimeType, year, locationQuery);
+    return generateCrimeCasesTable(filteredMatches, crimeType, year, month, locationQuery);
 }
 
-function generateCrimeCasesTable(cases, crimeType, year, locationFilter = null) {
+// CORREGIDO: Función para generar tabla de casos - AHORA SÍ SE MUESTRA LA TABLA
+function generateCrimeCasesTable(cases, crimeType, year, month = null, locationFilter = null) {
+    const monthText = month ? ` - ${getMonthName(month)}` : '';
+    const locationText = locationFilter ? ` (filtrado por: ${locationFilter})` : '';
+    
     let tableHTML = `
-        <strong>🔍 Casos de ${crimeType} en ${year}${locationFilter ? ` (filtrado por: ${locationFilter})` : ''}</strong>
+        <strong>🔍 Casos de ${crimeType} en ${year}${monthText}${locationText}</strong>
         <br><br>
         <div style="max-height: 300px; overflow-y: auto; font-size: 12px;">
-        <table class="table table-bordered table-condensed" style="background: white; color: #333;">
-            <thead style="background: #f5f5f5;">
+        <table class="table table-bordered table-condensed" style="background: white; color: #333; width: 100%;">
+            <thead style="background: #f5f5f5; position: sticky; top: 0;">
                 <tr>
-                    <th>Fecha</th>
-                    <th>Dirección</th>
-                    <th>Distrito</th>
-                    <th>Comisaría</th>
-                    <th>Turno</th>
+                    <th style="padding: 8px; border: 1px solid #ddd;">Fecha</th>
+                    <th style="padding: 8px; border: 1px solid #ddd;">Mes</th>
+                    <th style="padding: 8px; border: 1px solid #ddd;">Dirección</th>
+                    <th style="padding: 8px; border: 1px solid #ddd;">Distrito</th>
+                    <th style="padding: 8px; border: 1px solid #ddd;">Comisaría</th>
+                    <th style="padding: 8px; border: 1px solid #ddd;">Turno</th>
                 </tr>
             </thead>
             <tbody>
@@ -2898,18 +3018,20 @@ function generateCrimeCasesTable(cases, crimeType, year, locationFilter = null) 
     
     cases.slice(0, 20).forEach(crime => {
         const fecha = crime.fecha_hora_hecho ? new Date(crime.fecha_hora_hecho).toLocaleDateString('es-ES') : 'N/A';
+        const mes = crime.mes_hecho ? getMonthName(crime.mes_hecho) : 'N/A';
         const direccion = crime.direccion_hecho ? (crime.direccion_hecho.length > 30 ? crime.direccion_hecho.substring(0, 30) + '...' : crime.direccion_hecho) : 'N/A';
         const distrito = crime.distrito_hecho || 'N/A';
-        const comisaria = crime.comisaria_hecho || 'N/A'; // Manteniendo tu cambio a comisaria_hecho
+        const comisaria = crime.comisaria_hecho || 'N/A';
         const turno = crime.turno_hecho || 'N/A';
         
         tableHTML += `
             <tr>
-                <td>${fecha}</td>
-                <td title="${crime.direccion_hecho || ''}">${direccion}</td>
-                <td>${distrito}</td>
-                <td>${comisaria}</td>
-                <td>${turno}</td>
+                <td style="padding: 6px; border: 1px solid #ddd;">${fecha}</td>
+                <td style="padding: 6px; border: 1px solid #ddd;">${mes}</td>
+                <td style="padding: 6px; border: 1px solid #ddd;" title="${crime.direccion_hecho || ''}">${direccion}</td>
+                <td style="padding: 6px; border: 1px solid #ddd;">${distrito}</td>
+                <td style="padding: 6px; border: 1px solid #ddd;">${comisaria}</td>
+                <td style="padding: 6px; border: 1px solid #ddd;">${turno}</td>
             </tr>
         `;
     });
@@ -2926,6 +3048,219 @@ function generateCrimeCasesTable(cases, crimeType, year, locationFilter = null) 
     
     return tableHTML;
 }
+// ========== FUNCIÓN DE BÚSQUEDA POR DIRECCIÓN MEJORADA ==========
+
+function searchByAddress(query) {
+    console.log('🔍 Procesando búsqueda por dirección:', query);
+    
+    // Primero extraer posibles fechas de la consulta
+    const dateInfo = extractDateFromAddressQuery(query);
+    const cleanQuery = dateInfo.cleanQuery;
+    
+    const searchTerms = cleanQuery.toLowerCase()
+        .replace('buscar', '')
+        .replace('dirección', '')
+        .replace('direccion', '')
+        .replace('en', '')
+        .replace('calle', '')
+        .replace('av.', '')
+        .replace('av ', '')
+        .replace('jr.', '')
+        .replace('avenida', '')
+        .replace('pje.', '')
+        .replace('pasaje', '')
+        .trim()
+        .split(' ')
+        .filter(term => term.length > 2);
+    
+    if (searchTerms.length === 0) {
+        return "❌ Por favor especifica una dirección para buscar. Ejemplo: 'Buscar en Av. Lima 123' o 'Av. Lima 123 en enero 2025'";
+    }
+    
+    // Filtrar datos según fecha si se especificó
+    let filteredData = crimeData;
+    if (dateInfo.year) {
+        filteredData = filteredData.filter(crime => crime.año_hecho === dateInfo.year);
+        if (dateInfo.month) {
+            filteredData = filteredData.filter(crime => crime.mes_hecho === dateInfo.month);
+        }
+    }
+    
+    const matches = filteredData.filter(crime => {
+        if (!crime.direccion_hecho) return false;
+        const direccion = crime.direccion_hecho.toLowerCase();
+        return searchTerms.some(term => direccion.includes(term));
+    });
+    
+    if (matches.length === 0) {
+        let noResultsMessage = `🔍 No se encontraron casos en la dirección que mencionas`;
+        
+        if (dateInfo.year) {
+            const monthText = dateInfo.month ? ` en ${getMonthName(dateInfo.month)}` : '';
+            noResultsMessage += ` para ${dateInfo.year}${monthText}`;
+        }
+        
+        noResultsMessage += `. Los términos buscados fueron: "${searchTerms.join(', ')}"`;
+        
+        return noResultsMessage;
+    }
+    
+    // Si se especificó fecha, mostrar tabla directamente
+    if (dateInfo.year) {
+        const monthText = dateInfo.month ? ` en ${getMonthName(dateInfo.month)}` : '';
+        const locationText = searchTerms.join(' ');
+        
+        return generateAddressCasesTable(matches, locationText, dateInfo.year, dateInfo.month);
+    }
+    
+    // Comportamiento original si no hay fecha
+    if (matches.length === 1) {
+        return generateSingleCaseResponse(matches[0]);
+    }
+    
+    return generateAddressSearchResults(matches, searchTerms);
+}
+
+// Nueva función para extraer fecha de consultas de dirección
+function extractDateFromAddressQuery(query) {
+    const lowerQuery = query.toLowerCase();
+    
+    // Buscar patrones de fecha
+    const monthResult = parseMonth(query);
+    const yearMatch = query.match(/\b(20\d{2})\b/);
+    
+    const year = yearMatch ? parseInt(yearMatch[1]) : null;
+    const month = monthResult.month;
+    
+    // Crear consulta limpia (sin términos de fecha)
+    let cleanQuery = query;
+    
+    if (yearMatch) {
+        cleanQuery = cleanQuery.replace(yearMatch[0], '').trim();
+    }
+    
+    if (monthResult.monthName) {
+        cleanQuery = cleanQuery.replace(new RegExp(monthResult.monthName, 'gi'), '').trim();
+    }
+    
+    // Remover palabras relacionadas con fecha
+    const dateWords = ['en', 'del', 'de', 'año', 'mes', 'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 
+                      'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+    
+    dateWords.forEach(word => {
+        cleanQuery = cleanQuery.replace(new RegExp('\\b' + word + '\\b', 'gi'), '').trim();
+    });
+    
+    // Limpiar espacios múltiples
+    cleanQuery = cleanQuery.replace(/\s+/g, ' ').trim();
+    
+    return {
+        cleanQuery: cleanQuery,
+        year: year,
+        month: month,
+        monthName: monthResult.monthName
+    };
+}
+
+// Nueva función para generar tabla de casos por dirección con fecha
+function generateAddressCasesTable(cases, location, year, month = null) {
+    const monthText = month ? ` - ${getMonthName(month)}` : '';
+    
+    let tableHTML = `
+        <strong>🔍 Casos en "${location}" en ${year}${monthText}</strong>
+        <br><br>
+        <div style="max-height: 300px; overflow-y: auto; font-size: 12px;">
+        <table class="table table-bordered table-condensed" style="background: white; color: #333; width: 100%;">
+            <thead style="background: #f5f5f5; position: sticky; top: 0;">
+                <tr>
+                    <th style="padding: 8px; border: 1px solid #ddd;">Fecha</th>
+                    <th style="padding: 8px; border: 1px solid #ddd;">Mes</th>
+                    <th style="padding: 8px; border: 1px solid #ddd;">Tipo de Delito</th>
+                    <th style="padding: 8px; border: 1px solid #ddd;">Dirección</th>
+                    <th style="padding: 8px; border: 1px solid #ddd;">Comisaría</th>
+                    <th style="padding: 8px; border: 1px solid #ddd;">Turno</th>
+                </tr>
+            </thead>
+            <tbody>
+    `;
+    
+    cases.slice(0, 20).forEach(crime => {
+        const fecha = crime.fecha_hora_hecho ? new Date(crime.fecha_hora_hecho).toLocaleDateString('es-ES') : 'N/A';
+        const mes = crime.mes_hecho ? getMonthName(crime.mes_hecho) : 'N/A';
+        const tipoDelito = crime.modalidad_hecho || crime.subtipo_hecho || 'No especificado';
+        const direccion = crime.direccion_hecho ? (crime.direccion_hecho.length > 25 ? crime.direccion_hecho.substring(0, 25) + '...' : crime.direccion_hecho) : 'N/A';
+        const comisaria = crime.comisaria_hecho || 'N/A';
+        const turno = crime.turno_hecho || 'N/A';
+        
+        tableHTML += `
+            <tr>
+                <td style="padding: 6px; border: 1px solid #ddd;">${fecha}</td>
+                <td style="padding: 6px; border: 1px solid #ddd;">${mes}</td>
+                <td style="padding: 6px; border: 1px solid #ddd;"><strong>${tipoDelito}</strong></td>
+                <td style="padding: 6px; border: 1px solid #ddd;" title="${crime.direccion_hecho || ''}">${direccion}</td>
+                <td style="padding: 6px; border: 1px solid #ddd;">${comisaria}</td>
+                <td style="padding: 6px; border: 1px solid #ddd;">${turno}</td>
+            </tr>
+        `;
+    });
+    
+    tableHTML += `
+            </tbody>
+        </table>
+        </div>
+    `;
+    
+    if (cases.length > 20) {
+        tableHTML += `<br><small>💡 Se muestran 20 de ${cases.length} casos. Usa filtros más específicos para ver todos.</small>`;
+    }
+    
+    // Agregar resumen estadístico
+    const summary = generateAddressSummary(cases, location, year, month);
+    tableHTML += `<br>${summary}`;
+    
+    return tableHTML;
+}
+
+// Función para generar resumen de búsqueda por dirección
+function generateAddressSummary(cases, location, year, month = null) {
+    const total = cases.length;
+    
+    const crimeTypes = {};
+    const comisarias = {};
+    const turnos = {};
+    
+    cases.forEach(crime => {
+        // Tipos de delito
+        const tipo = crime.modalidad_hecho || crime.subtipo_hecho || 'No especificado';
+        crimeTypes[tipo] = (crimeTypes[tipo] || 0) + 1;
+        
+        // Comisarías
+        const comisaria = crime.comisaria_hecho || 'No especificada';
+        comisarias[comisaria] = (comisarias[comisaria] || 0) + 1;
+        
+        // Turnos
+        if (crime.turno_hecho) {
+            turnos[crime.turno_hecho] = (turnos[crime.turno_hecho] || 0) + 1;
+        }
+    });
+    
+    const topCrime = Object.entries(crimeTypes).sort((a, b) => b[1] - a[1])[0];
+    const topComisaria = Object.entries(comisarias).sort((a, b) => b[1] - a[1])[0];
+    const topTurno = Object.entries(turnos).sort((a, b) => b[1] - a[1])[0];
+    
+    const monthText = month ? ` en ${getMonthName(month)}` : '';
+    
+    return `
+        <div style="background: #f8f9fa; padding: 10px; border-radius: 5px; border-left: 4px solid #0073b7;">
+            <strong>📊 Resumen de "${location}" en ${year}${monthText}:</strong>
+            <br>
+            • <strong>Total de casos:</strong> ${total}
+            ${topCrime ? `<br>• <strong>Delito más común:</strong> ${topCrime[0]} (${topCrime[1]} casos)` : ''}
+            ${topComisaria ? `<br>• <strong>Comisaría principal:</strong> ${topComisaria[0]} (${topComisaria[1]} casos)` : ''}
+            ${topTurno ? `<br>• <strong>Turno más frecuente:</strong> ${topTurno[0]} (${topTurno[1]} casos)` : ''}
+        </div>
+    `;
+}
 
 function generateSingleCaseResponse(crime) {
     const fecha = crime.fecha_hora_hecho ? new Date(crime.fecha_hora_hecho) : null;
@@ -2937,7 +3272,7 @@ function generateSingleCaseResponse(crime) {
         <br>
         📅 <strong>Fecha y Hora:</strong> ${fecha ? fecha.toLocaleString('es-ES') : 'No especificada'}
         <br>
-        🏢 <strong>Comisaría:</strong> ${crime.comisaria_hecho || 'No especificada'} <!-- Manteniendo tu cambio -->
+        🏢 <strong>Comisaría:</strong> ${crime.comisaria_hecho || 'No especificada'}
         <br>
         🔍 <strong>Delito:</strong> ${crime.modalidad_hecho || crime.subtipo_hecho || 'No especificado'}
         <br>
@@ -2977,7 +3312,125 @@ function generateAddressSearchResults(matches, searchTerms) {
     return response;
 }
 
-// ========== FUNCIONES AUXILIARES DEL CHAT ==========
+// ========== FUNCIONES DE RESPUESTA MEJORADAS CON MES ==========
+
+// Respuesta de total con mes
+function generateTotalResponse(yearData, year, monthName = null) {
+    const total = yearData.length;
+    const previousYear = year - 1;
+    const previousYearData = crimeData.filter(crime => crime.año_hecho === previousYear);
+    const previousTotal = previousYearData.length;
+    
+    let variationText = '';
+    if (previousTotal > 0) {
+        const variation = ((total - previousTotal) / previousTotal * 100).toFixed(1);
+        const trend = variation >= 0 ? '📈 aumento' : '📉 disminución';
+        variationText = ` Esto representa un <strong>${Math.abs(variation)}%</strong> de ${trend} comparado con ${previousYear}.`;
+    }
+    
+    const monthText = monthName ? ` en ${monthName}` : '';
+    
+    return `
+        📊 <strong>Total de delitos en ${year}${monthText}: ${total.toLocaleString()}</strong>${variationText}
+        <br><br>
+        <small>💡 <em>Puedes preguntar por "delitos más comunes" o especificar un tipo de delito para más detalles.</em></small>
+    `;
+}
+
+// Respuesta de delitos comunes con mes
+function generateCommonCrimesResponse(yearData, year, monthName = null) {
+    const crimeTypes = {};
+    
+    yearData.forEach(crime => {
+        const tipo = crime.modalidad_hecho || crime.subtipo_hecho || 'No especificado';
+        crimeTypes[tipo] = (crimeTypes[tipo] || 0) + 1;
+    });
+    
+    const topCrimes = Object.entries(crimeTypes)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 5);
+    
+    const monthText = monthName ? ` en ${monthName}` : '';
+    let response = `🔍 <strong>Delitos más comunes en ${year}${monthText}:</strong><br><br>`;
+    
+    topCrimes.forEach(([tipo, cantidad], index) => {
+        const percentage = ((cantidad / yearData.length) * 100).toFixed(1);
+        const emoji = ['🥇', '🥈', '🥉', '4️⃣', '5️⃣'][index] || '🔹';
+        response += `${emoji} <strong>${tipo}</strong>: ${cantidad.toLocaleString()} casos (${percentage}%)<br>`;
+    });
+    
+    return response;
+}
+
+// Respuesta de comisarías con mes
+function generateComisariasResponse(yearData, year, monthName = null) {
+    const comisarias = {};
+    
+    yearData.forEach(crime => {
+        const comisaria = crime.comisaria_hecho || 'No especificada';
+        comisarias[comisaria] = (comisarias[comisaria] || 0) + 1;
+    });
+    
+    const topComisarias = Object.entries(comisarias)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 5);
+    
+    const monthText = monthName ? ` en ${monthName}` : '';
+    let response = `🏢 <strong>Comisarías con más casos en ${year}${monthText}:</strong><br><br>`;
+    
+    topComisarias.forEach(([comisaria, cantidad], index) => {
+        const percentage = ((cantidad / yearData.length) * 100).toFixed(1);
+        const emoji = ['🥇', '🥈', '🥉', '4️⃣', '5️⃣'][index] || '🔹';
+        response += `${emoji} <strong>${comisaria}</strong>: ${cantidad.toLocaleString()} casos (${percentage}%)<br>`;
+    });
+    
+    return response;
+}
+
+// Nueva función para resumen mensual
+function generateMonthlySummaryResponse(yearData, year, month) {
+    const monthName = getMonthName(month);
+    const total = yearData.length;
+    
+    const crimeTypes = {};
+    const comisarias = {};
+    const distritos = {};
+    
+    yearData.forEach(crime => {
+        // Tipos de delito
+        const tipo = crime.modalidad_hecho || crime.subtipo_hecho || 'No especificado';
+        crimeTypes[tipo] = (crimeTypes[tipo] || 0) + 1;
+        
+        // Comisarías
+        const comisaria = crime.comisaria_hecho || 'No especificada';
+        comisarias[comisaria] = (comisarias[comisaria] || 0) + 1;
+        
+        // Distritos
+        if (crime.distrito_hecho) {
+            distritos[crime.distrito_hecho] = (distritos[crime.distrito_hecho] || 0) + 1;
+        }
+    });
+    
+    const topCrime = Object.entries(crimeTypes).sort((a, b) => b[1] - a[1])[0];
+    const topComisaria = Object.entries(comisarias).sort((a, b) => b[1] - a[1])[0];
+    const topDistrito = Object.entries(distritos).sort((a, b) => b[1] - a[1])[0];
+    
+    return `
+        📅 <strong>Resumen de ${monthName} ${year}</strong>
+        <br><br>
+        📊 <strong>Total de delitos:</strong> ${total.toLocaleString()}
+        <br>
+        🔍 <strong>Delito más común:</strong> ${topCrime ? `${topCrime[0]} (${topCrime[1]} casos)` : 'N/A'}
+        <br>
+        🏢 <strong>Comisaría con más casos:</strong> ${topComisaria ? `${topComisaria[0]} (${topComisaria[1]} casos)` : 'N/A'}
+        <br>
+        🗺️ <strong>Distrito más afectado:</strong> ${topDistrito ? `${topDistrito[0]} (${topDistrito[1]} casos)` : 'N/A'}
+        <br><br>
+        <small>💡 <em>Puedes preguntar por un tipo específico de delito, como "robos agravados en ${monthName.toLowerCase()} ${year}"</em></small>
+    `;
+}
+
+// ========== FUNCIONES EXISTENTES (sin cambios) ==========
 
 function addUserMessage(message) {
     const chatBox = document.getElementById('chat-box');
@@ -3044,8 +3497,6 @@ function setChatStatus(status) {
     }
 }
 
-// ========== FUNCIONES DE DETECCIÓN DE DELITOS ==========
-
 function detectCrimeType(text) {
     const lowerText = text.toLowerCase();
     const crimePatterns = {
@@ -3068,78 +3519,6 @@ function detectCrimeType(text) {
     }
     
     return null;
-}
-
-function esTipoDeDelito(text) {
-    return detectCrimeType(text) !== null;
-}
-
-// ========== FUNCIONES DE CONSULTAS BÁSICAS (EXISTENTES) ==========
-
-function generateTotalResponse(yearData, year) {
-    const total = yearData.length;
-    const previousYear = year - 1;
-    const previousYearData = crimeData.filter(crime => crime.año_hecho === previousYear);
-    const previousTotal = previousYearData.length;
-    
-    let variationText = '';
-    if (previousTotal > 0) {
-        const variation = ((total - previousTotal) / previousTotal * 100).toFixed(1);
-        const trend = variation >= 0 ? '📈 aumento' : '📉 disminución';
-        variationText = ` Esto representa un <strong>${Math.abs(variation)}%</strong> de ${trend} comparado con ${previousYear}.`;
-    }
-    
-    return `
-        📊 <strong>Total de delitos en ${year}: ${total.toLocaleString()}</strong>${variationText}
-        <br><br>
-        <small>💡 <em>Puedes preguntar por "delitos más comunes" o "evolución mensual" para más detalles.</em></small>
-    `;
-}
-
-function generateCommonCrimesResponse(yearData, year) {
-    const crimeTypes = {};
-    
-    yearData.forEach(crime => {
-        const tipo = crime.modalidad_hecho || crime.subtipo_hecho || 'No especificado';
-        crimeTypes[tipo] = (crimeTypes[tipo] || 0) + 1;
-    });
-    
-    const topCrimes = Object.entries(crimeTypes)
-        .sort((a, b) => b[1] - a[1])
-        .slice(0, 5);
-    
-    let response = `🔍 <strong>Delitos más comunes en ${year}:</strong><br><br>`;
-    
-    topCrimes.forEach(([tipo, cantidad], index) => {
-        const percentage = ((cantidad / yearData.length) * 100).toFixed(1);
-        const emoji = ['🥇', '🥈', '🥉', '4️⃣', '5️⃣'][index] || '🔹';
-        response += `${emoji} <strong>${tipo}</strong>: ${cantidad.toLocaleString()} casos (${percentage}%)<br>`;
-    });
-    
-    return response;
-}
-
-function generateComisariasResponse(yearData, year) {
-    const comisarias = {};
-    
-    yearData.forEach(crime => {
-        const comisaria = crime.comisaria_hecho || 'No especificada'; // Manteniendo tu cambio
-        comisarias[comisaria] = (comisarias[comisaria] || 0) + 1;
-    });
-    
-    const topComisarias = Object.entries(comisarias)
-        .sort((a, b) => b[1] - a[1])
-        .slice(0, 5);
-    
-    let response = `🏢 <strong>Comisarías con más casos en ${year}:</strong><br><br>`;
-    
-    topComisarias.forEach(([comisaria, cantidad], index) => {
-        const percentage = ((cantidad / yearData.length) * 100).toFixed(1);
-        const emoji = ['🥇', '🥈', '🥉', '4️⃣', '5️⃣'][index] || '🔹';
-        response += `${emoji} <strong>${comisaria}</strong>: ${cantidad.toLocaleString()} casos (${percentage}%)<br>`;
-    });
-    
-    return response;
 }
 
 function generateDistritosResponse(yearData, year) {
@@ -3229,7 +3608,7 @@ function generateTurnoResponse(yearData, year) {
 function generateGeneralStatsResponse(yearData, year) {
     const total = yearData.length;
     const crimeTypes = new Set(yearData.map(crime => crime.modalidad_hecho).filter(Boolean)).size;
-    const comisarias = new Set(yearData.map(crime => crime.comisaria_hecho).filter(Boolean)).size; // Manteniendo tu cambio
+    const comisarias = new Set(yearData.map(crime => crime.comisaria_hecho).filter(Boolean)).size;
     const distritos = new Set(yearData.map(crime => crime.distrito_hecho).filter(Boolean)).size;
     
     return `
@@ -3359,7 +3738,6 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-<!-- Script CORREGIDO para el calendario de AdminLTE -->
 <!-- Script CORREGIDO para el calendario de AdminLTE -->
 <script>
 // Variables para el calendario
@@ -4929,6 +5307,399 @@ async function loadJSONData() {
         updateMainStatistics(); // ✅ También en caso de error
     }
 }
+</script>
+
+<script>
+//Script para la sección del Mapeo de Ubicación.
+// Variables para el mapa de seguridad
+var safetyMap = null;
+var userMarker = null;
+var dangerCircles = [];
+var safetyWatchId = null;
+var isSafetyActive = false;
+var userLocation = null;
+
+// Inicializar el mapa de seguridad
+function initSafetyMap() {
+    console.log('🛡️ Inicializando mapa de seguridad...');
+    
+    const safetyMapElement = document.getElementById('safety-map');
+    if (!safetyMapElement) {
+        console.log('❌ No se encontró el elemento del mapa de seguridad');
+        return;
+    }
+    
+    try {
+        safetyMap = L.map('safety-map').setView([-12.046, -77.031], 13);
+        
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors',
+            maxZoom: 18
+        }).addTo(safetyMap);
+        
+        console.log('✅ Mapa de seguridad inicializado');
+    } catch (error) {
+        console.error('❌ Error inicializando mapa de seguridad:', error);
+    }
+}
+
+// Activar/desactivar modo seguridad
+function toggleSafetyMode() {
+    const toggleBtn = document.getElementById('safety-toggle');
+    const statusElement = document.getElementById('safety-status');
+    
+    if (!isSafetyActive) {
+        // Activar modo seguridad
+        if (navigator.geolocation) {
+            statusElement.className = 'alert alert-warning';
+            statusElement.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Activando sistema de seguridad...';
+            
+            // Inicializar mapa si no existe
+            if (!safetyMap) {
+                initSafetyMap();
+            }
+            
+            // Iniciar seguimiento de ubicación
+            safetyWatchId = navigator.geolocation.watchPosition(
+                position => {
+                    userLocation = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude,
+                        accuracy: position.coords.accuracy
+                    };
+                    
+                    updateSafetyStatus(userLocation);
+                    isSafetyActive = true;
+                    
+                    toggleBtn.innerHTML = '<i class="fa fa-power-off"></i> Desactivar';
+                    statusElement.className = 'alert alert-success';
+                    statusElement.innerHTML = '<i class="fa fa-check-circle"></i> Sistema de seguridad activado';
+                    
+                    // Mostrar elementos de ubicación
+                    document.getElementById('location-info').style.display = 'block';
+                    document.getElementById('safety-map').style.display = 'block';
+                    document.getElementById('safety-alerts').style.display = 'block';
+                    
+                    console.log('🛡️ Modo seguridad activado');
+                },
+                error => {
+                    console.error('❌ Error obteniendo ubicación:', error);
+                    statusElement.className = 'alert alert-danger';
+                    
+                    switch(error.code) {
+                        case error.PERMISSION_DENIED:
+                            statusElement.innerHTML = '<i class="fa fa-exclamation-triangle"></i> Permiso de ubicación denegado';
+                            break;
+                        case error.POSITION_UNAVAILABLE:
+                            statusElement.innerHTML = '<i class="fa fa-exclamation-triangle"></i> Información de ubicación no disponible';
+                            break;
+                        case error.TIMEOUT:
+                            statusElement.innerHTML = '<i class="fa fa-exclamation-triangle"></i> Tiempo de espera agotado';
+                            break;
+                        default:
+                            statusElement.innerHTML = '<i class="fa fa-exclamation-triangle"></i> Error desconocido';
+                    }
+                },
+                {
+                    enableHighAccuracy: true,
+                    timeout: 10000,
+                    maximumAge: 60000
+                }
+            );
+        } else {
+            statusElement.className = 'alert alert-danger';
+            statusElement.innerHTML = '<i class="fa fa-exclamation-triangle"></i> Geolocalización no soportada por este navegador';
+        }
+    } else {
+        // Desactivar modo seguridad
+        if (safetyWatchId) {
+            navigator.geolocation.clearWatch(safetyWatchId);
+            safetyWatchId = null;
+        }
+        
+        isSafetyActive = false;
+        userLocation = null;
+        
+        toggleBtn.innerHTML = '<i class="fa fa-power-off"></i> Activar';
+        statusElement.className = 'alert alert-info';
+        statusElement.innerHTML = '<i class="fa fa-info-circle"></i> Sistema de seguridad desactivado';
+        
+        // Ocultar elementos de ubicación
+        document.getElementById('location-info').style.display = 'none';
+        document.getElementById('safety-map').style.display = 'none';
+        document.getElementById('safety-alerts').style.display = 'none';
+        
+        // Limpiar marcadores
+        if (userMarker) {
+            safetyMap.removeLayer(userMarker);
+            userMarker = null;
+        }
+        
+        dangerCircles.forEach(circle => {
+            safetyMap.removeLayer(circle);
+        });
+        dangerCircles = [];
+        
+        console.log('🛡️ Modo seguridad desactivado');
+    }
+}
+
+// Actualizar estado de seguridad
+function updateSafetyStatus(location) {
+    if (!safetyMap || !location) return;
+    
+    // Actualizar ubicación en el mapa
+    if (userMarker) {
+        safetyMap.removeLayer(userMarker);
+    }
+    
+    userMarker = L.marker([location.lat, location.lng])
+        .addTo(safetyMap)
+        .bindPopup('<strong>Tu ubicación actual</strong>')
+        .openPopup();
+    
+    // Centrar mapa en la ubicación actual
+    safetyMap.setView([location.lat, location.lng], 15);
+    
+    // Actualizar información de ubicación
+    updateLocationInfo(location);
+    
+    // Buscar casos cercanos
+    const nearbyCases = findNearbyCrimes(location);
+    updateSafetyAlerts(nearbyCases, location);
+    
+    // Actualizar interfaz
+    updateSafetyInterface(nearbyCases);
+}
+
+// Actualizar información de ubicación
+function updateLocationInfo(location) {
+    const locationElement = document.getElementById('current-location');
+    
+    // Usar geocodificación inversa para obtener dirección (simulada)
+    locationElement.innerHTML = `
+        Lat: ${location.lat.toFixed(6)}<br>
+        Lng: ${location.lng.toFixed(6)}<br>
+        <small>Precisión: ±${Math.round(location.accuracy)} metros</small>
+    `;
+}
+
+// Encontrar crímenes cercanos
+function findNearbyCrimes(userLocation) {
+    if (!crimeData || crimeData.length === 0) return [];
+    
+    const radius = parseInt(document.getElementById('alert-radius').value) || 1000;
+    const nearbyCases = [];
+    
+    crimeData.forEach(crime => {
+        if (crime.lat_hecho && crime.long_hecho && 
+            !isNaN(crime.lat_hecho) && !isNaN(crime.long_hecho)) {
+            
+            const distance = calculateDistance(
+                userLocation.lat, userLocation.lng,
+                crime.lat_hecho, crime.long_hecho
+            );
+            
+            if (distance <= radius) {
+                nearbyCases.push({
+                    crime: crime,
+                    distance: Math.round(distance),
+                    dangerLevel: calculateDangerLevel(crime, distance)
+                });
+            }
+        }
+    });
+    
+    // Ordenar por distancia
+    nearbyCases.sort((a, b) => a.distance - b.distance);
+    
+    return nearbyCases;
+}
+
+// Calcular distancia entre dos puntos (Haversine)
+function calculateDistance(lat1, lon1, lat2, lon2) {
+    const R = 6371000; // Radio de la Tierra en metros
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a = 
+        Math.sin(dLat/2) * Math.sin(dLat/2) +
+        Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
+        Math.sin(dLon/2) * Math.sin(dLon/2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    return R * c;
+}
+
+// Calcular nivel de peligro
+function calculateDangerLevel(crime, distance) {
+    let baseScore = 0;
+    
+    // Tipo de delito
+    if (crime.modalidad_hecho) {
+        if (crime.modalidad_hecho.includes('ROBO AGRAVADO')) baseScore += 3;
+        else if (crime.modalidad_hecho.includes('ROBO')) baseScore += 2;
+        else if (crime.modalidad_hecho.includes('HURTO')) baseScore += 1;
+    }
+    
+    // Reciente (últimos 2 años)
+    const currentYear = new Date().getFullYear();
+    if (crime.año_hecho >= currentYear - 2) baseScore += 2;
+    
+    // Distancia (más cercano = más peligroso)
+    if (distance <= 200) baseScore += 3;
+    else if (distance <= 500) baseScore += 2;
+    else if (distance <= 1000) baseScore += 1;
+    
+    return Math.min(baseScore, 5); // Máximo 5
+}
+
+// Actualizar alertas de seguridad
+function updateSafetyAlerts(nearbyCases, userLocation) {
+    const alertsContainer = document.getElementById('safety-alerts');
+    
+    // Limpiar círculos anteriores
+    dangerCircles.forEach(circle => {
+        safetyMap.removeLayer(circle);
+    });
+    dangerCircles = [];
+    
+    if (nearbyCases.length === 0) {
+        alertsContainer.innerHTML = `
+            <div class="alert alert-success">
+                <i class="fa fa-check-circle"></i> 
+                <strong>Zona segura:</strong> No se detectaron casos de robo cercanos en el radio seleccionado.
+            </div>
+        `;
+        return;
+    }
+    
+    let alertsHTML = '';
+    let highDangerCases = 0;
+    
+    nearbyCases.forEach((caseInfo, index) => {
+        const crime = caseInfo.crime;
+        const dangerLevel = caseInfo.dangerLevel;
+        
+        // Agregar círculo de peligro al mapa
+        const dangerCircle = L.circle([crime.lat_hecho, crime.long_hecho], {
+            color: dangerLevel >= 4 ? 'red' : dangerLevel >= 3 ? 'orange' : 'yellow',
+            fillColor: dangerLevel >= 4 ? '#f03' : dangerLevel >= 3 ? '#f90' : '#ff0',
+            fillOpacity: 0.2,
+            radius: 100
+        }).addTo(safetyMap);
+        
+        dangerCircle.bindPopup(`
+            <strong>${crime.modalidad_hecho || 'Delito'}</strong><br>
+            Distancia: ${caseInfo.distance}m<br>
+            Fecha: ${crime.fecha_hora_hecho ? new Date(crime.fecha_hora_hecho).toLocaleDateString('es-ES') : 'N/A'}<br>
+            Dirección: ${crime.direccion_hecho || 'No especificada'}
+        `);
+        
+        dangerCircles.push(dangerCircle);
+        
+        // Contar casos de alto peligro
+        if (dangerLevel >= 4) highDangerCases++;
+        
+        // Crear alerta si es de alto peligro o está muy cerca
+        if (dangerLevel >= 3 || caseInfo.distance <= 300) {
+            const alertType = dangerLevel >= 4 ? 'danger' : 'warning';
+            const icon = dangerLevel >= 4 ? 'fa-exclamation-triangle' : 'fa-warning';
+            
+            alertsHTML += `
+                <div class="alert alert-${alertType}">
+                    <i class="fa ${icon}"></i> 
+                    <strong>¡Precaución!</strong> 
+                    ${crime.modalidad_hecho || 'Caso de robo'} a ${caseInfo.distance}m de tu ubicación.
+                    <small>(${crime.direccion_hecho ? crime.direccion_hecho.substring(0, 50) + '...' : 'Dirección no especificada'})</small>
+                </div>
+            `;
+        }
+    });
+    
+    // Alerta general si hay muchos casos cercanos
+    if (highDangerCases > 0) {
+        alertsHTML = `
+            <div class="alert alert-danger">
+                <i class="fa fa-exclamation-triangle"></i> 
+                <strong>¡ALERTA DE SEGURIDAD!</strong> 
+                Se detectaron ${highDangerCases} casos de alto riesgo cerca de tu ubicación. 
+                Mantente alerta y evita zonas poco iluminadas.
+            </div>
+        ` + alertsHTML;
+    } else if (nearbyCases.length > 5) {
+        alertsHTML = `
+            <div class="alert alert-warning">
+                <i class="fa fa-warning"></i> 
+                <strong>Zona de precaución:</strong> 
+                Se detectaron ${nearbyCases.length} casos de robo en esta área. 
+                Recomendamos mantener precauciones básicas.
+            </div>
+        ` + alertsHTML;
+    }
+    
+    alertsContainer.innerHTML = alertsHTML;
+}
+
+// Actualizar interfaz de seguridad
+function updateSafetyInterface(nearbyCases) {
+    const safetyLevelElement = document.getElementById('safety-level');
+    const nearbyCasesElement = document.getElementById('nearby-cases');
+    
+    nearbyCasesElement.textContent = nearbyCases.length;
+    
+    // Determinar nivel de seguridad
+    const highDangerCases = nearbyCases.filter(c => c.dangerLevel >= 4).length;
+    const mediumDangerCases = nearbyCases.filter(c => c.dangerLevel === 3).length;
+    
+    if (highDangerCases > 0) {
+        safetyLevelElement.className = 'label label-danger';
+        safetyLevelElement.textContent = 'Alto Riesgo';
+    } else if (mediumDangerCases > 2 || nearbyCases.length > 5) {
+        safetyLevelElement.className = 'label label-warning';
+        safetyLevelElement.textContent = 'Precaución';
+    } else if (nearbyCases.length > 0) {
+        safetyLevelElement.className = 'label label-info';
+        safetyLevelElement.textContent = 'Moderado';
+    } else {
+        safetyLevelElement.className = 'label label-success';
+        safetyLevelElement.textContent = 'Seguro';
+    }
+}
+
+// Actualizar mapa de seguridad manualmente
+function refreshSafetyMap() {
+    if (isSafetyActive && userLocation) {
+        updateSafetyStatus(userLocation);
+        
+        // Mostrar notificación de actualización
+        const alertsContainer = document.getElementById('safety-alerts');
+        const updateAlert = document.createElement('div');
+        updateAlert.className = 'alert alert-info';
+        updateAlert.innerHTML = '<i class="fa fa-info-circle"></i> Mapa de seguridad actualizado';
+        alertsContainer.insertBefore(updateAlert, alertsContainer.firstChild);
+        
+        // Remover después de 3 segundos
+        setTimeout(() => {
+            if (updateAlert.parentNode) {
+                updateAlert.parentNode.removeChild(updateAlert);
+            }
+        }, 3000);
+    }
+}
+
+// Event listener para cambios en el radio de alerta
+document.addEventListener('DOMContentLoaded', function() {
+    const radiusSelect = document.getElementById('alert-radius');
+    if (radiusSelect) {
+        radiusSelect.addEventListener('change', function() {
+            if (isSafetyActive && userLocation) {
+                updateSafetyStatus(userLocation);
+            }
+        });
+    }
+    
+    // Inicializar mapa de seguridad (pero no activarlo aún)
+    setTimeout(initSafetyMap, 1000);
+});
 </script>
 <!-- jQuery 2.1.3 -->
 <script src="plugins/jQuery/jQuery-2.1.3.min.js"></script>
