@@ -490,6 +490,46 @@
     margin-left: 5px;
 }
 </style>
+
+<style>
+/* Estilos para los marcadores de peligro */
+.danger-marker {
+    background: transparent !important;
+    border: none !important;
+}
+
+/* Mejoras para la paginación de alertas */
+#safety-alerts-navigation {
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 5px;
+    border: 1px solid #e3e3e3;
+}
+
+#safety-alerts-navigation .btn-group .btn {
+    color: #333 !important;
+    border: 1px solid #ccc;
+}
+
+#safety-alerts-navigation .btn-group .btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: #e9ecef;
+}
+
+#safety-alerts-navigation .btn-group .btn:not(:disabled):hover {
+    background-color: #0073b7;
+    color: white !important;
+    border-color: #0073b7;
+}
+
+#safety-alerts-page-info {
+    background: #0073b7;
+    color: white !important;
+    border-color: #0073b7;
+    cursor: default;
+}
+</style>
   <body class="skin-blue">
     <div class="wrapper">
       
@@ -834,8 +874,8 @@
                 <i class="fa fa-angle-left pull-right"></i>
               </a>
               <ul class="treeview-menu">
-                <li><a href="pages/tables/simple.html"><i class="fa fa-circle-o"></i>Tabla de Casos de Robo</a></li>
-                <li><a href="pages/tables/data.html"><i class="fa fa-circle-o"></i>Tabla de Comisarias</a></li>
+                <!--<li><a href="pages/tables/simple.html"><i class="fa fa-circle-o"></i>Tabla de Casos de Robo</a></li>-->
+                <li><a href="pages/tables/data.html"><i class="fa fa-circle-o"></i>Registro de los Casos Delictivos</a></li>
               </ul>
             </li>
             <li>
@@ -1160,6 +1200,7 @@
 </div><!-- /.box -->
 
               <!-- Sección de Escaneo de tu Ubicación -->
+<!-- Sección de Escaneo de tu Ubicación -->
 <div class="box box-danger">
     <div class="box-header">
         <i class="fa fa-shield"></i>
@@ -1193,9 +1234,24 @@
         <!-- Mapa de seguridad -->
         <div id="safety-map" style="height: 250px; width: 100%; border: 1px solid #ccc; border-radius: 5px; margin-top: 10px; display: none;"></div>
         
-        <!-- Alertas -->
+        <!-- Alertas con paginación -->
         <div id="safety-alerts" style="display: none; margin-top: 10px;">
             <!-- Las alertas aparecerán aquí dinámicamente -->
+        </div>
+        
+        <!-- Navegación de alertas (se mostrará cuando haya más de 5 alertas) -->
+        <div id="safety-alerts-navigation" style="display: none; text-align: center; margin-top: 10px;">
+            <div class="btn-group">
+                <button class="btn btn-xs btn-default" onclick="previousSafetyAlertsPage()" id="prev-safety-alerts-btn" disabled>
+                    <i class="fa fa-chevron-left"></i> Anterior
+                </button>
+                <button class="btn btn-xs btn-info" id="safety-alerts-page-info" disabled>
+                    Página 1 de 1
+                </button>
+                <button class="btn btn-xs btn-default" onclick="nextSafetyAlertsPage()" id="next-safety-alerts-btn" disabled>
+                    Siguiente <i class="fa fa-chevron-right"></i>
+                </button>
+            </div>
         </div>
     </div>
     <div class="box-footer">
@@ -1217,7 +1273,6 @@
         </div>
     </div>
 </div>
-
             </section><!-- /.Left col -->
             <!-- right col (We are only adding the ID to make the widgets sortable)-->
             <section class="col-lg-5 connectedSortable">
@@ -5315,9 +5370,16 @@ async function loadJSONData() {
 var safetyMap = null;
 var userMarker = null;
 var dangerCircles = [];
+var dangerMarkers = []; // NUEVO: marcadores de peligro
 var safetyWatchId = null;
 var isSafetyActive = false;
 var userLocation = null;
+
+// Variables para paginación de alertas
+var currentSafetyAlertsPage = 1;
+var safetyAlertsPerPage = 5;
+var currentSafetyAlerts = [];
+var totalSafetyAlertsPages = 1;
 
 // Inicializar el mapa de seguridad
 function initSafetyMap() {
@@ -5428,6 +5490,7 @@ function toggleSafetyMode() {
         document.getElementById('location-info').style.display = 'none';
         document.getElementById('safety-map').style.display = 'none';
         document.getElementById('safety-alerts').style.display = 'none';
+        document.getElementById('safety-alerts-navigation').style.display = 'none';
         
         // Limpiar marcadores
         if (userMarker) {
@@ -5439,6 +5502,11 @@ function toggleSafetyMode() {
             safetyMap.removeLayer(circle);
         });
         dangerCircles = [];
+        
+        dangerMarkers.forEach(marker => {
+            safetyMap.removeLayer(marker);
+        });
+        dangerMarkers = [];
         
         console.log('🛡️ Modo seguridad desactivado');
     }
@@ -5552,15 +5620,26 @@ function calculateDangerLevel(crime, distance) {
     return Math.min(baseScore, 5); // Máximo 5
 }
 
-// Actualizar alertas de seguridad
+// Actualizar alertas de seguridad CON PAGINACIÓN Y MARCADORES ROJOS
 function updateSafetyAlerts(nearbyCases, userLocation) {
     const alertsContainer = document.getElementById('safety-alerts');
+    const navigationContainer = document.getElementById('safety-alerts-navigation');
     
-    // Limpiar círculos anteriores
+    // Guardar alertas para paginación
+    currentSafetyAlerts = nearbyCases;
+    currentSafetyAlertsPage = 1;
+    totalSafetyAlertsPages = Math.ceil(nearbyCases.length / safetyAlertsPerPage);
+    
+    // Limpiar círculos y marcadores anteriores
     dangerCircles.forEach(circle => {
         safetyMap.removeLayer(circle);
     });
     dangerCircles = [];
+    
+    dangerMarkers.forEach(marker => {
+        safetyMap.removeLayer(marker);
+    });
+    dangerMarkers = [];
     
     if (nearbyCases.length === 0) {
         alertsContainer.innerHTML = `
@@ -5569,12 +5648,20 @@ function updateSafetyAlerts(nearbyCases, userLocation) {
                 <strong>Zona segura:</strong> No se detectaron casos de robo cercanos en el radio seleccionado.
             </div>
         `;
+        navigationContainer.style.display = 'none';
         return;
     }
     
-    let alertsHTML = '';
-    let highDangerCases = 0;
+    // Mostrar/ocultar navegación según sea necesario
+    navigationContainer.style.display = nearbyCases.length > safetyAlertsPerPage ? 'block' : 'none';
     
+    // Mostrar la página actual de alertas
+    showCurrentSafetyAlertsPage();
+    
+    // Actualizar información de paginación
+    updateSafetyAlertsPaginationInfo();
+    
+    // Agregar círculos y marcadores de peligro al mapa
     nearbyCases.forEach((caseInfo, index) => {
         const crime = caseInfo.crime;
         const dangerLevel = caseInfo.dangerLevel;
@@ -5587,56 +5674,162 @@ function updateSafetyAlerts(nearbyCases, userLocation) {
             radius: 100
         }).addTo(safetyMap);
         
-        dangerCircle.bindPopup(`
-            <strong>${crime.modalidad_hecho || 'Delito'}</strong><br>
-            Distancia: ${caseInfo.distance}m<br>
-            Fecha: ${crime.fecha_hora_hecho ? new Date(crime.fecha_hora_hecho).toLocaleDateString('es-ES') : 'N/A'}<br>
-            Dirección: ${crime.direccion_hecho || 'No especificada'}
+        // NUEVO: Agregar marcador rojo de peligro
+        const dangerIcon = L.divIcon({
+            className: 'danger-marker',
+            html: `<div style="background-color: red; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 5px rgba(0,0,0,0.5);"></div>`,
+            iconSize: [16, 16],
+            iconAnchor: [8, 8]
+        });
+        
+        const dangerMarker = L.marker([crime.lat_hecho, crime.long_hecho], {
+            icon: dangerIcon
+        }).addTo(safetyMap);
+        
+        dangerMarker.bindPopup(`
+            <div style="min-width: 200px;">
+                <strong style="color: red;">⚠️ ZONA DE PELIGRO</strong><br>
+                <strong>${crime.modalidad_hecho || 'Delito'}</strong><br>
+                Distancia: ${caseInfo.distance}m<br>
+                Nivel de peligro: ${caseInfo.dangerLevel}/5<br>
+                Fecha: ${crime.fecha_hora_hecho ? new Date(crime.fecha_hora_hecho).toLocaleDateString('es-ES') : 'N/A'}<br>
+                Dirección: ${crime.direccion_hecho || 'No especificada'}
+            </div>
         `);
         
         dangerCircles.push(dangerCircle);
-        
-        // Contar casos de alto peligro
-        if (dangerLevel >= 4) highDangerCases++;
-        
-        // Crear alerta si es de alto peligro o está muy cerca
-        if (dangerLevel >= 3 || caseInfo.distance <= 300) {
-            const alertType = dangerLevel >= 4 ? 'danger' : 'warning';
-            const icon = dangerLevel >= 4 ? 'fa-exclamation-triangle' : 'fa-warning';
-            
-            alertsHTML += `
-                <div class="alert alert-${alertType}">
-                    <i class="fa ${icon}"></i> 
-                    <strong>¡Precaución!</strong> 
-                    ${crime.modalidad_hecho || 'Caso de robo'} a ${caseInfo.distance}m de tu ubicación.
-                    <small>(${crime.direccion_hecho ? crime.direccion_hecho.substring(0, 50) + '...' : 'Dirección no especificada'})</small>
-                </div>
-            `;
-        }
+        dangerMarkers.push(dangerMarker);
+    });
+}
+
+// Mostrar la página actual de alertas de seguridad
+function showCurrentSafetyAlertsPage() {
+    const alertsContainer = document.getElementById('safety-alerts');
+    
+    if (currentSafetyAlerts.length === 0) return;
+    
+    // Calcular índices para la página actual
+    const startIndex = (currentSafetyAlertsPage - 1) * safetyAlertsPerPage;
+    const endIndex = Math.min(startIndex + safetyAlertsPerPage, currentSafetyAlerts.length);
+    const pageAlerts = currentSafetyAlerts.slice(startIndex, endIndex);
+    
+    let alertsHTML = '';
+    let highDangerCases = 0;
+    
+    // Contar casos de alto peligro en toda la lista (no solo en la página actual)
+    currentSafetyAlerts.forEach(caseInfo => {
+        if (caseInfo.dangerLevel >= 4) highDangerCases++;
     });
     
     // Alerta general si hay muchos casos cercanos
     if (highDangerCases > 0) {
-        alertsHTML = `
+        alertsHTML += `
             <div class="alert alert-danger">
                 <i class="fa fa-exclamation-triangle"></i> 
                 <strong>¡ALERTA DE SEGURIDAD!</strong> 
                 Se detectaron ${highDangerCases} casos de alto riesgo cerca de tu ubicación. 
                 Mantente alerta y evita zonas poco iluminadas.
             </div>
-        ` + alertsHTML;
-    } else if (nearbyCases.length > 5) {
-        alertsHTML = `
+        `;
+    } else if (currentSafetyAlerts.length > 5) {
+        alertsHTML += `
             <div class="alert alert-warning">
                 <i class="fa fa-warning"></i> 
                 <strong>Zona de precaución:</strong> 
-                Se detectaron ${nearbyCases.length} casos de robo en esta área. 
+                Se detectaron ${currentSafetyAlerts.length} casos de robo en esta área. 
                 Recomendamos mantener precauciones básicas.
             </div>
-        ` + alertsHTML;
+        `;
     }
     
+    // Agregar alertas de la página actual
+    pageAlerts.forEach((caseInfo, index) => {
+        const crime = caseInfo.crime;
+        const dangerLevel = caseInfo.dangerLevel;
+        const globalIndex = startIndex + index + 1;
+        
+        const alertType = dangerLevel >= 4 ? 'danger' : dangerLevel >= 3 ? 'warning' : 'info';
+        const icon = dangerLevel >= 4 ? 'fa-exclamation-triangle' : 
+                    dangerLevel >= 3 ? 'fa-warning' : 'fa-info-circle';
+        
+        alertsHTML += `
+            <div class="alert alert-${alertType}">
+                <div class="row">
+                    <div class="col-xs-10">
+                        <i class="fa ${icon}"></i> 
+                        <strong>${globalIndex}. ${crime.modalidad_hecho || 'Caso de robo'}</strong><br>
+                        <small>
+                            <i class="fa fa-map-marker"></i> 
+                            ${caseInfo.distance}m de tu ubicación | 
+                            Nivel de peligro: ${dangerLevel}/5
+                        </small><br>
+                        <small>${crime.direccion_hecho || 'Dirección no especificada'}</small>
+                    </div>
+                    <div class="col-xs-2 text-right">
+                        <button class="btn btn-xs btn-default" onclick="focusOnDangerZone(${crime.lat_hecho}, ${crime.long_hecho})" title="Ver en mapa">
+                            <i class="fa fa-crosshairs"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+    
     alertsContainer.innerHTML = alertsHTML;
+}
+
+// Actualizar información de paginación de alertas
+function updateSafetyAlertsPaginationInfo() {
+    const pageInfo = document.getElementById('safety-alerts-page-info');
+    const prevBtn = document.getElementById('prev-safety-alerts-btn');
+    const nextBtn = document.getElementById('next-safety-alerts-btn');
+    
+    if (pageInfo && currentSafetyAlerts.length > 0) {
+        const startIndex = (currentSafetyAlertsPage - 1) * safetyAlertsPerPage + 1;
+        const endIndex = Math.min(currentSafetyAlertsPage * safetyAlertsPerPage, currentSafetyAlerts.length);
+        
+        pageInfo.innerHTML = `Página ${currentSafetyAlertsPage} de ${totalSafetyAlertsPages}`;
+    }
+    
+    if (prevBtn) {
+        prevBtn.disabled = currentSafetyAlertsPage <= 1;
+    }
+    if (nextBtn) {
+        nextBtn.disabled = currentSafetyAlertsPage >= totalSafetyAlertsPages;
+    }
+}
+
+// Navegar a la página anterior de alertas
+function previousSafetyAlertsPage() {
+    if (currentSafetyAlertsPage > 1) {
+        currentSafetyAlertsPage--;
+        showCurrentSafetyAlertsPage();
+        updateSafetyAlertsPaginationInfo();
+    }
+}
+
+// Navegar a la página siguiente de alertas
+function nextSafetyAlertsPage() {
+    if (currentSafetyAlertsPage < totalSafetyAlertsPages) {
+        currentSafetyAlertsPage++;
+        showCurrentSafetyAlertsPage();
+        updateSafetyAlertsPaginationInfo();
+    }
+}
+
+// Centrar el mapa en una zona de peligro específica
+function focusOnDangerZone(lat, lng) {
+    if (safetyMap) {
+        safetyMap.setView([lat, lng], 16);
+        
+        // Abrir el popup del marcador si existe
+        dangerMarkers.forEach(marker => {
+            const markerLatLng = marker.getLatLng();
+            if (Math.abs(markerLatLng.lat - lat) < 0.0001 && Math.abs(markerLatLng.lng - lng) < 0.0001) {
+                marker.openPopup();
+            }
+        });
+    }
 }
 
 // Actualizar interfaz de seguridad
