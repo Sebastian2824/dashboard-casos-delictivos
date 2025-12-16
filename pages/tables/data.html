@@ -476,7 +476,7 @@
           for (let i = 1; i <= 45; i++) {
             sampleData.push({
               "id_dgc": 10737930 + i,
-              "comisaria_registro": i % 3 === 0 ? "LA HUAYRONA" : i % 3 === 1 ? "CAJA DE AGUA" : "SANTA ELVIRA",
+              "comisaria_hecho": i % 3 === 0 ? "LA HUAYRONA" : i % 3 === 1 ? "CAJA DE AGUA" : "SANTA ELVIRA",
               "direccion_hecho": `Dirección ejemplo ${i}, San Juan de Lurigancho`,
               "fecha_hora_hecho": 1485870000000 + (i * 86400000),
               "turno_hecho": i % 3 === 0 ? "mañana" : i % 3 === 1 ? "tarde" : "noche",
@@ -530,7 +530,7 @@
             clearButtonId: 'clearRoboFilters',
             columns: [
               { key: 'id_dgc', title: 'ID DGC', filterType: 'input' },
-              { key: 'comisaria_registro', title: 'Comisaría Registro', filterType: 'select' },
+              { key: 'comisaria_hecho', title: 'Comisaría Registro', filterType: 'select' },
               { key: 'direccion_hecho', title: 'Dirección Hecho', filterType: 'input' },
               { key: 'fecha_hora_hecho', title: 'Fecha Hecho', formatter: formatDate, filterType: 'date', excelFormatter: formatDateForExcel },
               { key: 'turno_hecho', title: 'Turno', filterType: 'select' },
